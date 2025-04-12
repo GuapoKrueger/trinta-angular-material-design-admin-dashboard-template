@@ -1,0 +1,135 @@
+<mat-card class="trinta-card profile-settings-card  mb-25 bg-white border-none d-block">
+    <mat-card-header>
+        <mat-card-title>
+            <h5 class="mt-0 mb-0">
+                Agregar Usuario
+            </h5>
+        </mat-card-title>
+        <mat-card-subtitle>
+            <a class="default-btn" mat-button (click)="onSubmit()">
+                <i class="ri-add-line"></i> Guardar
+            </a>
+        </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <form [formGroup]="form">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="admin text-center">
+                        <div class="image ml-auto mr-auto position-relative">
+                            <img [src]="imagenBase64 || 'assets/images/users/user-default.png'" class="rounded-circle image" alt="admin-image">
+                            <button type="button" mat-button (click)="fileInput.click()">
+                                <i-feather name="camera"></i-feather>
+                            </button>
+                            <input type="file" accept="image/*" #fileInput (change)="onFileSelected($event)" hidden>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <label class="label d-block fw-medium mb-10">
+                        Nombre(s)
+                    </label>
+                    <mat-form-field>
+                        <i-feather name="user"></i-feather>
+                        <mat-label>Nombre(S)</mat-label>
+                        <input matInput formControlName="firstName">
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-4">
+                    <label class="label d-block fw-medium mb-10">
+                        Apellido Paterno
+                    </label>
+                    <mat-form-field>
+                        <i-feather name="user"></i-feather>
+                        <mat-label>Apellido Paterno</mat-label>
+                        <input matInput formControlName="middleName">
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-4">
+                    <label class="label d-block fw-medium mb-10">
+                        Apellido Materno
+                    </label>
+                    <mat-form-field>
+                        <i-feather name="user"></i-feather>
+                        <mat-label>Apellido Materno</mat-label>
+                        <input matInput formControlName="lastName">
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-4">
+                    <label class="label d-block fw-medium mb-10">
+                        Usuario
+                    </label>
+                    <mat-form-field>
+                        <i-feather name="user"></i-feather>
+                        <mat-label>Usuario</mat-label>
+                        <input matInput formControlName="userName">
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-4">
+                    <label class="label d-block fw-medium mb-10">
+                        Password
+                    </label>
+                    <mat-form-field>
+                        <i-feather name="lock"></i-feather>
+                        <mat-label>Password</mat-label>
+                        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+                        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+                            <span class="material-symbols-outlined">
+                                {{hidePassword ? 'visibility_off' : 'visibility'}}
+                            </span>
+                        </button>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-4">
+                    <label class="label d-block fw-medium mb-10">
+                        Confirmar Password
+                    </label>
+                    <mat-form-field>
+                        <i-feather name="lock"></i-feather>
+                        <mat-label>Confirmar password</mat-label>
+                        <input matInput [type]="hidePasswordConfirm ? 'password' : 'text'" formControlName="confirmPassword">
+                        <button mat-icon-button matSuffix (click)="hidePasswordConfirm = !hidePasswordConfirm" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePasswordConfirm">
+                            <span class="material-symbols-outlined">
+                                {{hidePasswordConfirm ? 'visibility_off' : 'visibility'}}
+                            </span>
+                        </button>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-4">
+                    <label class="label d-block fw-medium mb-10">
+                        Email
+                    </label>
+                    <mat-form-field>
+                        <i-feather name="mail"></i-feather>
+                        <mat-label>Email</mat-label>
+                        <input matInput formControlName="email">
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-4">
+                    <label class="label d-block fw-medium mb-10">
+                        Rol
+                    </label>
+                    <mat-form-field>
+                        <i-feather name="users"></i-feather>
+                        <mat-label>Seleccionar</mat-label>
+                        <mat-select formControlName="role">
+                            <mat-option value="Residente">Residente</mat-option>
+                            <mat-option value="Colaborador">Colaborador</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <!-- <div class="save-user-btn">
+                <button mat-button type="button">
+                    Save Information
+                </button>
+                <button mat-button type="button">
+                    Cancel
+                </button>
+            </div> --> 
+        </form>
+    </mat-card-content>
+</mat-card>
+
+
+  

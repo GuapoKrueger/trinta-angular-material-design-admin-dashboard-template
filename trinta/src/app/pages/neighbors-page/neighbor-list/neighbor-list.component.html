@@ -1,0 +1,105 @@
+<mat-card class="trinta-card neighbor-list-card mb-25 bg-white border-none d-block">
+    <mat-card-header>
+        <mat-card-title>
+            <h5 class="mt-0 mb-0">
+                Lista de Residentes
+            </h5>
+        </mat-card-title>
+        <mat-card-subtitle>
+            <a routerLink="/neighbors/add-neighbor" class="default-btn" mat-button>
+                <i class="ri-add-line"></i> Agregar
+            </a>
+        </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="neighbor-list-table">
+            <div class="table-responsive">
+                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+                    <ng-container matColumnDef="FirstName">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            Nombre
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="pl-0">
+                            <div class="agent-info d-flex align-items-center">
+                                <div class="image">
+                                    <img [src]="element.avatarUrl" alt="user-image">
+                                </div>
+                                <div class="info">
+                                    <h6 class="mt-0">
+                                        {{ (element.firstName || '') + ' ' + (element.middleName || '') + ' ' + (element.lastName || '') }}
+                                    </h6>                                    
+                                    <span class="d-block text-body">
+                                        {{element.phoneNumber}}
+                                    </span>
+                                </div>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Email">
+                        <th mat-header-cell *matHeaderCellDef>
+                            Email
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.email}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="PhoneNumber">
+                        <th mat-header-cell *matHeaderCellDef>
+                            Teléfono
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.phoneNumber}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Active">
+                        <th mat-header-cell *matHeaderCellDef>
+                            Estado
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <!-- <span class="trinta-badge fw-medium d-inline-block" *ngIf="element.active">
+                                {{element.active}}
+                            </span>
+                            <span class="trinta-badge fw-medium deactive d-inline-block" *ngIf="element.active">
+                                {{element.active}}
+                            </span> -->
+                            <span 
+                                class="trinta-badge fw-medium d-inline-block" 
+                                [ngClass]="element.active === 'ACTIVO' ? 'trinta-badge' : 'deactive'">
+                                {{ element.active ==='ACTIVO' ? 'Activo' : 'Inactivo' }}
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <!-- Action Column -->
+                    <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef class="text-end pr-0">
+                            Acción
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="text-end pr-0">
+                            <div class="action">
+                                <button mat-icon-button color="primary" class="p-0 min-w-auto lh-1 h-auto" (click)="onEdit(element.id)">
+                                    <i class="ri-edit-line"></i>
+                                </button>
+                                <button mat-icon-button color="warn" class="p-0 min-w-auto lh-1 h-auto" (click)="onDelete(element.id)">
+                                    <i class="ri-delete-bin-line"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+            </div>
+            <mat-paginator [pageSizeOptions]="[10, 12, 16]" showFirstLastButtons></mat-paginator>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+
+
+

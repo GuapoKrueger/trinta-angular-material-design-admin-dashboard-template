@@ -1,0 +1,215 @@
+<mat-card
+class="trinta-card add-user-card mb-25 bg-white border-none d-block"
+>
+<mat-card-header>
+    <mat-card-title>
+        <h5 class="mt-0 mb-0">
+            Agregar Residente
+        </h5>
+    </mat-card-title>
+    <mat-card-subtitle>
+      <a class="default-btn" mat-button (click)="onSubmit()">
+          <i class="ri-add-line"></i> Guardar
+      </a>
+  </mat-card-subtitle>
+</mat-card-header>
+<mat-card-content>
+    <form [formGroup]="neighborForm">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="admin text-center">
+                    <div class="image ml-auto mr-auto position-relative">
+                        <img [src]="imagenBase64 || 'assets/images/users/user-default.png'" class="rounded-circle image" alt="admin-image">
+                        <button type="button" mat-button (click)="fileInput.click()">
+                            <i-feather name="camera"></i-feather>
+                        </button>
+                        <input type="file" accept="image/*" #fileInput (change)="onFileSelected($event)" hidden>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <label class="label d-block fw-medium mb-10">
+                    Nombre
+                </label>
+                <mat-form-field>
+                    <i-feather name="user"></i-feather>
+                    <mat-label>Nombre</mat-label>
+                    <input matInput formControlName="FirstName" maxlength="50">
+                </mat-form-field>
+                <div class="error text-danger" *ngIf="neighborForm.get('FirstName')!.hasError('required') && neighborForm.get('FirstName')!.touched">
+                    El nombre es requerido.
+                </div>
+            </div>
+            <div class="col-lg-4">
+              <label class="label d-block fw-medium mb-10">
+                  Apellido Paterno
+              </label>
+              <mat-form-field>
+                <i-feather name="user"></i-feather>
+                  <mat-label>Apellido Paterno</mat-label>
+                  <input matInput formControlName="LastName" maxlength="50">
+              </mat-form-field>
+              <div class="error text-danger" *ngIf="neighborForm.get('LastName')!.hasError('required') && neighborForm.get('LastName')!.touched">
+                El Apellido Paterno es requerido.
+              </div>
+            </div>
+            <div class="col-lg-4">
+            <label class="label d-block fw-medium mb-10">
+                Apellido Materno
+            </label>
+            <mat-form-field>
+              <i-feather name="user"></i-feather>
+                <mat-label>Apellido Materno</mat-label>
+                <input matInput formControlName="MiddleName" maxlength="50">
+            </mat-form-field>
+            <div class="error text-danger" *ngIf="neighborForm.get('MiddleName')!.hasError('required') && neighborForm.get('MiddleName')!.touched">
+                El Apellido Materno es requerido.
+              </div>
+            </div>
+
+            <div class="col-lg-4">
+                <label class="label d-block fw-medium mb-10">
+                    Email
+                </label>
+                <mat-form-field>
+                    <i-feather name="mail"></i-feather>
+                    <mat-label>Email</mat-label>
+                    <input matInput formControlName="Email" maxlength="60">
+                </mat-form-field>
+                <div class="error text-danger" *ngIf="neighborForm.get('Email')!.hasError('required') && neighborForm.get('Email')!.touched">
+                    El Email es requerido.
+                </div>
+                <div class="error text-danger" *ngIf="neighborForm.get('Email')!.hasError('email') && neighborForm.get('Email')!.touched">
+                    El Email debe ser válido.
+                </div>
+            </div>
+            <div class="col-lg-4">
+              <label class="label d-block fw-medium mb-10">
+                  Teléfono
+              </label>
+              <mat-form-field>
+                  <i-feather name="phone"></i-feather>
+                  <mat-label>Teléfono</mat-label>
+                  <input matInput formControlName="PhoneNumber" (blur)="neighborForm.get('PhoneNumber')?.markAsTouched()" [showMaskTyped]="true" mask="(000) 000-0000">
+              </mat-form-field>
+              <div class="error text-danger" *ngIf="neighborForm.get('PhoneNumber')!.hasError('required') && neighborForm.get('PhoneNumber')!.touched">
+                El Teléfono es requerido.
+              </div>
+              <div *ngIf="neighborForm.get('PhoneNumber')?.hasError('minlength') || neighborForm.get('PhoneNumber')?.hasError('maxlength')">
+                El número de teléfono está incompleto.
+              </div>
+              <!-- <div class="error text-danger" *ngIf="neighborForm.get('PhoneNumber')!.hasError('pattern') && neighborForm.get('PhoneNumber')!.touched">
+                El Teléfono debe tener el formato (000) 000-0000.
+              </div> -->
+          </div>
+          <div class="col-lg-4">
+            <label class="label d-block fw-medium mb-10">
+                Usuario
+            </label>
+            <mat-form-field>
+                <i-feather name="user"></i-feather>
+                <mat-label>Usuario</mat-label>
+                <input matInput formControlName="UserName" maxlength="15">
+            </mat-form-field>
+            <div class="error text-danger" *ngIf="neighborForm.get('UserName')!.hasError('required') && neighborForm.get('UserName')!.touched">
+                El Usuario es requerido.
+              </div>
+          </div>
+          <div class="col-lg-4">
+            <label class="label d-block fw-medium mb-10">
+                Password
+            </label>
+            <mat-form-field>
+                <i-feather name="lock"></i-feather>
+                <mat-label>Password</mat-label>
+                <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="Password" maxlength="15">
+                <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+                    <span class="material-symbols-outlined">
+                        {{hidePassword ? 'visibility_off' : 'visibility'}}
+                    </span>
+                </button>
+            </mat-form-field>
+            <div class="error text-danger" *ngIf="neighborForm.get('Password')!.hasError('required') && neighborForm.get('Password')!.touched">
+                El Password es requerido.
+              </div>
+          </div>
+        </div>
+    </form>
+</mat-card-content>
+</mat-card>
+
+<mat-card
+class="trinta-card add-user-card mb-25 bg-white border-none d-block"
+>
+<mat-card-header>
+    <mat-card-title>
+        <h5 class="mt-0 mb-0">
+            Dirección
+        </h5>
+    </mat-card-title>
+</mat-card-header>
+<mat-card-content>
+    <form [formGroup]="neighborForm">
+        <div class="row">
+            <div class="col-lg-4">
+                <label class="label d-block fw-medium mb-10">
+                    Fraccionamiento
+                </label>
+                <mat-form-field>
+                  <i-feather name="map-pin"></i-feather>
+                    <mat-label>Selecciona</mat-label>
+                    <mat-select formControlName="NeighborhoodId" (selectionChange)="onNeighborhoodChange($event.value)">
+                        @for (neighborhood of neighborhoods; track neighborhood) {
+                          <mat-option [value]="neighborhood.id">
+                            {{ neighborhood.name }}
+                          </mat-option>
+                        }
+                      </mat-select>                      
+                </mat-form-field>
+            </div>
+            <div class="col-lg-4">
+                <label class="label d-block fw-medium mb-10">
+                    SubDivisión
+                </label>
+                <mat-form-field>
+                  <i-feather name="map-pin"></i-feather>
+                    <mat-label>Selecciona</mat-label>
+                    <mat-select formControlName="SubdivisionId" (selectionChange)="onSubdivisionChange($event.value)">
+                        @for (subdivision of subdivisions; track subdivision) {
+                          <mat-option [value]="subdivision.id">
+                            {{ subdivision.name }}
+                          </mat-option>
+                        }
+                      </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-lg-4">
+                <label class="label d-block fw-medium mb-10">
+                    Calle
+                </label>
+                <mat-form-field>
+                  <i-feather name="map-pin"></i-feather>
+                    <mat-label>Selecciona</mat-label>
+                    <mat-select formControlName="StreetId">
+                        @for (street of streets; track street) {
+                            <mat-option [value]="street.id">
+                              {{ street.name }}
+                            </mat-option>
+                          }
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-lg-4">
+                <label class="label d-block fw-medium mb-10">
+                    Número
+                </label>
+                <mat-form-field>
+                    <i-feather name="code"></i-feather>
+                    <mat-label>Número</mat-label>
+                    <input matInput formControlName="HouseNumber">
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+</mat-card-content>
+</mat-card>

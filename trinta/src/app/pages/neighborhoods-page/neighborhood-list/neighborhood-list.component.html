@@ -1,0 +1,82 @@
+<mat-card class="trinta-card neighborhood-list-card mb-25 bg-white border-none d-block">
+    <mat-card-header>
+        <mat-card-title>
+            <h5 class="mt-0 mb-0">
+                Lista de Fraccionamientos
+            </h5>
+        </mat-card-title>
+        <mat-card-subtitle>
+            <a routerLink="/neighborhoods/add-neighborhood" class="default-btn" mat-button>
+                <i class="ri-add-line"></i> Agregar
+            </a>
+        </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="neighborhood-list-table">
+            <div class="table-responsive">
+                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            Nombre
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="pl-0">
+                            {{element.name}}
+                        </td>
+                    </ng-container>
+
+                    <!-- City Column -->
+                    <ng-container matColumnDef="city">
+                        <th mat-header-cell *matHeaderCellDef>
+                            Ciudad
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.city}}
+                        </td>
+                    </ng-container>
+
+                    <!-- Municipal Column -->
+                    <ng-container matColumnDef="municipal">
+                        <th mat-header-cell *matHeaderCellDef>
+                            Municipio
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.municipal}}
+                        </td>
+                    </ng-container>
+
+                    <!-- State Column -->
+                    <ng-container matColumnDef="state">
+                        <th mat-header-cell *matHeaderCellDef>
+                            Estado
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.state ? 'Active' : 'Inactive'}}
+                        </td>
+                    </ng-container>
+
+                    <!-- Action Column -->
+                    <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef class="text-end pr-0">
+                            Acción
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="text-end pr-0">
+                            <div class="action">
+                                <button mat-icon-button color="primary" class="p-0 min-w-auto lh-1 h-auto" (click)="onEdit(element.id)">
+                                    <i class="ri-edit-line"></i>
+                                </button>
+                                <button mat-icon-button color="warn" class="p-0 min-w-auto lh-1 h-auto" (click)="onDelete(element.id)">
+                                    <i class="ri-delete-bin-line"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+            </div>
+            <mat-paginator [pageSizeOptions]="[10, 12, 16]" showFirstLastButtons></mat-paginator>
+        </div>
+    </mat-card-content>
+</mat-card>

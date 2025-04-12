@@ -1,0 +1,79 @@
+.trinta-card {
+    &.customer-card {
+        .mat-mdc-card-content {
+            .user {
+                img {
+                    width: 61px;
+                }
+                .info {
+                    margin-left: 15px;
+
+                    h6 {
+                        font-size: 15px;
+                        margin-bottom: 8px;
+                    }
+                }
+            }
+            // .action {
+            //     .mat-mdc-button {
+            //         color: #818093;
+            //         margin-right: 12px;
+
+            //         i-feather {
+            //             width: 18px;
+            //             height: 18px;
+            //         }
+            //         &:last-child {
+            //             margin-right: 0;
+            //         }
+            //     }
+            // }
+            .list {
+                margin: {
+                    top: 25px;
+                    bottom: 25px;
+                };
+                li {
+                    margin-bottom: 11px;
+
+                    span {
+                        margin-right: 3px;
+                        letter-spacing: 1px;
+                    }
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                }
+            }
+            
+        }
+    }
+}
+
+.default-btn {
+    &.mat-mdc-button {
+        height: auto;
+        min-width: auto;
+        border-radius: 6px;
+        padding: 10.5px 15px;
+        color: var(--primaryColor);
+        background: rgba(55, 97, 238, 0.10);
+        font: {
+            size: 14px;
+            weight: 600;
+            family: var(--headingFontFamily);
+        };
+    }
+}
+
+.mat-slide-toggle {
+    margin: 13px 0;
+    display: block;
+}
+
+.example1 .mat-mdc-radio-button ~ .mat-mdc-radio-button {
+    margin-left: 20px;
+}
+
+
+  

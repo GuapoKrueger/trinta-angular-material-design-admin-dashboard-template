@@ -1,0 +1,22 @@
+.save-user-btn {
+    .mat-mdc-button {
+        height: auto;
+        min-width: auto;
+        border-radius: 6px;
+        padding: 18px 25px;
+        letter-spacing: 0.16px;
+        color: var(--whiteColor);
+        background-color: var(--primaryColor);
+        font: {
+            size: 16px;
+            weight: 600;
+            family: var(--headingFontFamily);
+        };
+        &:nth-child(2) {
+            margin-left: 20px;
+            color: var(--primaryColor);
+            background: rgba(55, 97, 238, 0.10);
+        }
+    }
+}
+

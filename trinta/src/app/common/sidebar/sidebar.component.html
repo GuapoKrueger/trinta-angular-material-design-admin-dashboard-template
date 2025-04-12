@@ -1,0 +1,179 @@
+<div
+    class="sidebar-area bg-white transition"
+    [ngClass]="{'active': isToggled}"
+>
+    <div class="logo bg-white">
+        <a class="d-flex align-items-center">
+            <!-- <img src="assets/images/logo-icon.svg" alt="logo-icon"> -->
+            <img src="assets/images/App_Passo_35.png" alt="logo-icon">
+            <span class="fw-extrabold">
+                Passo
+            </span>
+        </a>
+    </div>
+    <div
+        class="burger-menu transition cursor-pointer"
+        [ngClass]="{'active': isToggled}"
+        (click)="toggle()"
+    >
+        <span class="top-bar transition bg-dark d-block"></span>
+        <span class="middle-bar transition bg-dark d-block"></span>
+        <span class="bottom-bar transition bg-dark d-block"></span>
+    </div>
+    <ng-scrollbar visibility="hover">
+        <div class="sidebar-inner">
+            <div class="sidebar-menu">
+                <mat-accordion>
+                    <!-- <span class="sub-title text-body">
+                        MAIN
+                    </span> -->
+                    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = true">
+                        <!-- <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                <i-feather name="home"></i-feather>
+                                <span class="title">
+                                    Dashboard
+                                </span>
+                                <span class="trinta-badge">
+                                    5
+                                </span>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header> -->
+                        <!-- <ul class="sidebar-sub-menu"> -->
+                            <!-- <li class="sidemenu-item">
+                                <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    E-Commerce
+                                </a>
+                            </li> -->
+                            <!-- <li class="sidemenu-item">
+                                <a routerLink="/crm" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    CRM
+                                </a>
+                            </li>
+                            <li class="sidemenu-item">
+                                <a routerLink="/project-management" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Project Management
+                                </a>
+                            </li>
+                            <li class="sidemenu-item">
+                                <a routerLink="/lms" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    LMS
+                                </a>
+                            </li>
+                            <li class="sidemenu-item">
+                                <a routerLink="/help-desk" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Help Desk <span class="trinta-badge">Hot</span>
+                                </a>
+                            </li> -->
+                        <!-- </ul> -->
+                    </mat-expansion-panel> 
+                    <span class="sub-title text-body">
+                        APPS
+                    </span>
+                    <!-- <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = true">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                <i-feather name="home"></i-feather>
+                                <span class="title">
+                                    Fraccionamientos
+                                </span>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <ul class="sidebar-sub-menu">
+                            <li class="sidemenu-item">
+                                <a routerLink="/neighborhoods/neighborhood-list" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Listado de Fraccionamientos
+                                </a>
+                            </li>
+                            <li class="sidemenu-item">
+                                <a routerLink="/neighborhoods/add-neighborhood" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Agregar
+                                </a>
+                            </li>
+                        </ul>
+                    </mat-expansion-panel> -->
+                    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = true">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                <i-feather name="user-check"></i-feather>
+                                <span class="title">
+                                    Residentes
+                                </span>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <ul class="sidebar-sub-menu">
+                            <li class="sidemenu-item">
+                                <a routerLink="/neighbors/neighbor-list" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Listado de Residentes
+                                </a>
+                            </li>
+                            <li class="sidemenu-item">
+                                <a routerLink="/neighbors/add-neighbor" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Agregar
+                                </a>
+                            </li>
+                        </ul>
+                    </mat-expansion-panel>
+                    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = true">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                <i-feather name="mail"></i-feather>
+                                <span class="title">
+                                    Invitación
+                                </span>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <ul class="sidebar-sub-menu">
+                            <li class="sidemenu-item">
+                                <a routerLink="/invitations/invitations-list" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Listado de Invitaciones
+                                </a>
+                            </li>
+                            <li class="sidemenu-item">
+                                <a routerLink="/invitations/share-invitation" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Compartir Invitación
+                                </a>
+                            </li>
+                            <!-- <li class="sidemenu-item">
+                                <a routerLink="/invitations/add-invitations" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Crear Invitación
+                                </a>
+                            </li> -->
+                        </ul>
+                    </mat-expansion-panel>
+                    <!-- <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = true">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                <i-feather name="users"></i-feather>
+                                <span class="title">
+                                    Users
+                                </span>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <ul class="sidebar-sub-menu">
+                            <li class="sidemenu-item">
+                                <a routerLink="/users" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Team Members
+                                </a>
+                            </li>
+                            <li class="sidemenu-item">
+                                <a routerLink="/users/users-list" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Users List
+                                </a>
+                            </li>
+                            <li class="sidemenu-item">
+                                <a routerLink="/users/add-user" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Add User
+                                </a>
+                            </li>
+                        </ul>
+                    </mat-expansion-panel> -->
+                    <!-- <a routerLink="/authentication/logout" class="sidebar-menu-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                        <i-feather name="home"></i-feather>
+                        <span class="title">Logout</span>
+                    </a> -->
+                </mat-accordion>
+            </div>
+        </div>
+    </ng-scrollbar>
+</div>

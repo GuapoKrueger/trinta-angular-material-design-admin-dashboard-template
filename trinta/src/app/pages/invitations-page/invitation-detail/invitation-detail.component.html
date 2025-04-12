@@ -1,0 +1,83 @@
+<div class="lock-screen-area">
+    <div class="d-table">
+        <div class="d-table-cell">
+            <div class="trinta-form ml-auto mr-auto bg-white border-radius">
+                <div class="user text-center">
+                    <img src="assets/images/Passo_Logo_64.png" class="rounded-circle" alt="admin-image">
+                </div>  
+                <div class="title text-center">
+                    <h3>
+                        Recibiste un Passo
+                    </h3>
+                    <p class="text-black fs-15">
+                        Accede al fraccionamiento usando esta invitación.
+                    </p>
+                </div>
+                <div class="user text-center">
+                    <img src="assets/images/users/user-default.png" class="rounded-circle" alt="admin-image">
+                    <span class="d-block fs-16 fw-semibold heading-font-family">
+                        {{ invitationDetails?.neighborName }}
+                    </span>
+                </div>
+
+                    <div class="form-group">
+                        <mat-card class="trinta-card client-card mb-25 bg-white border-none d-block">
+                            <mat-card-header>
+                                <mat-card-title></mat-card-title>
+                            </mat-card-header>
+                            <mat-card-content>
+                                <ul class="list p-0 list-unstyled">
+                                    <li class="text-black">
+                                        <span class="text-dark fw-medium heading-font-family">
+                                            Nombre del Invitado :
+                                        </span>
+                                        {{ invitationDetails?.guestName }}
+                                    </li>
+                                    <li class="text-black">
+                                        <span class="text-dark fw-medium heading-font-family">
+                                            Tipo de Acceso :
+                                        </span>
+                                        {{ invitationDetails?.accessType }}
+                                    </li>
+                                    <li class="text-black">
+                                        <span class="text-dark fw-medium heading-font-family">
+                                            Teléfono :
+                                        </span>
+                                        {{ invitationDetails?.phoneNumber }}
+                                    </li>
+                                    <li class="text-black">
+                                        <span class="text-dark fw-medium heading-font-family">
+                                            Inicia :
+                                        </span>
+                                        {{ invitationDetails?.startTime | date: 'dd/MM/yyyy' }}
+                                    </li>
+                                    <li class="text-black">
+                                        <span class="text-dark fw-medium heading-font-family">
+                                            Termina :
+                                        </span>
+                                        {{ invitationDetails?.endTime | date: 'dd/MM/yyyy' }}
+                                    </li>
+                                    <li class="text-black">
+                                        <span class="text-dark fw-medium heading-font-family">
+                                            Es reutilizable :
+                                        </span>
+                                        {{ invitationDetails?.isReusable }}
+                                    </li>
+                                    <li class="text-black">
+                                        <span class="text-dark fw-medium heading-font-family">
+                                            Ubicación :
+                                        </span>
+                                        {{ invitationDetails?.location }}
+                                    </li>
+                                </ul>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                    <button mat-button (click)="onSubmit()">
+                        Entrar
+                    </button>
+             
+            </div>
+        </div>
+    </div>
+</div>

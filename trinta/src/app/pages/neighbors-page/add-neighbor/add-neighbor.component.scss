@@ -1,0 +1,103 @@
+.trinta-card {
+    &.profile-settings-card {
+        .mat-mdc-card-content {
+            .admin {
+                // border-bottom: 1px solid #edeff5;
+                padding-bottom: 30px;
+                margin-bottom: 50px;
+
+                .image {
+                    width: 153px;
+                    height: 153px;
+
+                    .mdc-button {
+                        right: 2px;
+                        width: 45px;
+                        bottom: -1px;
+                        height: 45px;
+                        min-width: auto;
+                        padding: 5px 0 0;
+                        position: absolute;
+                        border-radius: 50%;
+                        color: var(--whiteColor);
+                        background-color: var(--primaryColor);
+
+                        i-feather {
+                            width: 18px;
+                            height: 18px;
+                        }
+                    }
+                }
+                h6 {
+                    font-size: 16px;
+                    margin: {
+                        top: 25px;
+                        bottom: 10px;
+                    };
+                }
+            }
+            ul {
+                li {
+                    a {
+                        color: var(--blackColor);
+                        padding: 12.5px 20px 12.5px 46px;
+
+                        i-feather {
+                            top: 50%;
+                            left: 20px;
+                            width: 16px;
+                            height: 16px;
+                            position: absolute;
+                            transform: translateY(-50%);
+                            transition: var(--transition);
+                        }
+                        &.active {
+                            color: var(--primaryColor);
+                            background: rgba(55, 97, 238, 0.05);
+                            
+                            i-feather {
+                                color: var(--primaryColor);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.admin {
+    // border-bottom: 1px solid #edeff5;
+    padding-bottom: 30px;
+    margin-bottom: 50px;
+
+    .image {
+        width: 153px;
+        height: 153px;
+
+        .mdc-button {
+            right: 2px;
+            width: 45px;
+            bottom: -1px;
+            height: 45px;
+            min-width: auto;
+            padding: 5px 0 0;
+            position: absolute;
+            border-radius: 50%;
+            color: var(--whiteColor);
+            background-color: var(--primaryColor);
+
+            i-feather {
+                width: 18px;
+                height: 18px;
+            }
+        }
+    }
+    h6 {
+        font-size: 16px;
+        margin: {
+            top: 25px;
+            bottom: 10px;
+        };
+    }
+}
