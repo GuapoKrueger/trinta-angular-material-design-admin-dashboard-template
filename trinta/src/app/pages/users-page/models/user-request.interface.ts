@@ -8,7 +8,7 @@ export interface UserCreate {
     role: string,
     foto?: File,
     permissions: Permission[];
-    fraccionamiento: Fraccionmiento[];
+    fraccionamientos: Fraccionmiento[];
 }
 
 export interface Permission {

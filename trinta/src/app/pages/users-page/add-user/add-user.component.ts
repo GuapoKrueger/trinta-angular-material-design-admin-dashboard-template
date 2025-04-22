@@ -81,14 +81,26 @@ export class AddUserComponent implements OnInit{
     });
 
     ngOnInit(): void {
+        // this.permissionsService.getPermissions().subscribe(data => {
+        //     this.permissions = data; // Assign fetched permissions to the array
+        // });
+
         this.permissionsService.getPermissions().subscribe(data => {
-            this.permissions = data; // Assign fetched permissions to the array
+          this.permissions = data.map(item => ({
+              id: item.id.toString(),
+              name: item.name,
+              description: item.description,
+              checked: false
+          }));
         });
 
+
         this.FraccionamientosService.getAll(1000, 'name', 'asc', 0, '').subscribe(resp => {
-          this.fraccionamientos = resp.data; // Assign fetched fraccionamientos to the array
-          // const fraccionamientosControls = this.fraccionamientos.map(() => this.fb.control(false));
-          // this.form.setControl('fraccionamientos', this.fb.array(fraccionamientosControls));
+          this.fraccionamientos = (resp.data as { id: number; name: string }[]).map(item => ({
+            id: item.id.toString(), // Converting to string to match the interface
+            name: item.name,
+            checked: false
+          }));
         });
 
 
@@ -117,6 +129,16 @@ export class AddUserComponent implements OnInit{
         const user = this.form.value as UserCreate;
 
         console.log(user);
+
+        const selectedFracs = this.fraccionamientos
+        .filter(f => f.checked);
+    
+        const selectedPerms = this.permissions
+          .filter(p => p.checked);
+
+        user.fraccionamientos = selectedFracs; // Map selected IDs to Fraccionmiento objects
+        user.permissions = selectedPerms; // Assign selected permissions to the user object
+
 
         this._userServices.createUser(user).subscribe({
             next: (response) => {

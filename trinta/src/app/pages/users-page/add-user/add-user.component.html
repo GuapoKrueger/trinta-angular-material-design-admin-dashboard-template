@@ -141,7 +141,7 @@
                         <tbody>
                             <tr *ngFor="let perm of fraccionamientos">
                                 <td>
-                                    <mat-checkbox [(ngModel)]="perm.checked"></mat-checkbox>
+                                    <mat-checkbox [(ngModel)]="perm.checked" [ngModelOptions]="{standalone: true}"></mat-checkbox>
                                 </td>
                                 <td>{{ perm.id }}</td>
                                 <td>{{ perm.name }}</td>
@@ -163,7 +163,7 @@
                         <tbody>
                             <tr *ngFor="let perm of permissions">
                                 <td>
-                                    <mat-checkbox [(ngModel)]="perm.checked"></mat-checkbox>
+                                    <mat-checkbox [(ngModel)]="perm.checked" [ngModelOptions]="{standalone: true}"></mat-checkbox>
                                 </td>
                                 <td>{{ perm.id }}</td>
                                 <td>{{ perm.name }}</td>
