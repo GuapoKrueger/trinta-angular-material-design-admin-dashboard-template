@@ -6,5 +6,21 @@ export interface UserCreate {
     middleName: string;
     email: string;
     role: string,
-    foto?: File
+    foto?: File,
+    permissions: Permission[];
+    fraccionamiento: Fraccionmiento[];
 }
+
+export interface Permission {
+    id: string;
+    name: string;
+    description: string;
+    checked: boolean;
+}
+
+export interface Fraccionmiento {
+    checked: boolean;
+    id: string;
+    name: string;
+}
+ 

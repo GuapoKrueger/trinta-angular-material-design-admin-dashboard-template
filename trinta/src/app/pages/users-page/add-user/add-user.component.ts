@@ -14,9 +14,16 @@ import { FileUploadModule } from '@iplab/ngx-file-upload';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { UsersService } from '../services/users.service';
+import { PermissionsService } from '../services/permissions.service'; // Import PermissionsService
 import { FooterComponent } from '../../../common/footer/footer.component';
-import { UserCreate } from '../models/user-request.interface';
+import { Fraccionmiento, Permission, UserCreate } from '../models/user-request.interface';
+
 import Swal from 'sweetalert2';
+import { CommonModule } from '@angular/common';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NeighborhoodService } from '../../neighborhoods-page/services/neighborhood.service';
+import { FraccionamientosService } from '../services/fraccionamientos.service';
 
 @Component({
     selector: 'app-add-user',
@@ -36,21 +43,28 @@ import Swal from 'sweetalert2';
         MatSelectModule, 
         MatRadioModule,
         RouterLinkActive,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        CommonModule,
+        MatCheckboxModule
     ],
     providers: [provideNativeDateAdapter()],
     templateUrl: './add-user.component.html',
     styleUrl: './add-user.component.scss'
 })
+
 export class AddUserComponent implements OnInit{
  
     private fb = inject(FormBuilder);
     private _userServices = inject(UsersService);
+    private permissionsService = inject(PermissionsService); // Inject PermissionsService
+    private FraccionamientosService = inject(FraccionamientosService); // Inject FraccionamientosService
 
     hidePassword = true;
     hidePasswordConfirm = true;
     public multiple: boolean = false;
     imagenBase64?: string;
+    permissions: Permission[] = []; // Array to store permissions
+    fraccionamientos: Fraccionmiento[] = []; // Array to store fraccionamientos
 
     form = this.fb.group({
         firstName: ['', Validators.required],
@@ -61,12 +75,26 @@ export class AddUserComponent implements OnInit{
         confirmPassword:['',Validators.required],
         role:['',Validators.required],
         foto: new FormControl<File | null>(null),
-        email: ['',Validators.required]
+        email: ['',Validators.required],
+        permissions: this.fb.array([]), // Initialize as a FormArray
+        fraccionamientos: this.fb.array([]) // Initialize as a FormArray
     });
 
     ngOnInit(): void {
-        
+        this.permissionsService.getPermissions().subscribe(data => {
+            this.permissions = data; // Assign fetched permissions to the array
+        });
+
+        this.FraccionamientosService.getAll(1000, 'name', 'asc', 0, '').subscribe(resp => {
+          this.fraccionamientos = resp.data; // Assign fetched fraccionamientos to the array
+          // const fraccionamientosControls = this.fraccionamientos.map(() => this.fb.control(false));
+          // this.form.setControl('fraccionamientos', this.fb.array(fraccionamientosControls));
+        });
+
+
+
     }
+
 
     onFileSelected(event: Event): void {
         const input = event.target as HTMLInputElement;

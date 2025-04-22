@@ -27,7 +27,8 @@ export const endpoint = {
     DOOR_OPEN: 'Door/open/',
     //
     //User
-    USER_CREATE: 'User/Create'
+    USER_CREATE: 'User/Create',
+    LIST_PERMISSIONS: 'Permissions',
   };
   
   export const httpOptions = {
