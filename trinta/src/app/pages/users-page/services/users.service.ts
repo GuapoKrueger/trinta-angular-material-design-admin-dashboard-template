@@ -38,6 +38,22 @@ export class UsersService {
       formData.append('Foto', user.foto);
     }
 
+    // Enviar permissions como objetos indexados
+    if (user.permissions?.length) {
+      user.permissions.forEach((p, i) => {
+        formData.append(`Permissions[${i}].id`,   p.id.toString());
+        formData.append(`Permissions[${i}].name`, p.name);
+      });
+    }
+
+    // Enviar fraccionamientos como objetos indexados
+    if (user.fraccionamientos?.length) {
+      user.fraccionamientos.forEach((f, i) => {
+        formData.append(`Fraccionamientos[${i}].id`,   f.id.toString());
+        formData.append(`Fraccionamientos[${i}].name`, f.name);
+      });
+    }
+
     return formData;
   }
 }

@@ -131,10 +131,10 @@ export class AddUserComponent implements OnInit{
         console.log(user);
 
         const selectedFracs = this.fraccionamientos
-        .filter(f => f.checked);
+        .filter(f => f.checked).map(f => ({ id: Number(f.id), name: f.name }));
     
         const selectedPerms = this.permissions
-          .filter(p => p.checked);
+          .filter(p => p.checked).map(f => ({ id: Number(f.id), name: f.name }));
 
         user.fraccionamientos = selectedFracs; // Map selected IDs to Fraccionmiento objects
         user.permissions = selectedPerms; // Assign selected permissions to the user object

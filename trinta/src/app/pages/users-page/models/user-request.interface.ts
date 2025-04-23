@@ -7,8 +7,8 @@ export interface UserCreate {
     email: string;
     role: string,
     foto?: File,
-    permissions: Permission[];
-    fraccionamientos: Fraccionmiento[];
+    permissions: { id: number; name: string }[];       // ahora es array de objetos
+    fraccionamientos: { id: number; name: string }[];  // ahora es array de objetos
 }
 
 export interface Permission {
@@ -23,4 +23,3 @@ export interface Fraccionmiento {
     id: string;
     name: string;
 }
- 
