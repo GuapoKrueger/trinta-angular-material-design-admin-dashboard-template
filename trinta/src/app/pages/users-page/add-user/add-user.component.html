@@ -127,9 +127,54 @@
                     Cancel
                 </button>
             </div> --> 
+            <div class="row">
+                <div class="col-lg-6 mt-3">
+                    <label class="label d-block fw-medium mb-10">Fraccionamientos</label>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Seleccionar</th>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let perm of fraccionamientos">
+                                <td>
+                                    <mat-checkbox [(ngModel)]="perm.checked" [ngModelOptions]="{standalone: true}"></mat-checkbox>
+                                </td>
+                                <td>{{ perm.id }}</td>
+                                <td>{{ perm.name }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-lg-6 mt-3">
+                    <label class="label d-block fw-medium mb-10">Permisos</label>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Seleccionar</th>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let perm of permissions">
+                                <td>
+                                    <mat-checkbox [(ngModel)]="perm.checked" [ngModelOptions]="{standalone: true}"></mat-checkbox>
+                                </td>
+                                <td>{{ perm.id }}</td>
+                                <td>{{ perm.name }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </form>
     </mat-card-content>
 </mat-card>
 
 
-  
+
