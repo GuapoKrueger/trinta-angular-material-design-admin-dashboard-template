@@ -11,6 +11,7 @@ export interface InvitationResponse {
 }
 
 export interface InvitationByIdNeighborResponse { 
+    id: number;
     phoneNumber: string;
     guestName: string;
     startTime: Date;
@@ -18,4 +19,5 @@ export interface InvitationByIdNeighborResponse {
     isReusable: string;
     isActive: boolean;
     isUsed: boolean;
+    accessType: string;
 }
