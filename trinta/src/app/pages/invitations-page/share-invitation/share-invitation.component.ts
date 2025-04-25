@@ -20,6 +20,8 @@ import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { ToggleService } from '../../../common/header/toggle.service';
 import { MatDatepickerModule} from '@angular/material/datepicker';
 import { MatRadioModule } from '@angular/material/radio';
+import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 export const dateRangeValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const startTime = control.get('startTime')?.value;
@@ -75,6 +77,8 @@ export class ShareInvitationComponent implements OnInit{
   private fb = inject(FormBuilder);
   private _invitationService = inject(InvitationService);
   private _authService = inject(AuthService);
+  private router = inject(Router);
+  private location = inject(Location);
   public IdNeighbor : number;
   public Location: string;
 
@@ -155,21 +159,27 @@ export class ShareInvitationComponent implements OnInit{
       this.form.get('endTime')?.updateValueAndValidity();
     });
     
-    
-    
+    // Recuperar datos del estado de navegación
+    let invitationData = undefined;
+    const nav = this.router.getCurrentNavigation();
+    if (nav?.extras?.state?.['invitationData']) {
+      invitationData = nav.extras.state['invitationData'];
+    } else if (this.location.getState() && (this.location.getState() as any).invitationData) {
+      invitationData = (this.location.getState() as any).invitationData;
+    }
 
-    // this.form.get('phoneNumber')?.valueChanges.subscribe((value) => {
-    //   console.log('Valor ingresado:', value);
-    //   // if (value) {
-    //   //   const cleanedValue = value.replace(/\s+/g, '').trim();
-    //   //   console.log('Valor después de trim:', cleanedValue);
-    
-    //   //   this.form.get('phoneNumber')?.setValue(cleanedValue, { emitEvent: false });
-    //   // }
-    // });
-    
-    
-
+    if (invitationData) {
+      // Llenar el formulario con los datos recibidos
+      this.form.patchValue({
+        name: invitationData.guestName || '',
+        phoneNumber: invitationData.phoneNumber || '',
+        location: invitationData.location || this.Location || '',
+        startTime: invitationData.startTime ? new Date(invitationData.startTime) : this.convertToLocalTime(new Date()),
+        endTime: invitationData.endTime ? new Date(invitationData.endTime) : this.convertToLocalTime(new Date()),
+        isReusable: invitationData.isReusable ? (invitationData.isReusable === true || invitationData.isReusable === 'Si' ? 'Si' : 'No') : 'No',
+        accessType: invitationData.accessType ? String(invitationData.accessType) : '1'
+      });
+    }
   }
 
   private validateDateRange(): boolean {

@@ -43,7 +43,7 @@ export class InvitationsListComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private invitationService: InvitationService) {}
+  constructor(private invitationService: InvitationService, private router: Router) {}
 
   ngOnInit(): void {
     const neighborId = JSON.parse(localStorage.getItem('IdNeighbor') || '0'); // Obtener IdNeighbor
@@ -82,4 +82,7 @@ export class InvitationsListComponent implements OnInit {
     console.log('Eliminar invitación:', invitation);
   }
 
+  onDuplicate(element: any): void {
+    this.router.navigate(['/invitations/share-invitation'], { state: { invitationData: element } });
+  }
 }

@@ -87,8 +87,11 @@
                         </th>
                         <td mat-cell *matCellDef="let element" class="text-end pr-0">
                             <div class="action">
-                                <button mat-icon-button color="primary" class="p-0 min-w-auto lh-1 h-auto" (click)="onViewDetails(element)">
+                                <!-- <button mat-icon-button color="primary" class="p-0 min-w-auto lh-1 h-auto" (click)="onViewDetails(element)">
                                     <i class="ri-eye-line"></i>
+                                </button> -->
+                                <button mat-icon-button color="accent" class="p-0 min-w-auto lh-1 h-auto" (click)="onDuplicate(element)"> <!-- Nuevo Botón -->
+                                    <i class="ri-file-copy-line"></i> <!-- Icono para duplicar/crear nuevo -->
                                 </button>
                                 <button mat-icon-button color="warn" class="p-0 min-w-auto lh-1 h-auto" (click)="onDelete(element)">
                                     <i class="ri-delete-bin-line"></i>
@@ -106,4 +109,4 @@
     </mat-card-content>
 </mat-card>
 
-  
+
