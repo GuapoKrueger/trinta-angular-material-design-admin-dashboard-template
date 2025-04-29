@@ -1,0 +1,15 @@
+/* filepath: c:\Users\edgar\source\repos\trinta-angular-material-design-admin-dashboard-template\trinta\src\app\pages\neighbors-page\add-neighbor\add-address-dialog\add-address-dialog.component.scss */
+.address-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Add some space between form fields */
+}
+
+.w-100 {
+    width: 100%;
+}
+
+/* Optional: Adjust dialog width if needed via global styles or component-specific */
+/* ::ng-deep .mat-dialog-container {
+    max-width: 500px !important;
+} */

@@ -78,10 +78,6 @@ export class UpdateNeighborComponent implements OnInit{
       MiddleName: ['', Validators.required, Validators.maxLength(50)],
       Email: ['', [Validators.required, Validators.email, Validators.maxLength(60)]],
       PhoneNumber: ['', [Validators.required, Validators.pattern(/^\(\d{3}\) \d{3}-\d{4}$/)]],
-      NeighborhoodId: ['', Validators.required],
-      SubdivisionId: ['', Validators.required],
-      StreetId: ['', Validators.required],
-      HouseNumber: ['', Validators.required],
       Foto: new FormControl<File | null>(null),
     });
   
@@ -143,16 +139,10 @@ export class UpdateNeighborComponent implements OnInit{
           MiddleName: resp.middleName,
           Email: resp.email,
           PhoneNumber: resp.phoneNumber,
-          NeighborhoodId: resp.neighborhoodId,
-          SubdivisionId: resp.subdivisionId,
-          StreetId: resp.streetId,
-          HouseNumber: resp.houseNumber,
           Foto: resp.avatarUrl
         });
 
         this.urlImagenActual = resp.avatarUrl;
-        this.onNeighborhoodChange(resp.neighborhoodId);
-        this.onSubdivisionChange(resp.subdivisionId);
       });
   }
 
@@ -182,10 +172,6 @@ export class UpdateNeighborComponent implements OnInit{
       MiddleName: String( this.neighborForm.get('MiddleName')?.value || ''),
       Email: String( this.neighborForm.get('Email')?.value || ''),
       PhoneNumber:String(this.neighborForm.get('PhoneNumber')?.value || ''),
-      NeighborhoodId: Number(this.neighborForm.get('NeighborhoodId')?.value) || 0,
-      SubdivisionId: Number(this.neighborForm.get('SubdivisionId')?.value) || 0,
-      StreetId: Number(this.neighborForm.get('StreetId')?.value) || 0,
-      HouseNumber: String(this.neighborForm.get('HouseNumber')?.value || ''),
       Foto: this.neighborForm.get('Foto')?.value as File|| null,
       UserName: String(this.neighborForm.get('UserName')?.value || ''),
       Password: String(this.neighborForm.get('Password')?.value || '')
