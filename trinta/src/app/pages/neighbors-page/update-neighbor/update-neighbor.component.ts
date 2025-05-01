@@ -14,15 +14,18 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTableModule } from '@angular/material/table';
 import { MatListModule, MatSelectionList } from '@angular/material/list';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { Neighborhood, Street, Subdivision } from '../../neighborhoods-page/models/neighborhood-request.interface';
 import { NeighborService } from '../services/neighbor.service';
 import { NeighborhoodService } from '../../neighborhoods-page/services/neighborhood.service';
 import { NeighborByIdResponse } from '../models/neighbor-response.interface';
 import Swal from 'sweetalert2';
-import { Neighbor } from '../models/neighbor-request.interface';
+import { Neighbor, Address } from '../models/neighbor-request.interface';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { MatIconModule } from '@angular/material/icon';
+import { AddAddressDialogComponent } from '../add-neighbor/add-address-dialog/add-address-dialog.component';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-update-neighbor',
@@ -47,7 +50,8 @@ import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
     ReactiveFormsModule,
     CommonModule,
     MatSelectionList,
-    NgxMaskDirective
+    NgxMaskDirective,
+    MatIconModule
   ],
     providers: [
     provideNgxMask() 
@@ -59,6 +63,7 @@ export class UpdateNeighborComponent implements OnInit{
 
   private fb = inject(FormBuilder);
   private router = inject(Router);
+  private dialog = inject(MatDialog);
   neighborhoods: Neighborhood[] = [];
   subdivisions: Subdivision[] = [];
   streets: Street[] = [];
@@ -69,13 +74,16 @@ export class UpdateNeighborComponent implements OnInit{
   neighborId?: number;
   urlImagenActual?: string;
   hidePassword = true;
+  addresses: Address[] = [];
+  dataSource = new MatTableDataSource<Address>(this.addresses);
+  displayedColumns: string[] = ['neighborhoodName', 'subdivisionName', 'streetName', 'number', 'actions'];
 
   initForm(): void {
     this.neighborForm = this.fb.group({
       id:[],
-      FirstName: ['', Validators.required, Validators.maxLength(50)],
-      LastName: ['', Validators.required, Validators.maxLength(50)],
-      MiddleName: ['', Validators.required, Validators.maxLength(50)],
+      FirstName: ['', [Validators.required, Validators.maxLength(50)]], // Moved maxLength to sync validators
+      LastName: ['', [Validators.required, Validators.maxLength(50)]], // Moved maxLength to sync validators
+      MiddleName: ['', [Validators.required, Validators.maxLength(50)]], // Moved maxLength to sync validators
       Email: ['', [Validators.required, Validators.email, Validators.maxLength(60)]],
       PhoneNumber: ['', [Validators.required, Validators.pattern(/^\(\d{3}\) \d{3}-\d{4}$/)]],
       Foto: new FormControl<File | null>(null),
@@ -87,19 +95,12 @@ export class UpdateNeighborComponent implements OnInit{
 
   ngOnInit(): void {
     this.initForm();
-    this.getNeighbors(1000, 'Id', 'asc', 0, '');
     const idParam = this.route.snapshot.paramMap.get('id');
     this.neighborId = idParam ? parseInt(idParam, 10) : undefined;
 
     if (this.neighborId) {
       this.neighborById(this.neighborId);
     }
-  }
-
-  getNeighbors(size: number, sort: string, order: string, numPage: number, getInputs: string): void {
-    this._neighborhoodService.getAll(size, sort, order, numPage, getInputs).subscribe(response => {
-      this.neighborhoods = response.data;
-    });
   }
 
   onNeighborhoodChange(neighborhoodId: number) {
@@ -143,6 +144,20 @@ export class UpdateNeighborComponent implements OnInit{
         });
 
         this.urlImagenActual = resp.avatarUrl;
+
+        // Load addresses from the response
+        if (resp.addresses && resp.addresses.length > 0) {
+          this.addresses = resp.addresses.map((addr, index) => ({
+            ...addr,
+            id: addr.id, // Assign temporary unique IDs for table operations
+            number: addr.houseNumber, // Map houseNumber to number
+            IsNew: false
+          }));
+          this.dataSource.data = [...this.addresses];
+        } else {
+          this.addresses = [];
+          this.dataSource.data = [];
+        }
       });
   }
 
@@ -158,12 +173,39 @@ export class UpdateNeighborComponent implements OnInit{
         
         this.imagenBase64 = lector.result as string;
         this.urlImagenActual = undefined;
-        // this.neighborForm.controls.Foto.setValue(file);
         };
     }
   }
 
   onSubmit(): void {
+
+    // Check if there are any addresses
+    if (this.addresses.length === 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Debe agregar al menos una dirección.',
+      });
+      return; // Stop the submission
+    }
+
+    // Map addresses for the request, renaming 'number' back to 'houseNumber'
+    const addressesForRequest = this.addresses.map(addr => ({
+      id: addr.id || 0, 
+      neighborhoodId: addr.neighborhoodId,
+      subdivisionId: addr.subdivisionId,
+      streetId: addr.streetId,
+      houseNumber: addr.number,
+      number: addr.number, 
+      IsNew: addr.IsNew 
+    }));
+
+    //set id to 0 if isnew = true
+    addressesForRequest.forEach(address => {
+      if (address.IsNew) {
+        address.id = 0;
+      }
+    });
 
     const neighborData: Neighbor = {
       id: Number(this.neighborForm.get('id')?.value) || 0,
@@ -174,7 +216,8 @@ export class UpdateNeighborComponent implements OnInit{
       PhoneNumber:String(this.neighborForm.get('PhoneNumber')?.value || ''),
       Foto: this.neighborForm.get('Foto')?.value as File|| null,
       UserName: String(this.neighborForm.get('UserName')?.value || ''),
-      Password: String(this.neighborForm.get('Password')?.value || '')
+      Password: String(this.neighborForm.get('Password')?.value || ''),
+      addresses: addressesForRequest // Include addresses in the payload
     };
 
       if(typeof neighborData.Foto === "string")
@@ -202,6 +245,67 @@ export class UpdateNeighborComponent implements OnInit{
         error: (error) => {
           console.error('Error saving neighbor:', error);
         },
+      });
+  }
+
+  openAddAddressDialog(addressToEdit?: Address): void {
+    const dialogRef = this.dialog.open(AddAddressDialogComponent, {
+      width: '500px',
+      disableClose: true,
+      data: addressToEdit ? { ...addressToEdit } : null
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const existingIndex = this.addresses.findIndex(a => a.id === result.id);
+
+        if (addressToEdit && existingIndex > -1) {
+            this.addresses[existingIndex] = result;
+        } else if (addressToEdit && this.addresses.some(a => a.id === addressToEdit.id)) {
+            const editIndex = this.addresses.findIndex(a => a.id === addressToEdit.id);
+            if (editIndex > -1) {
+                this.addresses[editIndex] = result;
+            } else {
+                 if (!result.id || this.addresses.some(a => a.id === result.id)) {
+                    result.id = Date.now();
+                 }
+                 this.addresses.push(result);
+            }
+        } else {
+          if (!result.id || this.addresses.some(a => a.id === result.id)) {
+              result.id = Date.now();
+          }
+          this.addresses.push(result);
+        }
+        this.dataSource.data = [...this.addresses];
+      }
+    });
+  }
+
+  editAddress(addressToEdit: Address): void {
+    this.openAddAddressDialog(addressToEdit);
+  }
+
+  removeAddress(addressToRemove: Address): void {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: `Se eliminará la dirección: ${addressToRemove.streetName || 'N/A'} #${addressToRemove.number || 'N/A'}.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.addresses = this.addresses.filter(address => address.id !== addressToRemove.id);
+          this.dataSource.data = [...this.addresses];
+          Swal.fire(
+            'Eliminada',
+            'La dirección ha sido eliminada.',
+            'success'
+          );
+        }
       });
   }
 

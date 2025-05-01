@@ -12,7 +12,7 @@ export interface Neighbor {
 }
 
 export interface Address {
-    id: number; // Optional: ID might not exist for new addresses
+    id?: number; // Optional: ID might not exist for new addresses
     neighborhoodId: number;
     neighborhoodName?: string;
     subdivisionId: number;
@@ -20,4 +20,5 @@ export interface Address {
     streetId: number;
     streetName?: string;
     number: string;
+    IsNew: boolean;
   }

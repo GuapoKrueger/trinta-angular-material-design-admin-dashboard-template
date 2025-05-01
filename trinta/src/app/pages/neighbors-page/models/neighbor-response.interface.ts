@@ -9,6 +9,17 @@ export interface NeighborResponse {
     Active: string
 }
 
+export interface AddressResponse {
+    id: number;
+    neighborhoodId: number;
+    neighborhoodName: string;
+    subdivisionId: number;
+    subdivisionName: string;
+    streetId: number;
+    streetName: string;
+    houseNumber: string;
+}
+
 export interface NeighborByIdResponse {
     id: number;
     firstName: string;
@@ -16,11 +27,8 @@ export interface NeighborByIdResponse {
     middleName: string;
     userName: string;
     password: string;
-    houseNumber: string;
     email: string;
     phoneNumber: string;
-    neighborhoodId: number;
-    subdivisionId: number;
-    streetId: number;
     avatarUrl: string;
+    addresses: AddressResponse[]; // Added addresses property
 }

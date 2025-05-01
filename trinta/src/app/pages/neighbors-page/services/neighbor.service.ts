@@ -96,6 +96,7 @@ export class NeighborService {
 
     // Append addresses
     neighbor.addresses?.forEach((address, index) => {
+        formData.append(`Addresses[${index}].Id`, (address.id ?? 0).toString());
         formData.append(`Addresses[${index}].HouseNumber`, address.number || '');
         formData.append(`Addresses[${index}].NeighborhoodId`, address.neighborhoodId.toString());
         formData.append(`Addresses[${index}].SubdivisionId`, address.subdivisionId.toString());

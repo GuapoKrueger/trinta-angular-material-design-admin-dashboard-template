@@ -109,77 +109,72 @@ class="trinta-card add-user-card mb-25 bg-white border-none d-block"
 </mat-card>
 
 <mat-card
-class="trinta-card add-user-card mb-25 bg-white border-none d-block"
+class="trinta-card address-list-card mb-25 bg-white border-none d-block"
 >
 <mat-card-header>
     <mat-card-title>
         <h5 class="mt-0 mb-0">
-            Dirección
+            Direcciones
         </h5>
     </mat-card-title>
+    <mat-card-subtitle>
+      <button class="default-btn" mat-button (click)="openAddAddressDialog()">
+          <i class="ri-add-line"></i> Agregar Dirección
+      </button>
+  </mat-card-subtitle>
 </mat-card-header>
 <mat-card-content>
-    <form [formGroup]="neighborForm">
-        <div class="row">
-            <div class="col-lg-4">
-                <label class="label d-block fw-medium mb-10">
-                    Fraccionamiento
-                </label>
-                <mat-form-field>
-                  <i-feather name="map-pin"></i-feather>
-                    <mat-label>Selecciona</mat-label>
-                    <mat-select formControlName="NeighborhoodId" (selectionChange)="onNeighborhoodChange($event.value)">
-                        @for (neighborhood of neighborhoods; track neighborhood) {
-                          <mat-option [value]="neighborhood.id">
-                            {{ neighborhood.name }}
-                          </mat-option>
-                        }
-                      </mat-select>                      
-                </mat-form-field>
-            </div>
-            <div class="col-lg-4">
-                <label class="label d-block fw-medium mb-10">
-                    SubDivisión
-                </label>
-                <mat-form-field>
-                  <i-feather name="map-pin"></i-feather>
-                    <mat-label>Selecciona</mat-label>
-                    <mat-select formControlName="SubdivisionId" (selectionChange)="onSubdivisionChange($event.value)">
-                        @for (subdivision of subdivisions; track subdivision) {
-                          <mat-option [value]="subdivision.id">
-                            {{ subdivision.name }}
-                          </mat-option>
-                        }
-                      </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="col-lg-4">
-                <label class="label d-block fw-medium mb-10">
-                    Calle
-                </label>
-                <mat-form-field>
-                  <i-feather name="map-pin"></i-feather>
-                    <mat-label>Selecciona</mat-label>
-                    <mat-select formControlName="StreetId">
-                        @for (street of streets; track street) {
-                            <mat-option [value]="street.id">
-                              {{ street.name }}
-                            </mat-option>
-                          }
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="col-lg-4">
-                <label class="label d-block fw-medium mb-10">
-                    Número
-                </label>
-                <mat-form-field>
-                    <i-feather name="code"></i-feather>
-                    <mat-label>Número</mat-label>
-                    <input matInput formControlName="HouseNumber">
-                </mat-form-field>
-            </div>
-        </div>
-    </form>
+    <div class="mat-elevation-z8 address-table-container">
+        <table mat-table [dataSource]="dataSource">
+
+            <!-- Fraccionamiento Column -->
+            <ng-container matColumnDef="neighborhoodName">
+                <th mat-header-cell *matHeaderCellDef> Fraccionamiento </th>
+                <td mat-cell *matCellDef="let address"> {{address.neighborhoodName}} </td>
+            </ng-container>
+
+            <!-- Subdivisión Column -->
+            <ng-container matColumnDef="subdivisionName">
+                <th mat-header-cell *matHeaderCellDef> Subdivisión </th>
+                <td mat-cell *matCellDef="let address"> {{address.subdivisionName}} </td>
+            </ng-container>
+
+            <!-- Calle Column -->
+            <ng-container matColumnDef="streetName">
+                <th mat-header-cell *matHeaderCellDef> Calle </th>
+                <td mat-cell *matCellDef="let address"> {{address.streetName}} </td>
+            </ng-container>
+
+            <!-- Número Column -->
+            <ng-container matColumnDef="number">
+                <th mat-header-cell *matHeaderCellDef> Número </th>
+                <td mat-cell *matCellDef="let address"> {{address.number}} </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                <td mat-cell *matCellDef="let address">
+                    <!-- Edit button -->
+                    <button mat-icon-button color="primary" (click)="editAddress(address)" aria-label="Edit address">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" (click)="removeAddress(address)" aria-label="Remove address">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            <!-- Row shown when there is no data. -->
+            <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+                    No hay direcciones agregadas.
+                </td>
+            </tr>
+        </table>
+    </div>
 </mat-card-content>
 </mat-card>

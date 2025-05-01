@@ -173,14 +173,16 @@ export class AddAddressDialogComponent implements OnInit {
 
       const addressData: Address = {
         // Keep the original ID if editing, otherwise generate a new one (or let backend handle it)
-        id: this.isEditMode && this.data ? this.data.id : Date.now(), // Use existing ID if editing
+        id: this.isEditMode && this.data ? this.data.id : 0, // Use existing ID if editing
         neighborhoodId: this.addressForm.value.neighborhoodId,
         neighborhoodName: selectedNeighborhood?.name || '', // Use 'Name'
         subdivisionId: this.addressForm.value.subdivisionId,
         subdivisionName: selectedSubdivision?.name || '',
         streetId: this.addressForm.value.streetId,
         streetName: selectedStreet?.name || '',
-        number: this.addressForm.value.number
+        number: this.addressForm.value.number,
+        IsNew: this.data?.IsNew ?? true // Use ?? to default only if undefined/null
+
       };
       this.dialogRef.close(addressData);
     } else {
