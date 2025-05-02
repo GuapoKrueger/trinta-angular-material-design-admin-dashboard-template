@@ -86,18 +86,23 @@ export class NeighborService {
     formData.append('FirstName', neighbor.FirstName);
     formData.append('LastName', neighbor.LastName);
     formData.append('MiddleName', neighbor.MiddleName);
-    formData.append('HouseNumber', neighbor.HouseNumber);
     formData.append('PhoneNumber', neighbor.PhoneNumber);
     formData.append('Email', neighbor.Email);
-    formData.append('NeighborhoodId', neighbor.NeighborhoodId.toString());
-    formData.append('SubdivisionId', neighbor.SubdivisionId.toString());
-    formData.append('StreetId', neighbor.StreetId.toString());
     formData.append('UserName', neighbor.UserName);
     formData.append('Password', neighbor.Password);
     if (neighbor.Foto) {
       formData.append('Foto', neighbor.Foto);
     }
 
+    // Append addresses
+    neighbor.addresses?.forEach((address, index) => {
+        formData.append(`Addresses[${index}].Id`, (address.id ?? 0).toString());
+        formData.append(`Addresses[${index}].HouseNumber`, address.number || '');
+        formData.append(`Addresses[${index}].NeighborhoodId`, address.neighborhoodId.toString());
+        formData.append(`Addresses[${index}].SubdivisionId`, address.subdivisionId.toString());
+        formData.append(`Addresses[${index}].StreetId`, address.streetId.toString());
+    });
+
     return formData;
   }
-} 
+}

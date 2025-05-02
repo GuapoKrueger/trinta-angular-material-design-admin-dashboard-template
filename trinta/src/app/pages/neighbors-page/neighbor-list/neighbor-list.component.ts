@@ -33,7 +33,7 @@ export class NeighborListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngOnInit(): void {
-    this.getNeighbors(10, 'Id', 'asc', 0, '');
+    this.getNeighbors(1000, 'Id', 'asc', 0, '');
   }
 
   getNeighbors(size: number, sort: string, order: string, numPage: number, getInputs: string): void {

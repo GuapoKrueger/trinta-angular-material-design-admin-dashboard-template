@@ -1,0 +1,59 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Editar Dirección' : 'Agregar Dirección' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="addressForm" class="address-form">
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Fraccionamiento</mat-label>
+      <mat-select formControlName="neighborhoodId">
+        <mat-option *ngFor="let neighborhood of neighborhoods" [value]="neighborhood.id">
+          {{ neighborhood.name }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="addressForm.get('neighborhoodId')?.hasError('required')">
+        Fraccionamiento es requerido.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Subdivisión</mat-label>
+      <mat-select formControlName="subdivisionId">
+        <mat-option *ngFor="let subdivision of subdivisions" [value]="subdivision.id">
+          {{ subdivision.name }}
+        </mat-option>
+      </mat-select>
+       <mat-error *ngIf="addressForm.get('subdivisionId')?.hasError('required')">
+        Subdivisión es requerida.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Calle</mat-label>
+      <mat-select formControlName="streetId">
+        <mat-option *ngFor="let street of streets" [value]="street.id">
+          {{ street.name }}
+        </mat-option>
+      </mat-select>
+       <mat-error *ngIf="addressForm.get('streetId')?.hasError('required')">
+        Calle es requerida.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Número</mat-label>
+      <input matInput formControlName="number" placeholder="Ej. 123A">
+       <mat-error *ngIf="addressForm.get('number')?.hasError('required')">
+        Número es requerido.
+      </mat-error>
+       <mat-error *ngIf="addressForm.get('number')?.hasError('maxlength')">
+        Número no puede exceder 10 caracteres.
+      </mat-error>
+    </mat-form-field>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="addressForm.invalid">Guardar</button>
+</mat-dialog-actions>
