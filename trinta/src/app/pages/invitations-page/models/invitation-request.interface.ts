@@ -6,6 +6,7 @@ export interface Invitation {
     neighborId: number;
     isValid: boolean;
     GuestName: string;
-    accessType: number
+    accessType: number;
+    neighborsAddressId: number;
   }
   

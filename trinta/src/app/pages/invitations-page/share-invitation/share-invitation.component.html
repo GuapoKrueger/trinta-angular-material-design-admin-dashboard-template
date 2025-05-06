@@ -69,10 +69,15 @@
                 <label class="main-label d-block lh-1 text-black mb-10">Dirección de la Invitación</label>
                 <mat-form-field>
                   <i-feather name="map-pin"></i-feather>
-                  <mat-label>Dirección de la Invitación</mat-label>
-                  <input matInput formControlName="location">
+                  <mat-label>Dirección</mat-label>
+                  <mat-select formControlName="neighborId">
+                    <!-- Iterate over the locations array -->
+                    <mat-option *ngFor="let loc of Adresses" [value]="loc.id">
+                      {{ loc.fullAddress }}
+                    </mat-option>
+                  </mat-select>
                 </mat-form-field>
-                <div class="error text-danger" *ngIf="form.get('location')!.hasError('required') && form.get('location')!.touched">
+                <div class="error text-danger" *ngIf="form.get('neighborId')!.hasError('required') && form.get('neighborId')!.touched">
                   La dirección es requerida.
                 </div>
               </div>
@@ -239,7 +244,8 @@
                     </li>
                     <li class="text-black">
                       <span class="text-dark fw-medium heading-font-family">Locación :</span>
-                      {{ form.controls['location'].value }}
+                      {{ getFullAddress() }}
+                      <!-- {{ Adresses.find(addr => addr.id === form.value.neighborId)?.fullAddress }} -->
                     </li>
                   </ul>
                   <a class="default-btn" mat-button (click)="onSubmit()">
@@ -260,5 +266,5 @@
   </mat-card-content>
 </mat-card>
 
-  
-  
+
+

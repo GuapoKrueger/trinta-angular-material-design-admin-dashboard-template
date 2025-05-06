@@ -22,6 +22,8 @@ import { MatDatepickerModule} from '@angular/material/datepicker';
 import { MatRadioModule } from '@angular/material/radio';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { AddressResponse, NeighborAddressResponse } from '../../neighbors-page/models/neighbor-response.interface';
+import { NeighborService } from '../../neighbors-page/services/neighbor.service';
 
 export const dateRangeValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const startTime = control.get('startTime')?.value;
@@ -77,16 +79,27 @@ export class ShareInvitationComponent implements OnInit{
   private fb = inject(FormBuilder);
   private _invitationService = inject(InvitationService);
   private _authService = inject(AuthService);
+  private _neighborService = inject(NeighborService);
   private router = inject(Router);
   private location = inject(Location);
   public IdNeighbor : number;
-  public Location: string;
+  public Adresses: NeighborAddressResponse[];
 
   constructor(        
     public toggleService: ToggleService
   ){
     this.IdNeighbor = this._authService.userIdGet;
-    this.Location = this._authService.userLocation;
+
+    this._neighborService.getNeighborAddresses(this.IdNeighbor).subscribe({
+      next: (response) => {
+        this.Adresses = response.data; // Aquí extraes el arreglo de NeighborAddressResponse[]
+      },
+      error: (error) => {
+        console.error('Error al obtener las direcciones:', error);
+        this.Adresses = []; // Opcional: asignar arreglo vacío en caso de error
+      }
+    });
+
   }
 
   ngOnInit(): void {
@@ -103,16 +116,13 @@ export class ShareInvitationComponent implements OnInit{
         phoneNumber: ['', [Validators.required, 
                            Validators.maxLength(10),
                            Validators.minLength(10), 
-                          //  Validators.pattern(/^\(\d{3}\) \d{3}-\d{4}$/)
                           ]
                       ],
-        location: [{ value: '', disabled: true }, Validators.required],
+        neighborId: [{ value: '' }, Validators.required], // Renamed from location
         startTime: [{ value: this.convertToLocalTime(new Date()), disabled: true}, [Validators.required]],
         endTime: [{ value: this.convertToLocalTime(new Date()), disabled: true }, [Validators.required]],
         isReusable: [{ value: 'No', disabled: true }, Validators.required],
         accessType: ['1', Validators.required]
-        // startTimeHour: ['',Validators.required],
-        // endTimeHour: ['',Validators.required]
       },
       { validators: dateRangeValidator }
     );
@@ -128,8 +138,12 @@ export class ShareInvitationComponent implements OnInit{
       this.form.controls['endTime'].setValue(new Date(endTimeValue));
     }
   
-    // Asignar el valor al control 'location' después de inicializar el formulario
-    this.form.controls['location'].setValue(this.Location);
+    // Asignar el valor al control 'neighborId' después de inicializar el formulario
+    if (this.Adresses && this.Adresses.length > 0) {
+        this.form.controls['neighborId'].setValue(this.Adresses[0].id); // Renamed from location
+    } else {
+        this.form.controls['neighborId'].setValue(null); // Renamed from location
+    }
 
     this.form.get('isReusable')!.valueChanges.subscribe((value) => {
       const today = new Date();
@@ -173,7 +187,7 @@ export class ShareInvitationComponent implements OnInit{
       this.form.patchValue({
         name: invitationData.guestName || '',
         phoneNumber: invitationData.phoneNumber || '',
-        location: invitationData.location || this.Location || '',
+        neighborId: invitationData.location || (this.Adresses && this.Adresses.length > 0 ? this.Adresses[0].id : null), // Renamed from location
         startTime: invitationData.startTime ? new Date(invitationData.startTime) : this.convertToLocalTime(new Date()),
         endTime: invitationData.endTime ? new Date(invitationData.endTime) : this.convertToLocalTime(new Date()),
         isReusable: invitationData.isReusable ? (invitationData.isReusable === true || invitationData.isReusable === 'Si' ? 'Si' : 'No') : 'No',
@@ -226,15 +240,6 @@ export class ShareInvitationComponent implements OnInit{
       return;
     }
 
-    // const startTime = this.form.value.startTimeHour;
-    // const endTime = this.form.value.endTimeHour;
-  
-    // // Convertir las horas a `TimeSpan` en formato de 24 horas
-    // const startHours = +startTime.split(':')[0];
-    // const startMinutes = +startTime.split(':')[1];
-    // const endHours = +endTime.split(':')[0];
-    // const endMinutes = +endTime.split(':')[1];
-
     const invitation: Invitation = {
       phoneNumber: this.form.value.phoneNumber ?? '',
       startTime: this.form.value.startTime ? new Date(this.form.value.startTime) : new Date(),
@@ -243,19 +248,17 @@ export class ShareInvitationComponent implements OnInit{
       neighborId: this.IdNeighbor,
       isValid: true,
       GuestName: this.form.value.name ?? '',
-      accessType: parseInt(this.form.value.accessType)
+      accessType: parseInt(this.form.value.accessType),
+      neighborsAddressId: this.form.value.neighborId ?? 0 // Renamed from location
     };
 
     // Llamamos al servicio para crear la invitación
-
-    // console.log(invitation);
 
     this._invitationService.createInvitation(invitation).subscribe({
       next: (response) => {
         if (response.isSuccess) {
           this.compartir(response.message); // Compartimos la invitación con el token generado
         } else {
-          // console.error('Error al crear la invitación:', response.message);
           Swal.fire({
             title: 'Error al crear la invitación',
             text: response.message,
@@ -265,7 +268,6 @@ export class ShareInvitationComponent implements OnInit{
         }
       },
       error: (err) => {
-        // console.error('Error en la creación de la invitación:', err);
         Swal.fire({
           title: 'Error al crear la invitación',
           text: err,
@@ -279,10 +281,6 @@ export class ShareInvitationComponent implements OnInit{
 
   compartir(token: string): void {
      const shareUrl = `https://www.passo.mx/invitation/detail/${token}`;
-    // const shareUrl = `https://cheery-buttercream-03c2f4.netlify.app/invitation/detail/${token}`;
-    // alert(token);
-    // localStorage.setItem('invitationToken', token);
-    // const shareUrl = `https://746d-177-230-96-73.ngrok-free.app/invitation/detail`;
 
     const message = `¡Has recibido una invitación! Para acceder, pulsa en el siguiente enlace: ${shareUrl}. Gracias por usar nuestro servicio.`;
     
@@ -310,30 +308,6 @@ export class ShareInvitationComponent implements OnInit{
       formGroup.get(controlName)?.markAsTouched();
     });
   }
-
-  // onStepChange(event: any, stepper: MatStepper): void {
-  //   console.log(stepper);
-  //   console.log('inicio steep' ,stepper.selectedIndex);
-  //   const inicioSteep = stepper.selectedIndex;
-  //   const currentStep = event.previouslySelectedIndex + 1;
-  //   console.log('siguiente' ,currentStep);
-  
-  //   if (!this.isStepValid(currentStep)) {
-  //     this.markStepControlsAsTouched(currentStep);
-  //     Swal.fire({
-  //       title: 'Error!',
-  //       text: 'Completa los campos requeridos antes de avanzar.',
-  //       icon: 'error',
-  //       confirmButtonText: 'Aceptar',
-  //     });
-  
-  //     // Revertir al paso anterior
-  //     stepper.selectedIndex = inicioSteep;
-  //     stepper.previous();
-  //     console.log('regresar' ,stepper.selectedIndex);
-  //     console.log(stepper.previous());
-  //   }
-  // }
 
   onStepNext(step: number, stepper: MatStepper): void {
     switch (step) {
@@ -381,13 +355,6 @@ export class ShareInvitationComponent implements OnInit{
         break;
   
       case 2:
-        // ['isReusable'].forEach((field) => {
-        //   const control = this.form.get(field);
-        //   if (control && !control.valid) {
-        //     invalidFields.push(field);
-        //   }
-        // });
-
         this.form.get('isReusable')?.enable();
 
         // Parchear el valor para que Angular lo considere en la validación
@@ -447,6 +414,11 @@ export class ShareInvitationComponent implements OnInit{
   
     // Si ya es un Date, devolverlo directamente
     return dateString;
+  }
+
+  getFullAddress(): string {
+    const address = this.Adresses.find(addr => addr.id === this.form.value.neighborId);
+    return address?.fullAddress || 'Dirección no encontrada';
   }
   
 }
