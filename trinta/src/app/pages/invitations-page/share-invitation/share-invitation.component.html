@@ -70,14 +70,14 @@
                 <mat-form-field>
                   <i-feather name="map-pin"></i-feather>
                   <mat-label>Dirección</mat-label>
-                  <mat-select formControlName="neighborId">
+                  <mat-select formControlName="neighborAddressId">
                     <!-- Iterate over the locations array -->
                     <mat-option *ngFor="let loc of Adresses" [value]="loc.id">
                       {{ loc.fullAddress }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
-                <div class="error text-danger" *ngIf="form.get('neighborId')!.hasError('required') && form.get('neighborId')!.touched">
+                <div class="error text-danger" *ngIf="form.get('neighborAddressId')!.hasError('required') && form.get('neighborAddressId')!.touched">
                   La dirección es requerida.
                 </div>
               </div>

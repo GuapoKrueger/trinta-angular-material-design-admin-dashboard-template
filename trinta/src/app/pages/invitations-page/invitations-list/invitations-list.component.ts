@@ -2,7 +2,7 @@ import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router, RouterLink } from '@angular/router';
 
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -11,6 +11,8 @@ import { InvitationByIdNeighborResponse } from '../models/invitation-response.in
 import { InvitationService } from '../services/invitation.service';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { FeathericonsModule } from '../../../icons/feathericons/feathericons.module';
+import { PhoneNumberPipe } from '../../../shared/pipes/phone-number.pipe';
 
 @Component({
   selector: 'app-invitations-list',
@@ -23,7 +25,9 @@ import { MatIconModule } from '@angular/material/icon';
     MatCardModule,
     MatMenuModule,
     CommonModule,
-    MatIconModule
+    MatIconModule,
+    FeathericonsModule,
+    PhoneNumberPipe
   ],
   templateUrl: './invitations-list.component.html',
   styleUrl: './invitations-list.component.scss'
@@ -41,14 +45,32 @@ export class InvitationsListComponent implements OnInit {
   ];
   dataSource = new MatTableDataSource<InvitationByIdNeighborResponse>();
 
+  // Pagination properties
+  pageSizeOptions: number[] = [5, 10, 15];
+  pageSize = 5;
+  pageIndex = 0;
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  // Getter for current page items
+  get pagedInvitations(): InvitationByIdNeighborResponse[] {
+    const data = this.dataSource.data;
+    const start = this.pageIndex * this.pageSize;
+    return data.slice(start, start + this.pageSize);
+  }
+
+  // Handle page changes
+  onPageChange(event: PageEvent): void {
+    this.pageSize = event.pageSize;
+    this.pageIndex = event.pageIndex;
+  }
 
   constructor(private invitationService: InvitationService, private router: Router) {}
 
   ngOnInit(): void {
     const neighborId = JSON.parse(localStorage.getItem('IdNeighbor') || '0'); // Obtener IdNeighbor
     if (neighborId > 0) {
-      this.getInvitations(neighborId, 10, 'Id', 'asc', 0, '');
+      this.getInvitations(neighborId, 1000, 'Id', 'desc', 0, '');
     }
   }
 
@@ -85,4 +107,5 @@ export class InvitationsListComponent implements OnInit {
   onDuplicate(element: any): void {
     this.router.navigate(['/invitations/share-invitation'], { state: { invitationData: element } });
   }
+  
 }

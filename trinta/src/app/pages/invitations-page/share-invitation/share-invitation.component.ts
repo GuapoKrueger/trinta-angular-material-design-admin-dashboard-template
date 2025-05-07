@@ -24,6 +24,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { AddressResponse, NeighborAddressResponse } from '../../neighbors-page/models/neighbor-response.interface';
 import { NeighborService } from '../../neighbors-page/services/neighbor.service';
+import { InvitationByIdNeighborResponse } from '../models/invitation-response.interface';
 
 export const dateRangeValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const startTime = control.get('startTime')?.value;
@@ -118,7 +119,7 @@ export class ShareInvitationComponent implements OnInit{
                            Validators.minLength(10), 
                           ]
                       ],
-        neighborId: [{ value: '' }, Validators.required], // Renamed from location
+        neighborAddressId: [{ value: '' }, Validators.required], // Renamed from location
         startTime: [{ value: this.convertToLocalTime(new Date()), disabled: true}, [Validators.required]],
         endTime: [{ value: this.convertToLocalTime(new Date()), disabled: true }, [Validators.required]],
         isReusable: [{ value: 'No', disabled: true }, Validators.required],
@@ -140,9 +141,9 @@ export class ShareInvitationComponent implements OnInit{
   
     // Asignar el valor al control 'neighborId' después de inicializar el formulario
     if (this.Adresses && this.Adresses.length > 0) {
-        this.form.controls['neighborId'].setValue(this.Adresses[0].id); // Renamed from location
+        this.form.controls['neighborAddressId'].setValue(this.Adresses[0].id); // Renamed from location
     } else {
-        this.form.controls['neighborId'].setValue(null); // Renamed from location
+        this.form.controls['neighborAddressId'].setValue(null); // Renamed from location
     }
 
     this.form.get('isReusable')!.valueChanges.subscribe((value) => {
@@ -174,12 +175,12 @@ export class ShareInvitationComponent implements OnInit{
     });
     
     // Recuperar datos del estado de navegación
-    let invitationData = undefined;
+    let invitationData: InvitationByIdNeighborResponse | undefined;
     const nav = this.router.getCurrentNavigation();
     if (nav?.extras?.state?.['invitationData']) {
-      invitationData = nav.extras.state['invitationData'];
+      invitationData = nav.extras.state['invitationData'] as InvitationByIdNeighborResponse;
     } else if (this.location.getState() && (this.location.getState() as any).invitationData) {
-      invitationData = (this.location.getState() as any).invitationData;
+      invitationData = ((this.location.getState() as any).invitationData) as InvitationByIdNeighborResponse;
     }
 
     if (invitationData) {
@@ -187,10 +188,10 @@ export class ShareInvitationComponent implements OnInit{
       this.form.patchValue({
         name: invitationData.guestName || '',
         phoneNumber: invitationData.phoneNumber || '',
-        neighborId: invitationData.location || (this.Adresses && this.Adresses.length > 0 ? this.Adresses[0].id : null), // Renamed from location
+        neighborAddressId: invitationData.neighborAddressId ? invitationData.neighborAddressId : this.Adresses[0].id, // Renamed from location
         startTime: invitationData.startTime ? new Date(invitationData.startTime) : this.convertToLocalTime(new Date()),
         endTime: invitationData.endTime ? new Date(invitationData.endTime) : this.convertToLocalTime(new Date()),
-        isReusable: invitationData.isReusable ? (invitationData.isReusable === true || invitationData.isReusable === 'Si' ? 'Si' : 'No') : 'No',
+        isReusable: invitationData.isReusable ? (invitationData.isReusable === 'Si' || invitationData.isReusable === 'Si' ? 'Si' : 'No') : 'No',
         accessType: invitationData.accessType ? String(invitationData.accessType) : '1'
       });
     }
@@ -249,7 +250,7 @@ export class ShareInvitationComponent implements OnInit{
       isValid: true,
       GuestName: this.form.value.name ?? '',
       accessType: parseInt(this.form.value.accessType),
-      neighborsAddressId: this.form.value.neighborId ?? 0 // Renamed from location
+      neighborAddressId: this.form.value.neighborAddressId ?? 0 // Renamed from location
     };
 
     // Llamamos al servicio para crear la invitación
@@ -417,7 +418,7 @@ export class ShareInvitationComponent implements OnInit{
   }
 
   getFullAddress(): string {
-    const address = this.Adresses.find(addr => addr.id === this.form.value.neighborId);
+    const address = this.Adresses.find(addr => addr.id === this.form.value.neighborAddressId);
     return address?.fullAddress || 'Dirección no encontrada';
   }
   

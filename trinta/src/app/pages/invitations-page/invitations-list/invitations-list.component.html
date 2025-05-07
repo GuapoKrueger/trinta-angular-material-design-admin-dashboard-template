@@ -1,3 +1,5 @@
+<div *ngIf="false">
+
 <mat-card class="trinta-card invitation-list-card mb-25 bg-white border-none d-block">
     <mat-card-header>
         <mat-card-title>
@@ -108,5 +110,59 @@
         </div>
     </mat-card-content>
 </mat-card>
+</div>
+
+
+
+
+
+<div class="row">
+    <div class="col-md-6 col-xxl-4 col-xxxl-3" *ngFor="let invitation of pagedInvitations">
+        
+
+
+        <div class="invitation-card">
+            <div class="invitation-content">
+              <div class="left-section">
+                <span class="material-symbols-outlined icon">person</span>
+                <div class="details">
+                  <strong>{{ invitation.guestName }}</strong>
+                  <br>
+                  <div class="phone">
+                    <span class="material-symbols-outlined icon">call</span>
+                    {{ invitation.phoneNumber | phoneNumber }}
+                  </div>
+                  <div class="dates">
+                    <span class="material-symbols-outlined icon">calendar_month</span>
+                    {{ invitation.startTime | date: 'dd/MM' }} – {{ invitation.endTime | date: 'dd/MM' }}
+                  </div>
+                  <div class="address">
+                    <span class="material-symbols-outlined icon">home_pin</span>
+                    {{ invitation.fullAddress }}
+                  </div>
+                </div>
+              </div>
+              <div class="status-icon">
+                <span class="material-symbols-outlined">
+                  {{ invitation.isUsed ? 'check_circle' : 'radio_button_unchecked' }}
+                </span>
+              </div>
+            </div>
+          
+            <button mat-button class="duplicate-btn" (click)="onDuplicate(invitation)">
+              Duplicar
+            </button>
+          </div>
+    </div>
+</div>
+
+<!-- Paginador para tarjetas -->
+<mat-paginator
+  [pageSizeOptions]="pageSizeOptions"
+  [pageSize]="pageSize"
+  [pageIndex]="pageIndex"
+  [length]="dataSource.data.length"
+  (page)="onPageChange($event)">
+</mat-paginator>
 
 
