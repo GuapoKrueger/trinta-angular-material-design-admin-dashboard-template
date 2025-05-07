@@ -2,8 +2,6 @@ import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router, RouterLink } from '@angular/router';
 
-import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
@@ -20,7 +18,6 @@ import { PhoneNumberPipe } from '../../../shared/pipes/phone-number.pipe';
   imports: [
     RouterLink,
     MatTableModule,
-    MatPaginatorModule,
     MatButtonModule,
     MatCardModule,
     MatMenuModule,
@@ -45,24 +42,11 @@ export class InvitationsListComponent implements OnInit {
   ];
   dataSource = new MatTableDataSource<InvitationByIdNeighborResponse>();
 
-  // Pagination properties
-  pageSizeOptions: number[] = [5, 10, 15];
-  pageSize = 5;
-  pageIndex = 0;
+  // Control para 'ver más'
+  displayCount = 5;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-
-  // Getter for current page items
-  get pagedInvitations(): InvitationByIdNeighborResponse[] {
-    const data = this.dataSource.data;
-    const start = this.pageIndex * this.pageSize;
-    return data.slice(start, start + this.pageSize);
-  }
-
-  // Handle page changes
-  onPageChange(event: PageEvent): void {
-    this.pageSize = event.pageSize;
-    this.pageIndex = event.pageIndex;
+  onViewMore(): void {
+    this.displayCount = Math.min(this.displayCount + 5, this.dataSource.data.length);
   }
 
   constructor(private invitationService: InvitationService, private router: Router) {}
@@ -86,9 +70,8 @@ export class InvitationsListComponent implements OnInit {
       .getAllByNeighborId(neighborId, size, sort, order, numPage, getInputs)
       .subscribe({
         next: (response) => {
-          console.log(response.data);
           this.dataSource = new MatTableDataSource(response.data);
-          this.dataSource.paginator = this.paginator;
+          // no más paginación integrada
         },
         error: (err) => {
           console.error('Error al cargar invitaciones:', err);

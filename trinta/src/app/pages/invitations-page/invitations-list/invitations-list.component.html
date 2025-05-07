@@ -106,7 +106,7 @@
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                 </table>
             </div>
-            <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+            <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator> -->
         </div>
     </mat-card-content>
 </mat-card>
@@ -114,13 +114,11 @@
 
 
 
+<!-- Paginador para tarjetas -->
 
-
+<br>
 <div class="row">
-    <div class="col-md-6 col-xxl-4 col-xxxl-3" *ngFor="let invitation of pagedInvitations">
-        
-
-
+    <div class="col-md-6 col-xxl-4 col-xxxl-3" *ngFor="let invitation of dataSource.data | slice:0:displayCount">
         <div class="invitation-card">
             <div class="invitation-content">
               <div class="left-section">
@@ -156,13 +154,9 @@
     </div>
 </div>
 
-<!-- Paginador para tarjetas -->
-<mat-paginator
-  [pageSizeOptions]="pageSizeOptions"
-  [pageSize]="pageSize"
-  [pageIndex]="pageIndex"
-  [length]="dataSource.data.length"
-  (page)="onPageChange($event)">
-</mat-paginator>
+<!-- Botón Ver más -->
+<div class="text-center" *ngIf="displayCount < dataSource.data.length">
+  <button mat-button color="primary" (click)="onViewMore()">Ver más</button>
+</div>
 
 
