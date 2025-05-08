@@ -168,11 +168,12 @@ import { authGuard } from './shared/guards/auth.guard';
 import { UpdateNeighborComponent } from './pages/neighbors-page/update-neighbor/update-neighbor.component';
 import { UpdateNeighborhoodComponent } from './pages/neighborhoods-page/update-neighborhood/update-neighborhood.component';
 import { InvitationsListComponent } from './pages/invitations-page/invitations-list/invitations-list.component';
+import { HomeComponent } from './pages/home/home.component';
 
 
 export const routes: Routes = [
     // {path: '', component: EcommerceComponent, canActivate : [authGuard]},
-    {path: '', component: ShareInvitationComponent, canActivate : [authGuard]},
+    {path: '', component: HomeComponent, canActivate : [authGuard]},
     {path: 'crm', component: CrmComponent},
     {path: 'project-management', component: ProjectManagementComponent},
     {path: 'lms', component: LmsComponent},
