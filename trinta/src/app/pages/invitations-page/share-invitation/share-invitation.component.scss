@@ -56,8 +56,8 @@
         min-width: auto;
         border-radius: 6px;
         padding: 10.5px 15px;
-        color: var(--primaryColor);
-        background: rgba(55, 97, 238, 0.10);
+        color: var(--whiteColor);
+        background: #3E4095;
         font: {
             size: 14px;
             weight: 600;
@@ -74,6 +74,73 @@
 .example1 .mat-mdc-radio-button ~ .mat-mdc-radio-button {
     margin-left: 20px;
 }
+:host ::ng-deep .mat-step-icon.mat-step-icon-state-number.mat-step-icon-selected {
+    background-color: #00899E !important;
+    border-color: #00899E !important;
+    color: #FFFFFF !important;
+}
 
+:host ::ng-deep .mat-step-icon.mat-step-icon-state-edit {
+    background-color: #00899E !important;
+    border-color: #00899E !important;
+    color: #FFFFFF !important;
+}
 
-  
+:host ::ng-deep {
+  .mat-mdc-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+  }
+
+  .close-button {
+    margin-left: auto;
+    color: #666;
+    &:hover {
+      color: #333;
+    }
+  }
+}
+
+mat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.access‐toggle-group {
+  display: inline-flex;
+  border-radius: 4px;
+  background: #f2f2f2;
+  .mat-button-toggle {
+    flex: 1;
+    border-radius: 0;
+    &.mat-button-toggle-checked {
+      background-color: #00b388;
+      color: white;
+    }
+    &:first-child { border-top-left-radius: 4px;  border-bottom-left-radius: 4px; }
+    &:last-child  { border-top-right-radius: 4px; border-bottom-right-radius: 4px; }
+    &.mat-button-toggle-checked img {
+      display: inline-block;
+    }
+    img {
+      display: inline-block;
+    }
+  }
+}
+
+// .access-toggle-group {
+//   mat-button-toggle {
+//     // Asegura que siempre se muestre la imagen dentro del toggle
+//     img {
+//       display: inline-block;
+//     }
+
+//     // También cuando esté seleccionado
+//     &.mat-button-toggle-checked img {
+//       display: inline-block;
+//     }
+//   }
+// }

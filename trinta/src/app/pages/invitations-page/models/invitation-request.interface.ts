@@ -8,5 +8,6 @@ export interface Invitation {
     GuestName: string;
     accessType: number;
     neighborAddressId: number;
+    token:string;
   }
   

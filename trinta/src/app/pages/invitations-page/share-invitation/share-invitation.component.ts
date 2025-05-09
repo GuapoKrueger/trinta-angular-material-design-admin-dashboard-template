@@ -4,7 +4,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
-import { FeathericonsModule } from '../../../icons/feathericons/feathericons.module';
 import { MatCardModule } from '@angular/material/card';
 import { StepperOverviewComponent } from '../../../ui-elements/stepper/stepper-overview/stepper-overview.component';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -25,6 +24,9 @@ import { Location } from '@angular/common';
 import { AddressResponse, NeighborAddressResponse } from '../../neighbors-page/models/neighbor-response.interface';
 import { NeighborService } from '../../neighbors-page/services/neighbor.service';
 import { InvitationByIdNeighborResponse } from '../models/invitation-response.interface';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatIconModule } from '@angular/material/icon';
+import { FeathericonsModule } from '../../../icons/feathericons/feathericons.module';
 
 export const dateRangeValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const startTime = control.get('startTime')?.value;
@@ -57,14 +59,15 @@ export const dateRangeValidator: ValidatorFn = (control: AbstractControl): Valid
     StepperOverviewComponent,
     MatDatepickerModule, 
     MatNativeDateModule, 
-    FeathericonsModule,
     MatSlideToggleModule, 
     StWithFormsComponent,
     MatSelectModule,
     CommonModule,
     NgxMaskDirective,
     NgxMaskPipe,
-    MatRadioModule 
+    MatRadioModule,
+    MatButtonToggleModule,
+    MatIconModule
   ],
   providers: [
     provideNgxMask() 
@@ -250,14 +253,16 @@ export class ShareInvitationComponent implements OnInit{
       isValid: true,
       GuestName: this.form.value.name ?? '',
       accessType: parseInt(this.form.value.accessType),
-      neighborAddressId: this.form.value.neighborAddressId ?? 0 // Renamed from location
+      neighborAddressId: this.form.value.neighborAddressId ?? 0,
+      token: '' // Renamed from location
     };
 
     // Llamamos al servicio para crear la invitación
-
+    if(invitation.token===''){
     this._invitationService.createInvitation(invitation).subscribe({
       next: (response) => {
         if (response.isSuccess) {
+          invitation.token = response.message;
           this.compartir(response.message); // Compartimos la invitación con el token generado
         } else {
           Swal.fire({
@@ -277,6 +282,15 @@ export class ShareInvitationComponent implements OnInit{
         });
       }
     });
+  }else
+  {
+    this.compartir(invitation.token);
+  }
+
+
+
+
+
 
   }
 
@@ -420,6 +434,21 @@ export class ShareInvitationComponent implements OnInit{
   getFullAddress(): string {
     const address = this.Adresses.find(addr => addr.id === this.form.value.neighborAddressId);
     return address?.fullAddress || 'Dirección no encontrada';
+  }
+
+  onClose(): void {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: '¿Deseas salir?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, salir',
+      cancelButtonText: 'No, permanecer'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/']);
+      }
+    });
   }
   
 }

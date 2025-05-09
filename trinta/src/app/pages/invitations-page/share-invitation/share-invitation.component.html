@@ -1,8 +1,16 @@
 <mat-card class="trinta-card mb-25 bg-white border-none d-block">
-  <mat-card-header>
+  <mat-card-header class="d-flex justify-content-between align-items-center">
     <mat-card-title>
-      <h5 class="mt-0 mb-0">Invitación</h5>
+      <h5 class="mt-0 mb-0">Registrar una visita</h5>
     </mat-card-title>
+    <button mat-icon-button class="close-button" (click)="onClose()">
+      <img
+        src="assets/images/pages/invitations-page/close - 512.png"
+        alt="Cerrar"
+        width="24"
+        height="24"
+      />
+    </button>
   </mat-card-header>
   <mat-card-content>
     <form [formGroup]="form">
@@ -83,8 +91,9 @@
               </div>
             </div>
           </div>
-          <div>
-            <button mat-flat-button color="primary" (click)="onStepNext(1, stepper)">Siguiente</button>
+          <div class="d-flex justify-content-end">
+            <img src="assets\images\pages\invitations-page\down.png" alt="Siguiente" (click)="onStepNext(1, stepper)"
+                 style="cursor:pointer; width:32px; height:32px;" />
           </div>
         </mat-step>
 
@@ -92,21 +101,37 @@
           <ng-template matStepLabel>Configuración de la Invitación</ng-template>
           <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-6">
-              <div >
+              <div class="mb-20">
                 <label class="main-label d-block lh-1 text-black mb-10">Tipo de Acceso</label>
-                <mat-radio-group  class="example1" formControlName="accessType">
+                <!-- <mat-radio-group  class="example1" formControlName="accessType">
                   <mat-radio-button value="1" class="mr-10">Vehicular</mat-radio-button>
                   <mat-radio-button value="2">Peatonal</mat-radio-button>
-                </mat-radio-group>
+                </mat-radio-group> -->
+                <mat-button-toggle-group
+                    formControlName="accessType"
+                    class="access‐toggle-group">
+                    <mat-button-toggle value="1">
+                      <mat-icon>directions_car</mat-icon>
+                      Vehicular
+                    </mat-button-toggle>
+                    <mat-button-toggle value="2">
+                      <mat-icon>directions_walk</mat-icon>
+                      Peatonal
+                    </mat-button-toggle>
+                  </mat-button-toggle-group>
                 <div class="error text-danger" *ngIf="form.get('accessType')!.hasError('required') && form.get('accessType')!.touched">
                   Debes seleccionar un tipo de acceso.
                 </div>
               </div>
             </div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
             <div class="col-lg-6 col-md-6 col-sm-6">
 
             </div>
-            <br>
             <div class="col-lg-6 col-md-6 col-sm-6">
               <div>
                 <label class="main-label d-block lh-1 text-black mb-10">Reutilizable</label>
@@ -194,14 +219,18 @@
 
 
           </div>
-          <div>
-            <button mat-flat-button matStepperPrevious color="primary" class="mr-15">Atrás</button>
-            <button mat-flat-button  color="primary" (click)="onStepNext(2, stepper)">Siguiente</button>
+          <div class="d-flex justify-content-between">
+            <img src="assets\images\pages\invitations-page\up.png" alt="Atrás"
+            style="cursor:pointer; width:32px; height:32px;"
+                 (click)="stepper.previous()" />
+            
+            <img src="assets\images\pages\invitations-page\down.png" alt="Siguiente" (click)="onStepNext(2, stepper)"
+            style="cursor:pointer; width:32px; height:32px;" />
           </div>
         </mat-step>
 
         <mat-step>
-          <ng-template matStepLabel>Compartir Invitación</ng-template>
+          <ng-template matStepLabel>Compartir</ng-template>
           <div class="row">
             <div class="col-md-6 col-xxl-4 col-xxxl-3">
               <mat-card class="trinta-card customer-card mb-25 bg-white border-none d-block">
@@ -248,16 +277,20 @@
                       <!-- {{ Adresses.find(addr => addr.id === form.value.neighborId)?.fullAddress }} -->
                     </li>
                   </ul>
-                  <a class="default-btn" mat-button (click)="onSubmit()">
-                    <i class="ri-share-fill"></i> Compartir Invitación
-                  </a>
+
                 </mat-card-content>
               </mat-card>
             </div>
           </div>
-          <div>
-            <button mat-flat-button color="primary" class="mr-15" matStepperPrevious>Atrás</button>
-            <button mat-flat-button color="warn" (click)="stepper.reset()">Inicio</button>
+          <div class="d-flex justify-content-between">
+            <!-- ensure Back arrow image also uses click to go back -->
+            <img src="assets/images/pages/invitations-page/up.png" alt="Atrás"
+                 style="cursor:pointer; width:32px; height:32px; margin-right:0.5rem;"
+                 (click)="stepper.previous()" />
+            <!-- <button mat-flat-button color="warn" (click)="stepper.reset()">Inicio</button> -->
+            <a class="default-btn" mat-button (click)="onSubmit()">
+              <i class="ri-share-fill"></i> Compartir Invitación
+            </a>
           </div>
         </mat-step>   
 
