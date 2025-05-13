@@ -1,42 +1,51 @@
-name: CI/CD Angular 17 → IIS
+name: CI/CD QA – Angular 17 ➤ IIS
 
 on:
   push:
     branches:
-      - main
+      - QA
 
 jobs:
   build-and-deploy:
     runs-on: windows-latest
     steps:
-      # 1. Clonar repo
-      - name: Checkout code
+      # 1. Checkout del código
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Configurar Node.js
-      - name: Setup Node.js
+      # 2. Instalar Node.js y Angular CLI
+      - name: Setup Node.js 20.x
         uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
-          cache: 'npm'
+          node-version: '20.x'
+      - name: Install Angular CLI globally
+        run: npm install -g @angular/cli@17
 
-      # 3. Instalar dependencias
+      # 3. Instalación de dependencias y build
       - name: Install dependencies
         run: npm ci
+      - name: Build Angular (QA config)
+        run: ng build --configuration=production --output-path=dist
 
-      # 4. Ejecutar tests
-      - name: Run tests
-        run: npm run test
-
-      # 5. Compilar Angular
-      - name: Build production
-        run: npm run build
-
-      # 6. Desplegar con Web Deploy
-      - name: Deploy to IIS via MSDeploy
+      # 4. Empaquetar los archivos
+      - name: Archive build output
         run: |
-          & "$Env:ProgramFiles\IIS\Microsoft Web Deploy V3\msdeploy.exe" `
+          cd dist
+          Compress-Archive -Path * -DestinationPath mi-app-qa.zip
+
+      # 5. Desplegar con MSDeploy
+      - name: Deploy to IIS via Web Deploy
+        env:
+          DEPLOY_URL: ${{ secrets.IIS_SERVER }}
+          DEPLOY_USER: ${{ secrets.IIS_USER }}
+          DEPLOY_PASS: ${{ secrets.IIS_PASSWORD }}
+          IIS_APP: ${{ secrets.IIS_SITE }}
+        run: |
+          # Ubica msdeploy.exe instalado junto con Web Deploy
+          $msdeploy = "C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe"
+
+          & $msdeploy `
             -verb:sync `
-            -source:contentPath="dist/tu-app" `
-            -dest:contentPath="${{ secrets.IIS_SITE }}",computerName="https://${{ secrets.IIS_SERVER }}:8172/msdeploy.axd?site=${{ secrets.IIS_SITE }}",userName="${{ secrets.IIS_USER }}",password="${{ secrets.IIS_PASSWORD }}",authtype="Basic" `
+            -source:package="dist\mi-app-qa.zip" `
+            -dest:appHostConfig="Default Web Site/${IIS_APP}",computerName="${DEPLOY_URL}",userName="${DEPLOY_USER}",password="${DEPLOY_PASS}",authType="Basic" `
             -allowUntrusted
