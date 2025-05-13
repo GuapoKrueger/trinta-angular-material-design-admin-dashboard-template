@@ -1,0 +1,42 @@
+name: CI/CD Angular 17 → IIS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest
+    steps:
+      # 1. Clonar repo
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Configurar Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          cache: 'npm'
+
+      # 3. Instalar dependencias
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. Ejecutar tests
+      - name: Run tests
+        run: npm run test
+
+      # 5. Compilar Angular
+      - name: Build production
+        run: npm run build
+
+      # 6. Desplegar con Web Deploy
+      - name: Deploy to IIS via MSDeploy
+        run: |
+          & "$Env:ProgramFiles\IIS\Microsoft Web Deploy V3\msdeploy.exe" `
+            -verb:sync `
+            -source:contentPath="dist/tu-app" `
+            -dest:contentPath="${{ secrets.IIS_SITE }}",computerName="https://${{ secrets.IIS_SERVER }}:8172/msdeploy.axd?site=${{ secrets.IIS_SITE }}",userName="${{ secrets.IIS_USER }}",password="${{ secrets.IIS_PASSWORD }}",authtype="Basic" `
+            -allowUntrusted
