@@ -39,7 +39,7 @@ jobs:
           DEPLOY_URL: ${{ secrets.IIS_SERVER }}
           DEPLOY_USER: ${{ secrets.IIS_USER }}
           DEPLOY_PASS: ${{ secrets.IIS_PASSWORD }}
-          IIS_APP: ${{ secrets.IIS_SITE }}
+          IIS_APP: ${{ secrets.IIS_SITE_FRONTEND }}
         run: |
           # Ubica msdeploy.exe instalado junto con Web Deploy
           $msdeploy = "C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe"
