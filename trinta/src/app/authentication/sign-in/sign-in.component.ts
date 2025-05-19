@@ -63,7 +63,7 @@ export class SignInComponent implements OnInit{
       
               // Redirigir después de mostrar el mensaje
               setTimeout(() => {
-                this.router.navigate(['/invitations/share-invitation']);
+                this.router.navigate(['/']);
               }, 2000);
             } else {
               // Mostrar mensaje de error del backend

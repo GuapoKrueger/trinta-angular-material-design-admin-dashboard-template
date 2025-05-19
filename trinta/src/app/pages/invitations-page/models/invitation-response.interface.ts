@@ -20,4 +20,6 @@ export interface InvitationByIdNeighborResponse {
     isActive: boolean;
     isUsed: boolean;
     accessType: string;
+    neighborAddressId : number;
+    fullAddress: string;
 }

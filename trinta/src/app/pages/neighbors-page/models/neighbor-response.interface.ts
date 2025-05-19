@@ -32,3 +32,12 @@ export interface NeighborByIdResponse {
     avatarUrl: string;
     addresses: AddressResponse[]; // Added addresses property
 }
+
+export interface NeighborAddressResponse {
+    id: number;
+    neighborhoodName: string;
+    subdivisionName: string;
+    streetName: string;
+    houseNumber: string;
+    fullAddress:string;
+}

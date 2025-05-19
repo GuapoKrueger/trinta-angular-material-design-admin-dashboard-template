@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BaseApiResponse } from '../../../shared/commons/base-api-response-interface';
 import { map, Observable } from 'rxjs';
-import { NeighborByIdResponse, NeighborResponse } from '../models/neighbor-response.interface';
+import { NeighborByIdResponse, NeighborResponse, NeighborAddressResponse } from '../models/neighbor-response.interface';
 import { environment as env } from '../../../../environments/environment.development';
 import { endpoint } from '../../../shared/utils/endpoint.util';
 import { Street, Subdivision } from '../../neighborhoods-page/models/neighborhood-request.interface';
@@ -78,6 +78,11 @@ export class NeighborService {
           return resp.data;
         })
       );
+  }
+
+  getNeighborAddresses(neighborId: number): Observable<BaseApiResponse<NeighborAddressResponse[]>> {
+    const requestUrl = `${env.api}${endpoint.NEIGHBOR_BY_ID}${neighborId}/Addresses`;
+    return this._httpClient.get<BaseApiResponse<NeighborAddressResponse[]>>(requestUrl);
   }
   
   private construirFormData(neighbor: Neighbor): FormData{
