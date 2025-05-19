@@ -124,7 +124,7 @@ class="trinta-card address-list-card mb-25 bg-white border-none d-block"
   </mat-card-subtitle>
 </mat-card-header>
 <mat-card-content>
-    <div class="mat-elevation-z8 address-table-container">
+    <div class="mat-elevation-z8 address-table-container table-responsive">
         <table mat-table [dataSource]="dataSource">
 
             <!-- Fraccionamiento Column -->
@@ -154,7 +154,7 @@ class="trinta-card address-list-card mb-25 bg-white border-none d-block"
             <!-- Actions Column -->
             <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef> Acciones </th>
-                <td mat-cell *matCellDef="let address">
+                <td mat-cell *matCellDef="let address" class="d-flex gap-2 text-nowrap">
                     <!-- Edit button -->
                     <button mat-icon-button color="primary" (click)="editAddress(address)" aria-label="Edit address">
                         <mat-icon>edit</mat-icon>

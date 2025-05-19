@@ -4,7 +4,10 @@ export interface LoginResponse {
     userName: string;
     fullName: string;
     role: string;
-    location: string;
+    location: [{
+        idNeighborsAddress: number;
+        location: string;
+    }];
     avatarUrl? : string;
     startHour: string;     
     endHour: string;
