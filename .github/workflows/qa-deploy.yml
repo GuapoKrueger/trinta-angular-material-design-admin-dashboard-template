@@ -54,5 +54,5 @@ jobs:
           & $msdeploy `
             -verb:sync `
             -source:package="dist\mi-app-qa.zip" `
-            -dest:"appHostConfig=Default Web Site/${{ secrets.IIS_SITE_FRONTEND }},computerName=${{ secrets.IIS_SERVER }},userName=${{ secrets.IIS_USER }},password=${{ secrets.IIS_PASSWORD }},authType=Basic" `
+            -dest:appHostConfig="Default Web Site/${IIS_APP}",computerName="${DEPLOY_URL}",userName="${DEPLOY_USER}",password="${DEPLOY_PASS}",authType="Basic" `
             -allowUntrusted
