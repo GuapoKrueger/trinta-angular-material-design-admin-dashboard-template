@@ -3,14 +3,23 @@
     <mat-card-title>
       <h5 class="mt-0 mb-0">Registrar una visita</h5>
     </mat-card-title>
-    <button mat-icon-button class="close-button" (click)="onClose()">
-      <img
-        src="assets/images/pages/invitations-page/close - 512.png"
-        alt="Cerrar"
-        width="24"
-        height="24"
-      />
-    </button>
+
+    <div class="ms-auto d-flex align-items-center">
+      <!-- <button mat-icon-button [style.display]="token ? 'inline-flex' : 'none'" (click)="newInvitation()">
+        <img
+          src="assets/images/pages/invitations-page/add.png"
+          alt="Nuevo"
+        />
+      </button> -->
+      <button mat-icon-button (click)="onClose()">
+        <img
+          src="assets/images/pages/invitations-page/close - 512.png"
+          alt="Cerrar"
+          width="18"
+          height="18"
+        />
+      </button>
+    </div>
   </mat-card-header>
   <mat-card-content>
     <form [formGroup]="form">

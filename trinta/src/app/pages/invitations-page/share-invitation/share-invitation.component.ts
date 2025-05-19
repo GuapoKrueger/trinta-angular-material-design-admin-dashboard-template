@@ -88,6 +88,7 @@ export class ShareInvitationComponent implements OnInit{
   private location = inject(Location);
   public IdNeighbor : number;
   public Adresses: NeighborAddressResponse[];
+  public token: string = '';
 
   constructor(        
     public toggleService: ToggleService
@@ -219,6 +220,26 @@ export class ShareInvitationComponent implements OnInit{
   }
   
   onSubmit() {
+    // // Si ya existe un token, preguntar si desea generar una nueva invitación
+    // if (this.token) {
+    //   Swal.fire({
+    //     title: 'Invitación ya generada',
+    //     text: '¿Deseas generar una nueva invitación?',
+    //     icon: 'question',
+    //     showCancelButton: true,
+    //     confirmButtonText: 'Sí, generar nueva',
+    //     cancelButtonText: 'No, usar existente'
+    //   }).then((result) => {
+    //     if (result.isConfirmed) {
+    //       this.token = '';
+    //       this.form.reset();
+    //       this.form.enable();
+    //     } else {
+    //       this.compartir(this.token);
+    //     }
+    //   });
+    //   return;
+    // }
 
     if (this.form.invalid) {
       this.markFormGroupTouched(this.form);
@@ -253,17 +274,17 @@ export class ShareInvitationComponent implements OnInit{
       isValid: true,
       GuestName: this.form.value.name ?? '',
       accessType: parseInt(this.form.value.accessType),
-      neighborAddressId: this.form.value.neighborAddressId ?? 0,
-      token: '' // Renamed from location
+      neighborAddressId: this.form.value.neighborAddressId ?? 0
     };
 
     // Llamamos al servicio para crear la invitación
-    if(invitation.token===''){
+    if(this.token===''){
     this._invitationService.createInvitation(invitation).subscribe({
       next: (response) => {
         if (response.isSuccess) {
-          invitation.token = response.message;
-          this.compartir(response.message); // Compartimos la invitación con el token generado
+          this.token = response.message;
+           this.form.disable();           // Bloquear edición tras generar
+            this.compartir(response.message); 
         } else {
           Swal.fire({
             title: 'Error al crear la invitación',
@@ -284,7 +305,7 @@ export class ShareInvitationComponent implements OnInit{
     });
   }else
   {
-    this.compartir(invitation.token);
+    this.compartir(this.token);
   }
 
 
@@ -363,7 +384,7 @@ export class ShareInvitationComponent implements OnInit{
       case 1:
         ['name', 'email', 'phoneNumber'].forEach((field) => {
           const control = this.form.get(field);
-          if (control && !control.valid) {
+          if (control && !control.valid && this.token==='') {
             invalidFields.push(field);
           }
         });
@@ -449,6 +470,46 @@ export class ShareInvitationComponent implements OnInit{
         this.router.navigate(['/']);
       }
     });
+  }
+
+  newInvitation(): void {
+    // 1) Si ya existe token, preguntamos
+    if (this.token) {
+      Swal.fire({
+        title: 'Nueva invitación',
+        text: '¿Deseas generar una nueva invitación?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, generar nueva',
+        cancelButtonText: 'No, mantener actual'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.clearInvitationForm();
+        }
+      });
+      return;
+    }
+    // 2) Si no hay token, limpiamos directamente
+    this.clearInvitationForm();
+  }
+
+  /** Reestablece token y devuelve el form al estado inicial */
+  private clearInvitationForm(): void {
+    this.token = '';
+    this.form.reset({
+      name: '',
+      email: '',
+      phoneNumber: '',
+      neighborAddressId: this.Adresses?.[0]?.id ?? null,
+      startTime: this.convertToLocalTime(new Date()),
+      endTime: this.convertToLocalTime(new Date()),
+      isReusable: 'No',
+      accessType: '1'
+    });
+    // Volver a deshabilitar los campos según el flujo original
+    this.form.get('startTime')?.disable();
+    this.form.get('endTime')?.disable();
+    this.form.get('isReusable')?.disable();
   }
   
 }
