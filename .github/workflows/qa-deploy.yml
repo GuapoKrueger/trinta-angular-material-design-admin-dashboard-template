@@ -7,6 +7,11 @@ on:
   #    - QA
   workflow_dispatch:
 
+
+defaults:
+  run:
+    working-directory: trinta
+
 jobs:
   build-and-deploy:
     runs-on: windows-latest
