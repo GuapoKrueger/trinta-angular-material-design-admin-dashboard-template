@@ -1,9 +1,11 @@
 name: CI/CD QA – Angular 17 ➤ IIS
 
 on:
-  push:
-    branches:
-      - QA
+  
+  #push:
+  #  branches:
+  #    - QA
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
