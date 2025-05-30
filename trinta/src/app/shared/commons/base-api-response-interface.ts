@@ -1,6 +1,6 @@
 export interface BaseApiResponse<T> {
     isSuccess: boolean;
-    data: any;
+    data: T;
     message: string;
     totalRecords: number;
     errors: T;

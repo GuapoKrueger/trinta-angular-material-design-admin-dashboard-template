@@ -23,7 +23,7 @@ export class NeighborService {
     order: string,
     numPage: number,
     getInputs: string
-  ): Observable<BaseApiResponse<NeighborResponse>> {
+  ): Observable<BaseApiResponse<NeighborResponse[]>> {
     const requestUrl = `${env.api}${
       endpoint.LIST_NEIGHBOR
     }?records=${size}&sort=${sort}&order=${order}&numPage=${
@@ -31,7 +31,7 @@ export class NeighborService {
     }${getInputs}`;
 
     return this._httpClient
-      .get<BaseApiResponse<NeighborResponse>>(requestUrl)
+      .get<BaseApiResponse<NeighborResponse[]>>(requestUrl)
       .pipe(
         map((resp) => {
           resp.data.forEach(function (c: NeighborResponse) {
@@ -43,16 +43,16 @@ export class NeighborService {
       );
   }
 
-  getByNeighborhoodId(neighborhoodId: number): Observable<BaseApiResponse<Subdivision>> {
+  getByNeighborhoodId(neighborhoodId: number): Observable<BaseApiResponse<Subdivision[]>> {
     const requestUrl = `${env.api}Neighborhood/${neighborhoodId}/subdivisions`;
     // const requestUrl = `https://localhost:44307/api/Neighborhood/${neighborhoodId}/subdivisions`
-    return this._httpClient.get<BaseApiResponse<Subdivision>>(requestUrl);
+    return this._httpClient.get<BaseApiResponse<Subdivision[]>>(requestUrl);
   }
 
-  getBySubdivisionId(subdivisionId: number): Observable<BaseApiResponse<Street>> {
+  getBySubdivisionId(subdivisionId: number): Observable<BaseApiResponse<Street[]>> {
      const requestUrl = `${env.api}Neighborhood/${subdivisionId}/streets`;
     // const requestUrl = `https://localhost:44307/api/Neighborhood/${subdivisionId}/streets`
-    return this._httpClient.get<BaseApiResponse<Street>>(requestUrl);
+    return this._httpClient.get<BaseApiResponse<Street[]>>(requestUrl);
   }
 
   createNeighbor(neighbor: Neighbor): Observable<BaseApiResponse<boolean>> {
