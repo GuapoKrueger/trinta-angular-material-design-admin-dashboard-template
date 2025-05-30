@@ -169,11 +169,26 @@ import { UpdateNeighborComponent } from './pages/neighbors-page/update-neighbor/
 import { UpdateNeighborhoodComponent } from './pages/neighborhoods-page/update-neighborhood/update-neighborhood.component';
 import { InvitationsListComponent } from './pages/invitations-page/invitations-list/invitations-list.component';
 import { HomeComponent } from './pages/home/home.component';
+import path from 'path';
+import { Component } from '@angular/core';
+import { HomeVisitasComponent } from './pages/home/home-visitas/home-visitas.component';
+import { HomeMenuComponent } from './pages/home/home-menu/home-menu.component';
+import { EventInvitationComponent } from './pages/invitations-page/event-invitation/event-invitation.component';
+import { HomeEventComponent } from './pages/home/home-event/home-event.component';
 
 
 export const routes: Routes = [
     // {path: '', component: EcommerceComponent, canActivate : [authGuard]},
-    {path: '', component: HomeComponent, canActivate : [authGuard]},
+    {path: '', component: HomeMenuComponent, canActivate : [authGuard]},
+    {
+        path: 'home', 
+        component: HomeComponent, 
+        canActivate: [authGuard],
+        children: [
+            { path: 'visitas', component: HomeVisitasComponent, canActivate: [authGuard] },
+            { path: 'eventos', component: HomeEventComponent, canActivate: [authGuard] }
+        ]
+    },
     {path: 'crm', component: CrmComponent},
     {path: 'project-management', component: ProjectManagementComponent},
     {path: 'lms', component: LmsComponent},
@@ -304,7 +319,8 @@ export const routes: Routes = [
             {path: '', component: ShareInvitationComponent },
             {path: 'share-invitation', component: ShareInvitationComponent},
             {path: 'add-invitations', component: AddInvitationsComponent},
-            {path: 'invitations-list', component: InvitationsListComponent}
+            {path: 'invitations-list', component: InvitationsListComponent},
+            {path: 'event-invitation', component: EventInvitationComponent}
         ],
         canActivate : [authGuard]
     },

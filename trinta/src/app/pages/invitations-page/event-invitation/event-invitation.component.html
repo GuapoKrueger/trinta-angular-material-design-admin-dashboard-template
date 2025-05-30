@@ -1,0 +1,363 @@
+<mat-card class="trinta-card mb-25 bg-white border-none d-block">
+  <mat-card-header class="d-flex justify-content-between align-items-center">
+    <mat-card-title>
+      <h5 class="mt-0 mb-0">Registrar un evento</h5>
+    </mat-card-title>
+
+    <div class="ms-auto d-flex align-items-center">
+      <!-- <button mat-icon-button [style.display]="token ? 'inline-flex' : 'none'" (click)="newInvitation()">
+        <img
+          src="assets/images/pages/invitations-page/add.png"
+          alt="Nuevo"
+        />
+      </button> -->
+      <button mat-icon-button (click)="onClose()">
+        <img
+          src="assets/images/pages/invitations-page/close - 512.png"
+          alt="Cerrar"
+          width="18"
+          height="18"
+        />
+      </button>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="form">
+      <mat-stepper #stepper orientation="vertical">
+        
+        <mat-step >
+          <ng-template matStepLabel>Información del evento</ng-template>
+          <div class="row">
+
+                        <!-- NUEVO: campo para cargar imagen -->
+            <div class="col-lg-12 col-md-12 col-sm-12">
+              <div class="mb-20 image-upload-wrapper">
+                <!-- <label class="main-label d-block lh-1 text-black mb-10">Imagen de invitación</label> -->
+
+                <!-- Contenedor circular de vista previa e ícono -->
+                <div class="image-preview-container" (click)="fileInput.click()">
+                  <img *ngIf="imagePreview" [src]="imagePreview" alt="Vista previa" class="preview-image" />
+                  <!-- <mat-icon class="camera-icon">photo_camera</mat-icon> -->
+                </div>
+
+                <input #fileInput type="file" accept="image/*" hidden (change)="onFileSelected($event)" />
+
+                <div class="error text-danger" *ngIf="form.get('image')?.invalid && form.get('image')?.touched">
+                  La imagen es requerida.
+                </div>
+              </div>
+            </div>
+
+
+
+            <div class="col-lg-12 col-md-12 col-sm-12">
+              <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Nombre</label>
+                <mat-form-field>
+                  <i-feather name="user"></i-feather>
+                  <mat-label>Nombre</mat-label>
+                  <input matInput formControlName="name" minlength="4" maxlength="50">
+                </mat-form-field>
+                <div class="error text-danger" *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
+                  <div *ngIf="form.get('name')?.hasError('required')">El nombre es requerido.</div>
+                  <div *ngIf="form.get('name')?.hasError('minlength')">El nombre debe tener al menos 4 caracteres.</div>
+                  <div *ngIf="form.get('name')?.hasError('maxlength')">El nombre no puede exceder los 50 caracteres.</div>
+                </div>
+                
+              </div>
+            </div>
+            <!-- <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Correo Electrónico</label>
+                <mat-form-field>
+                  <i-feather name="mail"></i-feather>
+                  <mat-label>Correo Electrónico</mat-label>
+                  <input matInput formControlName="email" maxlength="60">
+                </mat-form-field>
+                <div class="error text-danger" *ngIf="form.get('email')!.hasError('email') && form.get('email')!.touched">
+                  Ingresa un correo electrónico válido.
+                </div>
+                <div class="error text-danger" *ngIf="form.get('email')!.hasError('required') && form.get('email')!.touched">
+                  El correo electrónico es requerido.
+                </div>
+              </div>
+            </div> -->
+            <!-- <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Número de Teléfono</label>
+                <mat-form-field>
+                  <i-feather name="phone"></i-feather>
+                  <mat-label>Número de Teléfono</mat-label>
+                  <input matInput formControlName="phoneNumber" (blur)="form.get('phoneNumber')?.markAsTouched()" [showMaskTyped]="true" mask="(000) 000-0000">
+                </mat-form-field>
+                <div class="error text-danger" *ngIf="form.get('phoneNumber')?.touched">
+                  <div *ngIf="form.get('phoneNumber')?.hasError('required')">
+                    El número de teléfono es requerido.
+                  </div>
+                  <div *ngIf="form.get('phoneNumber')?.hasError('minlength') || form.get('phoneNumber')?.hasError('maxlength')">
+                    El número de teléfono está incompleto.
+                  </div>
+                </div>             
+              </div>
+            </div> -->
+            <div class="col-lg-12 col-md-12 col-sm-12">
+              <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Dirección de la Invitación</label>
+                <mat-form-field>
+                  <i-feather name="map-pin"></i-feather>
+                  <mat-label>Dirección</mat-label>
+                  <mat-select formControlName="neighborAddressId">
+                    <!-- Iterate over the locations array -->
+                    <mat-option *ngFor="let loc of Adresses" [value]="loc.id">
+                      {{ loc.fullAddress }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div class="error text-danger" *ngIf="form.get('neighborAddressId')!.hasError('required') && form.get('neighborAddressId')!.touched">
+                  La dirección es requerida.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end">
+            <img src="assets\images\pages\invitations-page\down.png" alt="Siguiente" (click)="onStepNext(1, stepper)"
+                 style="cursor:pointer; width:32px; height:32px;" />
+          </div>
+        </mat-step>
+
+        <mat-step>
+          <ng-template matStepLabel>Configuración de la Invitación</ng-template>
+          <div class="row">
+            <!-- <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Tipo de Acceso</label>
+                <mat-button-toggle-group
+                    formControlName="accessType"
+                    class="access‐toggle-group">
+                    <mat-button-toggle value="1">
+                      <mat-icon>directions_car</mat-icon>
+                      Vehicular
+                    </mat-button-toggle>
+                    <mat-button-toggle value="2">
+                      <mat-icon>directions_walk</mat-icon>
+                      Peatonal
+                    </mat-button-toggle>
+                  </mat-button-toggle-group>
+                <div class="error text-danger" *ngIf="form.get('accessType')!.hasError('required') && form.get('accessType')!.touched">
+                  Debes seleccionar un tipo de acceso.
+                </div>
+              </div>
+            </div> -->
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+
+            </div>
+            <!-- <div class="col-lg-6 col-md-6 col-sm-6">
+              <div>
+                <label class="main-label d-block lh-1 text-black mb-10">Reutilizable</label>
+                <mat-form-field>
+                  <i-feather name="list"></i-feather>
+                  <mat-label>Selecciona</mat-label>
+                  <mat-select formControlName="isReusable">
+                    <mat-option value="Si">Si</mat-option>
+                    <mat-option value="No">No</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div class="error text-danger" *ngIf="form.get('isReusable')!.hasError('required') && form.get('isReusable')!.touched">
+                  Debes seleccionar si la invitación es reutilizable.
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+
+            </div> -->
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Fecha de evento</label>
+                <mat-form-field appearance="fill">
+                  <i-feather name="calendar"></i-feather>
+                  <mat-label>MM/DD/YYYY</mat-label>
+                  <input matInput  formControlName="startTime" [matDatepicker]="pickerInicio">
+                  <mat-datepicker-toggle matIconSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerInicio></mat-datepicker>
+                </mat-form-field>
+                <div class="error text-danger" *ngIf="form.get('startTime')!.hasError('required') && form.get('startTime')!.touched">
+                  La fecha de inicio es requerida.
+                </div>
+                <div class="error text-danger" *ngIf="form.hasError('dateRangeInvalid')">
+                  La fecha de inicio no puede ser mayor que la fecha final.
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="mb-20">
+              <label class="main-label d-block lh-1 text-black mb-10">Hora de Inicio</label>
+              <mat-form-field appearance="fill">
+                <i-feather name="clock"></i-feather>
+                <mat-label>HH:MM</mat-label>
+                <input matInput type="time" formControlName="startTimeHour" step="60">
+              </mat-form-field>
+              <div class="error text-danger"
+                  *ngIf="form.get('startTimeHour')!.hasError('required') && form.get('startTimeHour')!.touched">
+                La hora de inicio es requerida.
+              </div>
+            </div>
+          </div>
+
+
+          <div class="col-lg-6 col-md-6 col-sm-6">
+          <div class="mb-20">
+            <label class="main-label d-block lh-1 text-black mb-10">Hora de Fin</label>
+            <mat-form-field appearance="fill">
+              <i-feather name="clock"></i-feather>
+              <mat-label>HH:MM</mat-label>
+              <input matInput type="time" formControlName="endTimeHour" step="60">
+            </mat-form-field>
+            <div class="error text-danger"
+                *ngIf="form.get('endTimeHour')!.hasError('required') && form.get('endTimeHour')!.touched">
+              La hora de fin es requerida.
+            </div>
+            <div class="error text-danger"
+                *ngIf="form.hasError('timeRangeInvalid') && (form.get('startTimeHour')!.touched || form.get('endTimeHour')!.touched)">
+              La hora de inicio no puede ser mayor que la hora de fin.
+            </div>
+          </div>
+        </div>
+            
+            <!-- <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Fecha Final</label>
+                <mat-form-field appearance="fill">
+                  <i-feather name="calendar"></i-feather>
+                  <mat-label>MM/DD/YYYY</mat-label>
+                  <input matInput  formControlName="endTime" [matDatepicker]="pickerTermina">
+                  <mat-datepicker-toggle matIconSuffix [for]="pickerTermina"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerTermina ></mat-datepicker>
+                </mat-form-field>
+
+                <div class="error text-danger" *ngIf="form.get('endTime')!.hasError('required') && form.get('endTime')!.touched">
+                  La fecha de término es requerida.
+                </div>
+                <div class="error text-danger" *ngIf="form.hasError('dateRangeInvalid')">
+                  La fecha final no puede ser menor que la fecha de inicio.
+                </div>
+              </div>
+            </div> -->
+
+            <!-- <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Hora de Inicio</label>
+                <mat-form-field appearance="fill">
+                  <i-feather name="clock"></i-feather>
+                  <mat-label>Hora de Inicio</mat-label>
+                  <input matInput type="time" formControlName="startTimeHour" [step]="60" placeholder="HH:MM AM/PM">
+                </mat-form-field>
+                <div class="error text-danger" *ngIf="form.get('startTimeHour')!.hasError('required') && form.get('startTimeHour')!.touched">
+                  La Hora de Inicio es requerida.
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Hora Final</label>
+                <mat-form-field appearance="fill">
+                  <i-feather name="clock"></i-feather>
+                  <mat-label>Hora Final</mat-label>
+                  <input matInput type="time" formControlName="endTimeHour" [step]="60" placeholder="HH:MM AM/PM">
+                </mat-form-field>
+                <div class="error text-danger" *ngIf="form.get('endTimeHour')!.hasError('required') && form.get('endTimeHour')!.touched">
+                  La Hora Final es requerida.
+                </div>
+              </div>
+            </div> -->
+
+
+          </div>
+          <div class="d-flex justify-content-between">
+            <img src="assets\images\pages\invitations-page\up.png" alt="Atrás"
+            style="cursor:pointer; width:32px; height:32px;"
+                 (click)="stepper.previous()" />
+            
+            <img src="assets\images\pages\invitations-page\down.png" alt="Siguiente" (click)="onStepNext(2, stepper)"
+            style="cursor:pointer; width:32px; height:32px;" />
+          </div>
+        </mat-step>
+
+        <mat-step>
+          <ng-template matStepLabel>Compartir</ng-template>
+          <div class="row">
+            <div class="col-md-6 col-xxl-4 col-xxxl-3">
+              <mat-card class="trinta-card customer-card mb-25 bg-white border-none d-block">
+                <mat-card-content>
+                  <div class="d-flex align-items-center justify-content-between">
+                    <div class="user d-flex align-items-center">
+                      <img src="assets/images/users/user-default.png" class="rounded-circle" alt="user-image">
+                      <div class="info">
+                        <h6>{{ form.controls['name'].value }}</h6>
+                        <!-- <span class="d-block text-body">From - {{ form.get('startTime')?.value ? (form.get('startTime')?.value | date: 'dd/MM/yyyy') : now }}</span> -->
+                      </div>
+                    </div>
+                  </div>
+                  <ul class="list p-0 list-unstyled">
+                    <li class="text-black">
+                      <span class="text-dark fw-medium heading-font-family">Nombre :</span>
+                      {{ form.controls['name'].value }}
+                    </li>
+                    <li class="text-black">
+                      <span class="text-dark fw-medium heading-font-family">Tipo de Acceso :</span>
+                      {{ form.value.accessType === '1' ? 'Vehicular' : 'Peatonal' }}
+                    </li>
+                    <!-- <li class="text-black">
+                      <span class="text-dark fw-medium heading-font-family">Teléfono :</span>
+                      {{ form.controls['phoneNumber'].value }}
+                    </li> -->
+                    <li class="text-black">
+                      <span class="text-dark fw-medium heading-font-family">Inicia :</span>
+                      {{ form.controls['startTime'].value | date:'dd/MM/yyyy' }}
+                      <!-- {{ form.get('startTime')?.value ? (form.get('startTime')?.value | date: 'dd/MM/yyyy') : '' }} -->
+                    </li>
+                    <li class="text-black">
+                      <span class="text-dark fw-medium heading-font-family">Termina :</span>
+                      {{ form.controls['endTime'].value | date:'dd/MM/yyyy'}}
+                      <!-- {{ form.get('endTime')?.value ? (form.get('endTime')?.value | date: 'dd/MM/yyyy') : '' }} -->
+                    </li>
+                    <!-- <li class="text-black">
+                      <span class="text-dark fw-medium heading-font-family">Es reutilizable :</span>
+                      {{ form.controls['isReusable'].value }}
+                    </li> -->
+                    <li class="text-black">
+                      <span class="text-dark fw-medium heading-font-family">Locación :</span>
+                      {{ getFullAddress() }}
+                      <!-- {{ Adresses.find(addr => addr.id === form.value.neighborId)?.fullAddress }} -->
+                    </li>
+                  </ul>
+
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
+          <div class="d-flex justify-content-between">
+            <!-- ensure Back arrow image also uses click to go back -->
+            <img src="assets/images/pages/invitations-page/up.png" alt="Atrás"
+                 style="cursor:pointer; width:32px; height:32px; margin-right:0.5rem;"
+                 (click)="stepper.previous()" />
+            <!-- <button mat-flat-button color="warn" (click)="stepper.reset()">Inicio</button> -->
+            <a class="default-btn" mat-button (click)="onSubmit()">
+              <i class="ri-share-fill"></i> Compartir Invitación
+            </a>
+          </div>
+        </mat-step>   
+
+      </mat-stepper>
+    </form>
+  </mat-card-content>
+</mat-card>
+
+
+
