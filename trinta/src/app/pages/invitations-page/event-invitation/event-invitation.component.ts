@@ -360,7 +360,7 @@ export class EventInvitationComponent implements OnInit{
     //  const shareUrl = `https://www.passo.mx/invitation/detail/${token}`;
 
     const baseUrl = window.location.origin;
-    const shareUrl = `${baseUrl}/invitation/detail/${token}`;
+    const shareUrl = `${baseUrl}/eventinvitation/detail/${token}`;
 
     const message = `¡Has recibido una invitación! Para acceder, pulsa en el siguiente enlace: ${shareUrl}. Gracias por usar nuestro servicio.`;
     

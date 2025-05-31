@@ -5,6 +5,7 @@ import { environment as env } from '../../../../environments/environment.develop
 import { endpoint } from '../../../shared/utils/endpoint.util';
 import { BaseApiResponse } from '../../../shared/commons/base-api-response-interface';
 import { EventInvitation } from '../models/event-invitation-request.inteface';
+import { formatDate } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -20,9 +21,13 @@ export class EventInvitationService {
   createEventInvitation(payload: EventInvitation): Observable<BaseApiResponse<string>> {
     const url = `${env.api}${endpoint.EVENT_INVITATION_CREATE}`; // Ajustar al endpoint adecuado
     const formData = new FormData();
+
+    const startLocal = formatDate(payload.startTime, "yyyy-MM-dd'T'HH:mm:ss", 'en-US');
+    const endLocal   = formatDate(payload.endTime,   "yyyy-MM-dd'T'HH:mm:ss", 'en-US');
+    
     formData.append('phoneNumber', payload.phoneNumber);
-    formData.append('startTime', payload.startTime.toISOString());
-    formData.append('endTime', payload.endTime.toISOString());
+    formData.append('startTime', startLocal);
+    formData.append('endTime', endLocal);
     formData.append('isReusable', payload.isReusable);
     formData.append('neighborId', payload.neighborId.toString());
     formData.append('isValid', payload.isValid.toString());

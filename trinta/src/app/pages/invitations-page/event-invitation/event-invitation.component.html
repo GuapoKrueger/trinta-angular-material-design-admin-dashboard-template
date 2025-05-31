@@ -306,25 +306,31 @@
                   </div>
                   <ul class="list p-0 list-unstyled">
                     <li class="text-black">
-                      <span class="text-dark fw-medium heading-font-family">Nombre :</span>
+                      <span class="text-dark fw-medium heading-font-family">Evento :</span>
                       {{ form.controls['name'].value }}
                     </li>
-                    <li class="text-black">
+                    <!-- <li class="text-black">
                       <span class="text-dark fw-medium heading-font-family">Tipo de Acceso :</span>
                       {{ form.value.accessType === '1' ? 'Vehicular' : 'Peatonal' }}
-                    </li>
+                    </li> -->
                     <!-- <li class="text-black">
                       <span class="text-dark fw-medium heading-font-family">Teléfono :</span>
                       {{ form.controls['phoneNumber'].value }}
                     </li> -->
                     <li class="text-black">
-                      <span class="text-dark fw-medium heading-font-family">Inicia :</span>
+                      <span class="text-dark fw-medium heading-font-family">Fecha :</span>
                       {{ form.controls['startTime'].value | date:'dd/MM/yyyy' }}
                       <!-- {{ form.get('startTime')?.value ? (form.get('startTime')?.value | date: 'dd/MM/yyyy') : '' }} -->
                     </li>
                     <li class="text-black">
-                      <span class="text-dark fw-medium heading-font-family">Termina :</span>
-                      {{ form.controls['endTime'].value | date:'dd/MM/yyyy'}}
+                      <span class="text-dark fw-medium heading-font-family">Hora inicio :</span>
+                      {{ form.controls['startTimeHour'].value }}
+                      <!-- {{ form.get('endTime')?.value ? (form.get('endTime')?.value | date: 'dd/MM/yyyy') : '' }} -->
+                    </li>
+
+                    <li class="text-black">
+                      <span class="text-dark fw-medium heading-font-family">Hora fin :</span>
+                      {{ form.controls['endTimeHour'].value }}
                       <!-- {{ form.get('endTime')?.value ? (form.get('endTime')?.value | date: 'dd/MM/yyyy') : '' }} -->
                     </li>
                     <!-- <li class="text-black">
@@ -336,6 +342,7 @@
                       {{ getFullAddress() }}
                       <!-- {{ Adresses.find(addr => addr.id === form.value.neighborId)?.fullAddress }} -->
                     </li>
+
                   </ul>
 
                 </mat-card-content>

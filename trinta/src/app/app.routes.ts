@@ -175,6 +175,7 @@ import { HomeVisitasComponent } from './pages/home/home-visitas/home-visitas.com
 import { HomeMenuComponent } from './pages/home/home-menu/home-menu.component';
 import { EventInvitationComponent } from './pages/invitations-page/event-invitation/event-invitation.component';
 import { HomeEventComponent } from './pages/home/home-event/home-event.component';
+import { EventInvitationDetailComponent } from './pages/invitations-page/event-invitation-detail/event-invitation-detail.component';
 
 
 export const routes: Routes = [
@@ -330,6 +331,14 @@ export const routes: Routes = [
         children: [
             {path: '', component: SignInComponent},
             {path: 'detail/:token', component: InvitationDetailComponent},
+        ]
+    },
+    {
+        path: 'eventinvitation',
+        component: InvitationsPageComponent,
+        children: [
+            {path: '', component: SignInComponent},
+            {path: 'detail/:token', component: EventInvitationDetailComponent},
         ]
     },
 

@@ -144,3 +144,36 @@ mat-card-header {
 //     }
 //   }
 // }
+
+
+.access-toggle-group {
+  display: inline-flex;
+  background: #f1f3f5;
+  border-radius: 8px;
+  overflow: hidden;
+
+  .mat-button-toggle {
+    flex: 1;
+    text-transform: none;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    color: #5f6368;
+    border-radius: 0;
+    justify-content: center;
+  }
+
+  .mat-button-toggle-checked {
+    background-color: #20c997;  // verde éxito
+    color: #fff;
+
+    mat-icon {
+      color: #fff;
+    }
+  }
+
+  mat-icon {
+    vertical-align: middle;
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+  }
+}

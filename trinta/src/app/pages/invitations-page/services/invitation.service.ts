@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Invitation } from '../models/invitation-request.interface';
 import { BaseApiResponse } from '../../../shared/commons/base-api-response-interface';
@@ -32,10 +32,16 @@ export class InvitationService {
       );
   }
 
-  openDoor(token: string): Observable<BaseApiResponse<boolean>> {
+  openDoor(token: string, accessType:string | null = null): Observable<BaseApiResponse<boolean>> {
     const requestUrl = `${env.api}${endpoint.DOOR_OPEN}${token}`;
+
+let params = new HttpParams();
+    if (accessType !== null) {
+      params = params.set('accessType', accessType);
+    }
+
     return this._httpClient
-    .put<BaseApiResponse<boolean>>(requestUrl, {});
+    .put<BaseApiResponse<boolean>>(requestUrl, {}, { params });
   }
 
   getAllByNeighborId(
