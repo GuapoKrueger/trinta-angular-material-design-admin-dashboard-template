@@ -116,10 +116,17 @@
 
 <!-- Paginador para tarjetas -->
 
+<div class="header-back">
+    <a routerLink="/">
+        <img src="assets/images/pages/back-arrow.png" alt="Volver" width="24" height="24">
+    </a>
+    <h5 class="mb-0">REPORTE DE VISITAS</h5>
+</div>
+
 <br>
 <div class="row">
     <div class="col-md-6 col-xxl-4 col-xxxl-3" *ngFor="let invitation of dataSource.data | slice:0:displayCount">
-        <div class="invitation-card">
+        <div class="invitation-card" [ngClass]="{ 'invitation-card--disabled': !invitation.isUsed }">
             <div class="invitation-content">
               <div class="left-section">
                 <span class="material-symbols-outlined icon">person</span>
@@ -130,14 +137,17 @@
                     <span class="material-symbols-outlined icon">call</span>
                     {{ invitation.phoneNumber | phoneNumber }}
                   </div>
+                  <div class="invitation-card-detail-spacer"></div>
                   <div class="dates">
                     <span class="material-symbols-outlined icon">calendar_month</span>
                     {{ invitation.startTime | date: 'dd/MM' }} – {{ invitation.endTime | date: 'dd/MM' }}
                   </div>
+                  <div class="invitation-card-detail-spacer"></div>
                   <div class="address">
                     <span class="material-symbols-outlined icon">home_pin</span>
                     {{ invitation.fullAddress }}
                   </div>
+                  <div class="invitation-card-detail-spacer"></div>
                 </div>
               </div>
               <div class="status-icon">
@@ -147,9 +157,19 @@
               </div>
             </div>
           
-            <button mat-button class="duplicate-btn" (click)="onDuplicate(invitation)">
+            <!-- <button mat-button class="duplicate-btn" (click)="onDuplicate(invitation)">
               Duplicar
-            </button>
+            </button> -->
+            <div class="text-center">
+                <a
+                    class="duplicate-link"
+                    [class.disabled]="!invitation.isUsed"
+                    (click)="invitation.isUsed && onDuplicate(invitation)"
+                    >
+                Duplicar
+                </a>
+            </div>
+
           </div>
     </div>
 </div>

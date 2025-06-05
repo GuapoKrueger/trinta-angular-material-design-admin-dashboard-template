@@ -348,3 +348,40 @@
 
 
 
+.header-back {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.header-back a {
+  margin-right: 1rem;
+}
+
+
+.invitation-card-detail-spacer {
+  /* ocupa el 50% de la altura del viewport */
+  height: 10px;
+}
+
+.duplicate-link {
+  color: #00b69b;
+  text-decoration: underline;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-block;
+  margin-top: 12px; /* opcional, para separar un poco del contenido */
+  &:hover {
+    color: #009681;
+  }
+}
+
+.invitation-card--disabled {
+  opacity: 0.5;
+  pointer-events: none; // impide interacciones
+}
+
+.duplicate-link.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: default;
+}
