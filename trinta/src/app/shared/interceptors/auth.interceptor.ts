@@ -21,9 +21,10 @@ export const AuthInterceptorFn: HttpInterceptorFn = (req, next) => {
         // Si el servidor devuelve 401 (Unauthorized), intentar refrescar el token
         authService.logout();
         router.navigate(['/authentication']);
-        return throwError('Token ha expirado o el usuario no está autorizado.');
+        return throwError(() => new Error('Token ha expirado o el usuario no está autorizado.'));
       }
-      return throwError(error); // Si el error no es 401, simplemente propagar el error
+      // console.error('Error en la solicitud:', error);
+      return throwError(() => error); // Si el error no es 401, simplemente propagar el error
     })
   );
 };
