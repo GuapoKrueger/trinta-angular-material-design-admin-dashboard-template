@@ -29,6 +29,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { FeathericonsModule } from '../../../icons/feathericons/feathericons.module';
 import { EventInvitation } from '../models/event-invitation-request.inteface';
 import { EventInvitationService } from '../services/event-invitation.service';
+import { environment as env } from '../../../../environments/environment.development';
+
 
 export const dateAndTimeRangeValidator: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
   const sDate = group.get('startTime')!.value;
@@ -357,10 +359,10 @@ export class EventInvitationComponent implements OnInit{
   }
 
   compartir(token: string): void {
-    //  const shareUrl = `https://www.passo.mx/invitation/detail/${token}`;
+    const shareUrl = `https://www.passo.mx/eventinvitation/detail/${token}`;
 
-    const baseUrl = window.location.origin;
-    const shareUrl = `${baseUrl}/eventinvitation/detail/${token}`;
+    // const baseUrl = window.location.origin;
+    // const shareUrl = `${baseUrl}/eventinvitation/detail/${token}`;
 
     const message = `¡Has recibido una invitación! Para acceder, pulsa en el siguiente enlace: ${shareUrl}. Gracias por usar nuestro servicio.`;
     

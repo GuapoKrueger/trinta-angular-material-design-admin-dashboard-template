@@ -18,7 +18,7 @@ export class EventInvitationService {
   /**
    * Envía una invitación de evento con imagen usando FormData
    */
-  createEventInvitation(payload: EventInvitation): Observable<BaseApiResponse<string>> {
+  createEventInvitation(payload: EventInvitation): Observable<BaseApiResponse<boolean>> {
     const url = `${env.api}${endpoint.EVENT_INVITATION_CREATE}`; // Ajustar al endpoint adecuado
     const formData = new FormData();
 
@@ -38,6 +38,8 @@ export class EventInvitationService {
       formData.append('image', payload.image);
     }
 
-    return this.http.post<BaseApiResponse<string>>(url, formData);
+    return this.http.post<BaseApiResponse<boolean>>(url, formData);
   }
 }
+
+

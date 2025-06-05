@@ -80,8 +80,8 @@ export class EventInvitationDetailComponent {
   onSubmit() {
     // const shareUrl = `https://localhost:44307/api/Door/open/${this.token}`;
     // const shareUrl = `https://api.passo.mx/api/Door/open/${this.token}`;
-    const apiUrl = env.api;  
-    const fullUrl = `${apiUrl}Door/open/${this.token}`;
+    //const apiUrl = env.api;  
+    //const fullUrl = `${apiUrl}Door/open/${this.token}`;
 
     if (this.token) {
       this._invitationService.openDoor(this.token, this.invitationDetails?.accessType).subscribe({
