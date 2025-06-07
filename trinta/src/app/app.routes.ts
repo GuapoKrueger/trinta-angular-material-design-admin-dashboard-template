@@ -176,6 +176,7 @@ import { HomeMenuComponent } from './pages/home/home-menu/home-menu.component';
 import { EventInvitationComponent } from './pages/invitations-page/event-invitation/event-invitation.component';
 import { HomeEventComponent } from './pages/home/home-event/home-event.component';
 import { EventInvitationDetailComponent } from './pages/invitations-page/event-invitation-detail/event-invitation-detail.component';
+import { EventInvitationListComponent } from './pages/invitations-page/event-invitation-list/event-invitation-list.component';
 
 
 export const routes: Routes = [
@@ -321,7 +322,8 @@ export const routes: Routes = [
             {path: 'share-invitation', component: ShareInvitationComponent},
             {path: 'add-invitations', component: AddInvitationsComponent},
             {path: 'invitations-list', component: InvitationsListComponent},
-            {path: 'event-invitation', component: EventInvitationComponent}
+            {path: 'event-invitation', component: EventInvitationComponent},
+            { path: 'event-list',        component: EventInvitationListComponent }
         ],
         canActivate : [authGuard]
     },

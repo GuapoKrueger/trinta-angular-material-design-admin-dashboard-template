@@ -139,7 +139,7 @@ export class EventInvitationComponent implements OnInit{
         // accessType: ['1', Validators.required],
         startTimeHour: [null, Validators.required],
         endTimeHour: [null, Validators.required],
-        image: [null, [Validators.required, this.fileValidator(['png','jpg'], 2_000_000)]]
+        image: [null, [Validators.required, this.fileValidator(['png','jpg'], 5_000_000)]]
       },
       { validators: dateAndTimeRangeValidator }
     );

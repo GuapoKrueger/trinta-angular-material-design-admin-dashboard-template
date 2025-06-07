@@ -8,6 +8,7 @@ export interface InvitationResponse {
     location: string;
     avatarUrl?: string;
     accessType: string;
+    imageEventoURL: string;
 }
 
 export interface InvitationByIdNeighborResponse { 
@@ -22,4 +23,19 @@ export interface InvitationByIdNeighborResponse {
     accessType: string;
     neighborAddressId : number;
     fullAddress: string;
+}
+
+
+export interface EventInvitationByIdNeighborResponse { 
+    id: number;
+    guestName: string;
+    startTime: Date;
+    endTime: Date;
+    isActive: boolean;
+    isUsed: boolean;
+    accessType: string;
+    fullAddress: string;
+    token: string;
+    numAccess: number;
+    delete: boolean;
 }

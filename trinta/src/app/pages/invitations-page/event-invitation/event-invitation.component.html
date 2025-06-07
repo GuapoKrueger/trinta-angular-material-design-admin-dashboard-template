@@ -39,6 +39,22 @@
                   <img *ngIf="imagePreview" [src]="imagePreview" alt="Vista previa" class="preview-image" />
                   <!-- <mat-icon class="camera-icon">photo_camera</mat-icon> -->
                 </div>
+                <div class="error text-danger" *ngIf="form.get('image')?.touched">
+                  <ng-container *ngIf="form.get('image')?.hasError('tooLarge')">
+                    El archivo excede el tamaño máximo (5 MB).
+                  </ng-container>
+                  <ng-container *ngIf="form.get('image')?.hasError('badExt')">
+                    Sólo se permiten imágenes .png o .jpg.
+                  </ng-container>
+                  <ng-container *ngIf="form.get('image')?.hasError('required')">
+                    La imagen es requerida.
+                  </ng-container>
+                </div>
+                <p class="text-center text-muted mt-2" *ngIf="!imagePreview">
+                  Agregar imagen. 
+                  <br>
+                  Obligatorio.
+                </p>
 
                 <input #fileInput type="file" accept="image/*" hidden (change)="onFileSelected($event)" />
 

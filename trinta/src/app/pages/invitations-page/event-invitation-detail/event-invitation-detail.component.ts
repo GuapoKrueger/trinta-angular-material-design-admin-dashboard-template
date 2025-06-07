@@ -63,7 +63,8 @@ export class EventInvitationDetailComponent {
       this._invitationService.invitationByToken(this.token).subscribe({
           next: (response) => {
               this.invitationDetails = response;
-              this.imagenBase64 = response.avatarUrl;
+              // this.imagenBase64 = response.avatarUrl;
+              // this.imagenBase64 = response.ImageEventoURL;
               console.log(response);
           },
           error: (error) => {

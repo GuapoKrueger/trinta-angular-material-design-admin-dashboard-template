@@ -24,6 +24,7 @@ export const endpoint = {
 
     //EventInvitation
     EVENT_INVITATION_CREATE: 'EventInvitation/Create',
+    EVENT_INVITATION: 'EventInvitation',
 
     //
     //Abrir Puerta

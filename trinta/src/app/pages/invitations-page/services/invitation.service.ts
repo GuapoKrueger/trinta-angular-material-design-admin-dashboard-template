@@ -5,7 +5,7 @@ import { BaseApiResponse } from '../../../shared/commons/base-api-response-inter
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { environment as env } from '../../../../environments/environment.development';
 import { endpoint } from '../../../shared/utils/endpoint.util';
-import { InvitationByIdNeighborResponse, InvitationResponse } from '../models/invitation-response.interface';
+import { EventInvitationByIdNeighborResponse, InvitationByIdNeighborResponse, InvitationResponse } from '../models/invitation-response.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -67,4 +67,36 @@ let params = new HttpParams();
         })
       );
   }
+
+  getAllEventInvitationsByNeighborId(
+    neighborId: number,
+    size: number,
+    sort: string,
+    order: string,
+    numPage: number,
+    getInputs: string
+  ): Observable<BaseApiResponse<EventInvitationByIdNeighborResponse[]>> {
+    const requestUrl = `${env.api}${endpoint.EVENT_INVITATION}?NeighborId=${neighborId}&records=${size}&sort=${sort}&order=${order}&numPage=${numPage + 1
+    }${getInputs}`;
+  
+    return this._httpClient
+      .get<BaseApiResponse<EventInvitationByIdNeighborResponse[]>>(requestUrl)
+      .pipe(
+        map((resp) => {
+          resp.data.forEach(function (c: EventInvitationByIdNeighborResponse) {
+           
+          });
+
+          return resp;
+        })
+      );
+  }
+
+
+  deleteEventInvitation(id: number): Observable<BaseApiResponse<boolean>> {
+    const requestUrl = `${env.api}${endpoint.EVENT_INVITATION}/${id}`;
+    return this._httpClient
+      .delete<BaseApiResponse<boolean>>(requestUrl);
+  }
+
 }

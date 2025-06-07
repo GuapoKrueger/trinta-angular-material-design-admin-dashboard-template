@@ -368,3 +368,13 @@
     margin-right: 0.5rem;
   }
 }
+
+
+.event-image-thumb {
+  max-width: 200px;
+  cursor: pointer;
+  transition: transform .2s;
+  &:hover {
+    transform: scale(1.05);
+  }
+}

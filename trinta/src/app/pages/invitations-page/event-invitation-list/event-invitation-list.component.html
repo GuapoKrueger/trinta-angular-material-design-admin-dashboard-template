@@ -1,0 +1,203 @@
+<div *ngIf="false">
+
+<mat-card class="trinta-card invitation-list-card mb-25 bg-white border-none d-block">
+    <mat-card-header>
+        <mat-card-title>
+            <h5 class="mt-0 mb-0">
+                Lista de Invitaciones
+            </h5>
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="invitation-list-table">
+            <div class="table-responsive">
+                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                    <!-- Phone Number Column -->
+                    <ng-container matColumnDef="phoneNumber">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            Teléfono
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="pl-0">
+                            {{element.phoneNumber}}
+                        </td>
+                    </ng-container>
+
+                    <!-- Guest Name Column -->
+                    <ng-container matColumnDef="guestName">
+                        <th mat-header-cell *matHeaderCellDef>
+                            Invitado
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.guestName}}
+                        </td>
+                    </ng-container>
+
+                    <!-- Start Time Column -->
+                    <ng-container matColumnDef="startTime">
+                        <th mat-header-cell *matHeaderCellDef>
+                            Fecha Inicio
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.startTime | date: 'dd/MM/yyyy'}}
+                        </td>
+                    </ng-container>
+
+                    <!-- End Time Column -->
+                    <ng-container matColumnDef="endTime">
+                        <th mat-header-cell *matHeaderCellDef>
+                            Fecha Fin
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.endTime | date: 'dd/MM/yyyy'}}
+                        </td>
+                    </ng-container>
+
+                    <!-- Is Reusable Column -->
+                    <ng-container matColumnDef="isReusable">
+                        <th mat-header-cell *matHeaderCellDef>
+                            Reutilizable
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.isReusable}}
+                        </td>
+                    </ng-container>
+
+                    <!-- Is Active Column -->
+                    <ng-container matColumnDef="isActive">
+                        <th mat-header-cell *matHeaderCellDef>
+                            Activa
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.isActive ? 'Sí' : 'No'}}
+                        </td>
+                    </ng-container>
+
+                    <!-- Is Used Column -->
+                    <ng-container matColumnDef="isUsed">
+                        <th mat-header-cell *matHeaderCellDef>
+                            Usada
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.isUsed ? 'Sí' : 'No'}}
+                        </td>
+                    </ng-container>
+
+                    <!-- Action Column -->
+                    <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef class="text-end pr-0">
+                            Acción
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="text-end pr-0">
+                            <div class="action">
+                                <!-- <button mat-icon-button color="primary" class="p-0 min-w-auto lh-1 h-auto" (click)="onViewDetails(element)">
+                                    <i class="ri-eye-line"></i>
+                                </button> -->
+                                <button mat-icon-button color="accent" class="p-0 min-w-auto lh-1 h-auto" (click)="onDuplicate(element)"> <!-- Nuevo Botón -->
+                                    <i class="ri-file-copy-line"></i> <!-- Icono para duplicar/crear nuevo -->
+                                </button>
+                                <button mat-icon-button color="warn" class="p-0 min-w-auto lh-1 h-auto" (click)="onDelete(element)">
+                                    <i class="ri-delete-bin-line"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+            </div>
+            <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator> -->
+        </div>
+    </mat-card-content>
+</mat-card>
+</div>
+
+
+
+<!-- Paginador para tarjetas -->
+
+<div class="header-back">
+    <a routerLink="/">
+        <img src="assets/images/pages/back-arrow.png" alt="Volver" width="24" height="24">
+    </a>
+    <h5 class="mb-0">REPORTE DE EVENTOS</h5>
+</div>
+
+<br>
+<div class="row">
+    <div class="col-md-6 col-xxl-4 col-xxxl-3" *ngFor="let invitation of dataSource.data | slice:0:displayCount">
+        <div class="invitation-card" [ngClass]="{ 'invitation-card--disabled': invitation.delete }">
+            <div class="invitation-content">
+              <div class="left-section">
+                <span class="material-symbols-outlined icon">person</span>
+                <div class="details">
+                    <strong>{{ invitation.guestName }}</strong>
+                    <div class="invitation-card-detail-spacer"></div>
+                        <div class="address">
+                        <span class="material-symbols-outlined icon">home_pin</span>
+                        {{ invitation.fullAddress }}
+                    </div>
+                    <div class="invitation-card-detail-spacer"></div>
+                        <div class="dates">
+                        <span class="material-symbols-outlined icon">Schedule</span>
+                        {{ invitation.startTime | date:'hh:mm a' }} – {{ invitation.endTime | date:'hh:mm a' }}
+                        </div>
+                    <div class="invitation-card-detail-spacer"></div>
+                    <!-- <div class="dates">
+                        <span class="material-symbols-outlined icon">calendar_month</span>
+                        {{ invitation.startTime | date: 'dd/MM/yyyy' }} 
+                    </div> -->
+                    <!-- <div class="invitation-card-detail-spacer"></div> -->
+                    <div class="botom_details mt-4 grid grid-cols-2 gap-4 border-t pt-4">
+                        <div class="botom_details_item_Left">
+                            <div class="dates d-flex align-items-center">
+                                <span class="material-symbols-outlined icon">calendar_month</span>
+                                <span>{{ invitation.startTime | date: 'dd/MM/yyyy' }} </span>
+                            </div>
+                            <!-- <button class="w-full bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600">Cancelar</button> -->
+                             <!-- cambiar button por link -->
+                            <a class="action-link d-block w-100 text-center cancelar-link" (click)="onDelete(invitation)">Cancelar</a>
+                        </div>
+                        <div class="botom_details_item_right">
+                            <div class="access d-flex align-items-center">
+                                <span class="material-symbols-outlined icon">Person</span>
+                                <span>{{invitation.numAccess}} accesos</span>
+                            </div>
+                            <a class="action-link d-block w-100 text-center compartir-link" (click)="compartir(invitation.token)">Compartir</a>
+                        </div>
+                    </div>
+                </div>
+              </div>
+              <div class="status-icon">
+                <span class="material-symbols-outlined">
+                  {{ invitation.isUsed ? 'check_circle' : 'radio_button_unchecked' }}
+                </span>
+              </div>
+
+
+
+            </div>
+          
+            <!-- <button mat-button class="duplicate-btn" (click)="onDuplicate(invitation)">
+              Duplicar
+            </button> -->
+            <!-- <div class="text-center">
+                <a
+                    class="duplicate-link"
+                    [class.disabled]="!invitation.isUsed"
+                    (click)="invitation.isUsed && onDuplicate(invitation)"
+                    >
+                Duplicar
+                </a>
+            </div> -->
+
+          </div>
+    </div>
+</div>
+
+<!-- Botón Ver más -->
+<div class="text-center" *ngIf="displayCount < dataSource.data.length">
+  <button mat-button color="primary" (click)="onViewMore()">Ver más</button>
+</div>
+
+

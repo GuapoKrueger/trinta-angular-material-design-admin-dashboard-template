@@ -13,8 +13,23 @@
                         Accede al fraccionamiento usando esta invitación.
                     </p>
                 </div>
+                <div class="event-image text-center mb-4">
+                <ng-container *ngIf="invitationDetails">
+                    <!-- prueba sin el <a> para descartar wrapper -->
+                    <img
+                    *ngIf="invitationDetails.imageEventoURL; else noImage"
+                    [src]="invitationDetails.imageEventoURL"
+                    alt="Imagen del evento"
+                    class="img-fluid event-image-thumb rounded"
+                    />
+                </ng-container>
+                <ng-template #noImage>
+                    <p class="text-muted">No hay imagen disponible</p>
+                </ng-template>
+                </div>
+
                 <div class="user text-center">
-                    <img src="assets/images/users/user-default.png" class="rounded-circle" alt="admin-image">
+                    <!-- <img src="assets/images/users/user-default.png" class="rounded-circle" alt="admin-image"> -->
                     <span class="d-block fs-16 fw-semibold heading-font-family">
                         {{ invitationDetails?.neighborName }}
                     </span>
