@@ -145,35 +145,70 @@ mat-card-header {
 //   }
 // }
 
+// Estilos para la sección de carga de imagen
+button[mat-raised-button][color="primary"] {
+  background-color: #00b388 !important;
+  color: #ffffff !important;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-weight: 500;
+  text-transform: none;
+  transition: background-color 0.3s ease;
+}
+button[mat-raised-button][color="primary"]:hover {
+  background-color: #008f72 !important;
+}
 
-.access-toggle-group {
-  display: inline-flex;
-  background: #f1f3f5;
-  border-radius: 8px;
-  overflow: hidden;
+img[alt="Vista previa"] {
+  display: block;
+  margin: 12px auto;
+  max-width: 100%;
+  max-height: 200px;
+  border: 2px solid #00b388;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
 
-  .mat-button-toggle {
-    flex: 1;
-    text-transform: none;
-    padding: 0.5rem 1rem;
-    font-weight: 500;
-    color: #5f6368;
-    border-radius: 0;
-    justify-content: center;
-  }
+.error.text-danger {
+  color: #e53935;
+  font-size: 0.875rem;
+  margin-top: 4px;
+}
 
-  .mat-button-toggle-checked {
-    background-color: #20c997;  // verde éxito
-    color: #fff;
+// Imagen circular con ícono de cámara superpuesto
+.image-upload-wrapper {
+  text-align: center;
+}
 
-    mat-icon {
-      color: #fff;
-    }
-  }
+.image-preview-container {
+  width: 150px;
+  height: 150px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: visible;
+  cursor: pointer;
+}
 
-  mat-icon {
-    vertical-align: middle;
-    font-size: 1.2rem;
-    margin-right: 0.5rem;
-  }
+.image-preview-container .preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.camera-icon {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background-color: #3E4095;
+  color: white;
+  border-radius: 50%;
+  padding: 6px;
+  font-size: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 2;
 }

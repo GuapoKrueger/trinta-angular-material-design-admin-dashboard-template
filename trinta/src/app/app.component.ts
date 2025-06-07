@@ -85,7 +85,8 @@ export class AppComponent {
     // Método para verificar si la URL contiene el prefijo /invitation/detail
   isInvitationDetailRoute(): boolean {
     // Obtiene la URL actual y verifica si contiene el prefijo /invitation/detail
-    return this.router.url.startsWith('/invitation/detail');
+    const url = this.router.url;
+    return url.startsWith('/invitation/detail') || url.startsWith('/eventinvitation/detail');;
   }
 
 }

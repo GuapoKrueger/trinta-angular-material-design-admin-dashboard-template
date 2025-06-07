@@ -120,34 +120,52 @@
     <a routerLink="/">
         <img src="assets/images/pages/back-arrow.png" alt="Volver" width="24" height="24">
     </a>
-    <h5 class="mb-0">REPORTE DE VISITAS</h5>
+    <h5 class="mb-0">REPORTE DE EVENTOS</h5>
 </div>
 
 <br>
 <div class="row">
     <div class="col-md-6 col-xxl-4 col-xxxl-3" *ngFor="let invitation of dataSource.data | slice:0:displayCount">
-        <div class="invitation-card" [ngClass]="{ 'invitation-card--disabled': !invitation.isUsed }">
+        <div class="invitation-card" [ngClass]="{ 'invitation-card--disabled': invitation.delete }">
             <div class="invitation-content">
               <div class="left-section">
                 <span class="material-symbols-outlined icon">person</span>
                 <div class="details">
-                  <strong>{{ invitation.guestName }}</strong>
-                  <br>
-                  <div class="phone">
-                    <span class="material-symbols-outlined icon">call</span>
-                    {{ invitation.phoneNumber | phoneNumber }}
-                  </div>
-                  <div class="invitation-card-detail-spacer"></div>
-                  <div class="dates">
-                    <span class="material-symbols-outlined icon">calendar_month</span>
-                    {{ invitation.startTime | date: 'dd/MM' }} – {{ invitation.endTime | date: 'dd/MM' }}
-                  </div>
-                  <div class="invitation-card-detail-spacer"></div>
-                  <div class="address">
-                    <span class="material-symbols-outlined icon">home_pin</span>
-                    {{ invitation.fullAddress }}
-                  </div>
-                  <div class="invitation-card-detail-spacer"></div>
+                    <strong>{{ invitation.guestName }}</strong>
+                    <div class="invitation-card-detail-spacer"></div>
+                        <div class="address">
+                        <span class="material-symbols-outlined icon">home_pin</span>
+                        {{ invitation.fullAddress }}
+                    </div>
+                    <div class="invitation-card-detail-spacer"></div>
+                        <div class="dates">
+                        <span class="material-symbols-outlined icon">Schedule</span>
+                        {{ invitation.startTime | date:'hh:mm a' }} – {{ invitation.endTime | date:'hh:mm a' }}
+                        </div>
+                    <div class="invitation-card-detail-spacer"></div>
+                    <!-- <div class="dates">
+                        <span class="material-symbols-outlined icon">calendar_month</span>
+                        {{ invitation.startTime | date: 'dd/MM/yyyy' }} 
+                    </div> -->
+                    <!-- <div class="invitation-card-detail-spacer"></div> -->
+                    <div class="botom_details mt-4 grid grid-cols-2 gap-4 border-t pt-4">
+                        <div class="botom_details_item_Left">
+                            <div class="dates d-flex align-items-center">
+                                <span class="material-symbols-outlined icon">calendar_month</span>
+                                <span>{{ invitation.startTime | date: 'dd/MM/yyyy' }} </span>
+                            </div>
+                            <!-- <button class="w-full bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600">Cancelar</button> -->
+                             <!-- cambiar button por link -->
+                            <a class="action-link d-block w-100 text-center cancelar-link" (click)="onDelete(invitation)">Cancelar</a>
+                        </div>
+                        <div class="botom_details_item_right">
+                            <div class="access d-flex align-items-center">
+                                <span class="material-symbols-outlined icon">Person</span>
+                                <span>{{invitation.numAccess}} accesos</span>
+                            </div>
+                            <a class="action-link d-block w-100 text-center compartir-link" (click)="compartir(invitation.token)">Compartir</a>
+                        </div>
+                    </div>
                 </div>
               </div>
               <div class="status-icon">
@@ -155,12 +173,15 @@
                   {{ invitation.isUsed ? 'check_circle' : 'radio_button_unchecked' }}
                 </span>
               </div>
+
+
+
             </div>
           
             <!-- <button mat-button class="duplicate-btn" (click)="onDuplicate(invitation)">
               Duplicar
             </button> -->
-            <div class="text-center">
+            <!-- <div class="text-center">
                 <a
                     class="duplicate-link"
                     [class.disabled]="!invitation.isUsed"
@@ -168,7 +189,7 @@
                     >
                 Duplicar
                 </a>
-            </div>
+            </div> -->
 
           </div>
     </div>

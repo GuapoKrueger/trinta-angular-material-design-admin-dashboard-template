@@ -31,7 +31,7 @@ export class FraccionamientosService {
     order: string,
     numPage: number,
     getInputs: string
-  ): Observable<BaseApiResponse<NeighborhoodResponse>> {
+  ): Observable<BaseApiResponse<NeighborhoodResponse[]>> {
     const requestUrl = `${environment.api}${
       endpoint.LIST_NEIGHBORHOOD
     }?records=${size}&sort=${sort}&order=${order}&numPage=${
@@ -39,7 +39,7 @@ export class FraccionamientosService {
     }${getInputs}`;
 
     return this._httpClient
-      .get<BaseApiResponse<NeighborhoodResponse>>(requestUrl)
+      .get<BaseApiResponse<NeighborhoodResponse[]>>(requestUrl)
       .pipe(
         map((resp) => {
           resp.data.forEach(function (c: NeighborhoodResponse) {

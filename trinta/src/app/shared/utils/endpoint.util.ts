@@ -22,6 +22,10 @@ export const endpoint = {
     INVITATION_BY_TOKEN: 'Invitation/detail/',
     INVITATION_BY_NEIGHBOR: 'Invitation',
 
+    //EventInvitation
+    EVENT_INVITATION_CREATE: 'EventInvitation/Create',
+    EVENT_INVITATION: 'EventInvitation',
+
     //
     //Abrir Puerta
     DOOR_OPEN: 'Door/open/',

@@ -40,7 +40,7 @@ export class AddAddressDialogComponent implements OnInit {
   isEditMode = false; // Flag to track if editing
 
   addressForm: FormGroup;
-  neighborhoods: Neighborhood[] = [];
+  neighborhoods: NeighborhoodResponse[] = [];
   subdivisions: Subdivision[] = [];
   streets: Street[] = [];
 

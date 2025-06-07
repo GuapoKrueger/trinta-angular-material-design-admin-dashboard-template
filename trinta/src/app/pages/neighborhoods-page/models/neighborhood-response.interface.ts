@@ -1,13 +1,13 @@
 export interface NeighborhoodResponse {
-    Id : number;
-    Name: string;
-    City: string;
-    Municipal: string
-    State: boolean;
-    StateNeighborhood: string
-    Latitude: string;
-    Longitude: string
-    HasSubdivision: boolean;
+    id : number;
+    name: string;
+    city: string;
+    municipal: string
+    state: boolean;
+    stateNeighborhood: string
+    latitude: string;
+    longitude: string
+    hasSubdivision: boolean;
 }
 
 export interface NeighborhoodByIdResponse  {

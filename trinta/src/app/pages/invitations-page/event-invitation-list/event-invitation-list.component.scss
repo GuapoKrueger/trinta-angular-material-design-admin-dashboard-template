@@ -363,7 +363,7 @@
   height: 10px;
 }
 
-.duplicate-link {
+.compartir-link {
   color: #00b69b;
   text-decoration: underline;
   font-weight: 500;
@@ -372,6 +372,18 @@
   margin-top: 12px; /* opcional, para separar un poco del contenido */
   &:hover {
     color: #009681;
+  }
+}
+
+.cancelar-link {
+  color: #b60000;
+  text-decoration: underline;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-block;
+  margin-top: 12px; /* opcional, para separar un poco del contenido */
+  &:hover {
+    color: #b60000;
   }
 }
 
@@ -384,4 +396,46 @@
   opacity: 0.5;
   pointer-events: none;
   cursor: default;
+}
+
+
+.botom_details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+//   margin-top: 1rem;     /* ya tenías mt-4 */
+//   padding-top: 1rem;    /* ya tenías pt-4 */
+  //border-top: 1px solid #e0e0e0; /* ya tenías border-t */
+}
+
+.botom_details_item_Left,
+.botom_details_item_right {
+  flex: 1;              /* cada uno ocupa 50% */
+  align-items: center;
+}
+
+.botom_details_item_Left {
+   text-align: left;
+   padding-right: 2.5rem;
+}
+
+.botom_details_item_right {
+      text-align: left;
+    padding-left: 2.5rem;
+}
+
+.botom_details_item_Left .action-link,
+.botom_details_item_right .action-link {
+  margin-top: 1rem;  // ajusta el valor según necesites
+}
+
+.dates, .access {
+  .icon {
+    font-size: 1.4rem;
+    color: #4a4a4a;
+  }
+  span:last-child {
+    font-size: 0.95rem;
+    color: #4a4a4a;
+  }
 }

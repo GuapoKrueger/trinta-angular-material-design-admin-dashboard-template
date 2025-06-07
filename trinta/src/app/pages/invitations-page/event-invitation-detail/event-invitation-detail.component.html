@@ -1,0 +1,113 @@
+<div class="lock-screen-area">
+    <div class="d-table">
+        <div class="d-table-cell">
+            <div class="trinta-form ml-auto mr-auto bg-white border-radius">
+                <div class="user text-center">
+                    <img src="assets/images/Passo_Logo_64.png" class="rounded-circle" alt="admin-image">
+                </div>  
+                <div class="title text-center">
+                    <h3>
+                        Recibiste un Passo
+                    </h3>
+                    <p class="text-black fs-15">
+                        Accede al fraccionamiento usando esta invitación.
+                    </p>
+                </div>
+                <div class="event-image text-center mb-4">
+                <ng-container *ngIf="invitationDetails">
+                    <!-- prueba sin el <a> para descartar wrapper -->
+                    <img
+                    *ngIf="invitationDetails.imageEventoURL; else noImage"
+                    [src]="invitationDetails.imageEventoURL"
+                    alt="Imagen del evento"
+                    class="img-fluid event-image-thumb rounded"
+                    />
+                </ng-container>
+                <ng-template #noImage>
+                    <p class="text-muted">No hay imagen disponible</p>
+                </ng-template>
+                </div>
+
+                <div class="user text-center">
+                    <!-- <img src="assets/images/users/user-default.png" class="rounded-circle" alt="admin-image"> -->
+                    <span class="d-block fs-16 fw-semibold heading-font-family">
+                        {{ invitationDetails?.neighborName }}
+                    </span>
+                </div>
+
+                    <div class="form-group">
+                        <mat-card class="trinta-card client-card mb-25 bg-white border-none d-block">
+                            <mat-card-header>
+                                <mat-card-title></mat-card-title>
+                            </mat-card-header>
+                            <mat-card-content>
+                                <ul class="list p-0 list-unstyled">
+                                    <li class="text-black">
+                                        <span class="text-dark fw-medium heading-font-family">
+                                            Nombre del evento :
+                                        </span>
+                                        {{ invitationDetails?.guestName }}
+                                    </li>
+
+       
+                                    <li class="text-black">
+                                        <span class="text-dark fw-medium heading-font-family">
+                                            Fecha :
+                                        </span>
+                                        {{ invitationDetails?.startTime | date: 'dd/MM/yyyy' }}
+                                    </li>
+                                    <li class="text-black">
+                                        <span class="text-dark fw-medium heading-font-family">
+                                            Inicia :
+                                        </span>
+                                        {{ invitationDetails?.startTime | date: 'hh:mm a' }}
+                                    </li>
+                                    <li class="text-black">
+                                        <span class="text-dark fw-medium heading-font-family">
+                                            Termina :
+                                        </span>
+                                        {{ invitationDetails?.endTime | date: 'hh:mm a' }}
+                                    </li>
+                                </ul>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+
+            
+                    <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="mb-20">
+                        <label class="main-label d-block lh-1 text-black mb-10">Tipo de Acceso</label>
+                        <!-- <mat-radio-group  class="example1" formControlName="accessType">
+                        <mat-radio-button value="1" class="mr-10">Vehicular</mat-radio-button>
+                        <mat-radio-button value="2">Peatonal</mat-radio-button>
+                        </mat-radio-group> -->
+                        <mat-button-toggle-group
+                            
+                            class="access‐toggle-group"
+                            
+                            (change)="onAccessTypeChange($event.value)">
+                            <mat-button-toggle [value]="1">
+                            <mat-icon>directions_car</mat-icon>
+                            Vehicular
+                            </mat-button-toggle>
+                            <mat-button-toggle [value]="2">
+                            <mat-icon>directions_walk</mat-icon>
+                            Peatonal
+                            </mat-button-toggle>
+                        </mat-button-toggle-group>
+                        <!-- <div class="error text-danger" *ngIf="form.get('accessType')!.hasError('required') && form.get('accessType')!.touched">
+                        Debes seleccionar un tipo de acceso.
+                        </div> -->
+                    </div>
+                    </div>
+                    </div>
+
+                    <button mat-button [disabled]="!isAccessSelected" (click)="onSubmit()">
+                        Entrar
+                    </button>
+             
+            </div>
+        </div>
+    </div>
+</div>
