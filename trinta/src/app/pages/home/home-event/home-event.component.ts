@@ -12,7 +12,7 @@ import { NgForOf } from '@angular/common';
 })
 export class HomeEventComponent {
     cards = [
-      { label: 'Registrar eventos', route: '/invitations/event-invitation', img: 'assets/images/pages/home/visit.png' },
-      { label: 'Reporte eventos', route: '/invitations/event-list', img: 'assets/images/pages/home/report.png' }
+      { label: 'Registrar eventos', route: '/invitations/event-invitation', img: 'assets/images/pages/home/Eventos.png' },
+      { label: 'Reporte eventos', route: '/invitations/event-list', img: 'assets/images/pages/home/ReporEventos.png' }
     ];
 }

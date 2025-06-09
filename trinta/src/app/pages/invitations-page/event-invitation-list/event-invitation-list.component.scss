@@ -439,3 +439,32 @@
     color: #4a4a4a;
   }
 }
+
+
+
+// .botom_details {
+//   display: flex;
+//   flex-direction: row;
+//   flex-wrap: wrap;
+//   gap: 1rem;
+// }
+
+// .botom_details_item_Left,
+// .botom_details_item_right {
+//   flex: 1 1 100%; // Ocupa 100% en móviles, pero permite ajuste
+//   min-width: 0;
+// }
+
+.access span {
+  overflow-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.invitation-card {
+  overflow: hidden; // oculta el overflow
+}
+
+.invitation-content {
+  overflow-x: hidden;
+}

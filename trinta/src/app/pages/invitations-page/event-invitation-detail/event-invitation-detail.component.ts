@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Router, RouterLink, ActivatedRoute  } from '@angular/router';
+import { Router, ActivatedRoute  } from '@angular/router';
 import { FeathericonsModule } from '../../../icons/feathericons/feathericons.module';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
@@ -21,7 +21,6 @@ import { environment as env } from '../../../../environments/environment.develop
   selector: 'app-event-invitation-detail',
   standalone: true,
   imports: [    
-    RouterLink, 
     MatFormFieldModule, 
     MatInputModule, 
     MatCheckboxModule, 
@@ -56,6 +55,7 @@ export class EventInvitationDetailComponent {
   }
 
   ngOnInit() {
+    console.log('EventInvitationDetailComponent initialized');
     this.token = this.route.snapshot.paramMap.get('token');
     
 
