@@ -177,6 +177,7 @@ import { EventInvitationComponent } from './pages/invitations-page/event-invitat
 import { HomeEventComponent } from './pages/home/home-event/home-event.component';
 import { EventInvitationDetailComponent } from './pages/invitations-page/event-invitation-detail/event-invitation-detail.component';
 import { EventInvitationListComponent } from './pages/invitations-page/event-invitation-list/event-invitation-list.component';
+import { NeighborAddressResolver } from './pages/invitations-page/resolver/neighbor-address.resolver';
 
 
 export const routes: Routes = [
@@ -319,7 +320,7 @@ export const routes: Routes = [
         component: InvitationsPageComponent,
         children: [
             {path: '', component: ShareInvitationComponent },
-            {path: 'share-invitation', component: ShareInvitationComponent},
+            {path: 'share-invitation', component: ShareInvitationComponent, resolve: { addresses: NeighborAddressResolver }},
             {path: 'add-invitations', component: AddInvitationsComponent},
             {path: 'invitations-list', component: InvitationsListComponent},
             {path: 'event-invitation', component: EventInvitationComponent},
@@ -341,6 +342,7 @@ export const routes: Routes = [
         children: [
             {path: '', component: SignInComponent},
             {path: 'detail/:token', component: EventInvitationDetailComponent},
+            {path: 'detail', component: EventInvitationDetailComponent},
         ]
     },
 

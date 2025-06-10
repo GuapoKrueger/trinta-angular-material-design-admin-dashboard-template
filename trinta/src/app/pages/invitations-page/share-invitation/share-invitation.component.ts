@@ -19,7 +19,7 @@ import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { ToggleService } from '../../../common/header/toggle.service';
 import { MatDatepickerModule} from '@angular/material/datepicker';
 import { MatRadioModule } from '@angular/material/radio';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { AddressResponse, NeighborAddressResponse } from '../../neighbors-page/models/neighbor-response.interface';
 import { NeighborService } from '../../neighbors-page/services/neighbor.service';
@@ -91,20 +91,12 @@ export class ShareInvitationComponent implements OnInit{
   public token: string = '';
 
   constructor(        
-    public toggleService: ToggleService
-  ){
+    public toggleService: ToggleService,
+    private route: ActivatedRoute
+  )
+  {
     this.IdNeighbor = this._authService.userIdGet;
-
-    this._neighborService.getNeighborAddresses(this.IdNeighbor).subscribe({
-      next: (response) => {
-        this.Adresses = response.data; // Aquí extraes el arreglo de NeighborAddressResponse[]
-      },
-      error: (error) => {
-        console.error('Error al obtener las direcciones:', error);
-        this.Adresses = []; // Opcional: asignar arreglo vacío en caso de error
-      }
-    });
-
+    this.Adresses = this.route.snapshot.data['addresses'];
   }
 
   ngOnInit(): void {

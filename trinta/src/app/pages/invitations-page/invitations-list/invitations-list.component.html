@@ -160,7 +160,7 @@
             <!-- <button mat-button class="duplicate-btn" (click)="onDuplicate(invitation)">
               Duplicar
             </button> -->
-            <div class="text-center">
+            <!-- <div class="text-center">
                 <a
                     class="duplicate-link"
                     [class.disabled]="!invitation.isUsed"
@@ -168,7 +168,34 @@
                     >
                 Duplicar
                 </a>
-            </div>
+            </div> -->
+                    <div class="botom_details mt-4 flex flex-col sm:flex-row gap-4 border-t pt-4">
+                    <!-- FECHA Y CANCELAR -->
+                    <div class="botom_details_item_Left w-full">
+                        <div class="flex flex-col xs:flex-row xs:justify-between xs:items-center gap-1">
+                        <a
+                            class="duplicate-link"
+                            [class.disabled]="!invitation.isUsed"
+                            (click)="invitation.isUsed && onDuplicate(invitation)"
+                            >
+                            Duplicar
+                        </a>
+                        </div>
+                    </div>
+
+                    <!-- ACCESOS Y COMPARTIR -->
+                    <div class="botom_details_item_right w-full">
+                        <div class="flex flex-col xs:flex-row xs:justify-between xs:items-center gap-1 mt-2 sm:mt-0">
+                        <a class="text-green-600 text-sm font-medium compartir-link" (click)="compartir(invitation.token)">
+                            Compartir
+                        </a>
+                        </div>
+                    </div>
+                    </div>
+
+
+
+
 
           </div>
     </div>
