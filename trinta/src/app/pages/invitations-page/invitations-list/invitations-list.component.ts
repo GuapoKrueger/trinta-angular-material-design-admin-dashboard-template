@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { FeathericonsModule } from '../../../icons/feathericons/feathericons.module';
 import { PhoneNumberPipe } from '../../../shared/pipes/phone-number.pipe';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-invitations-list',
@@ -90,5 +91,32 @@ export class InvitationsListComponent implements OnInit {
   onDuplicate(element: any): void {
     this.router.navigate(['/invitations/share-invitation'], { state: { invitationData: element } });
   }
+
+    compartir(token: string): void {
+      //const shareUrl = `https://www.passo.mx/eventinvitation/detail/${token}`;
+  
+      const baseUrl = window.location.origin;
+      const shareUrl = `${baseUrl}/eventinvitation/detail/${token}`;
+  
+      const message = `¡Has recibido una invitación! Para acceder, pulsa en el siguiente enlace: ${shareUrl}. Gracias por usar nuestro servicio.`;
+      
+    
+      if (navigator.share) {
+        navigator.share({
+          title: `Passo te abre las puertas.`,
+          text: `No hay que pensarlo mucho, un Passo y estás dentro, Vamos!. ¡Haz clic!.`, 
+          url: shareUrl
+        }).then(() => {
+          console.log('Invitación compartida exitosamente');
+        }).catch(console.error);
+      } else {
+        Swal.fire({
+          title: 'Error!',
+          text: 'La función de compartir no está disponible en este navegador.',
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
+      }
+    }
   
 }

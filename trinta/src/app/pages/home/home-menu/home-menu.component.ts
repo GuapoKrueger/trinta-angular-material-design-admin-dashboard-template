@@ -13,7 +13,7 @@ import { NgForOf } from '@angular/common';
 export class HomeMenuComponent {
     cards = [
       { label: 'Visitas', route: '/home/visitas', img: 'assets/images/pages/home/visit.png' },
-      { label: 'Eventos', route: '/home/eventos', img: 'assets/images/pages/home/report.png' }
+      { label: 'Eventos', route: '/home/eventos', img: 'assets/images/pages/home/Eventos.png' }
     ];
 }
 

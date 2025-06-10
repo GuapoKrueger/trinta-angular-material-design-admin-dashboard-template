@@ -23,6 +23,7 @@ export interface InvitationByIdNeighborResponse {
     accessType: string;
     neighborAddressId : number;
     fullAddress: string;
+    token: string;
 }
 
 
