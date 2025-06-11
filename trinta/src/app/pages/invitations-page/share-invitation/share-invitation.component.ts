@@ -116,9 +116,9 @@ export class ShareInvitationComponent implements OnInit{
                           ]
                       ],
         neighborAddressId: [{ value: '' }, Validators.required], // Renamed from location
-        startTime: [{ value: this.convertToLocalTime(new Date()), disabled: true}, [Validators.required]],
-        endTime: [{ value: this.convertToLocalTime(new Date()), disabled: true }, [Validators.required]],
-        isReusable: [{ value: 'No', disabled: true }, Validators.required],
+        startTime: [{ value: this.convertToLocalTime(new Date()), disabled: false}, [Validators.required]],
+        endTime: [{ value: this.convertToLocalTime(new Date()), disabled: false }, [Validators.required]],
+        isReusable: [{ value: 'No', disabled: false }, Validators.required],
         accessType: ['1', Validators.required]
       },
       { validators: dateRangeValidator }
