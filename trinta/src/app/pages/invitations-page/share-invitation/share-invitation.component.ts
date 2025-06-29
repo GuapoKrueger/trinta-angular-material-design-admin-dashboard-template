@@ -116,9 +116,9 @@ export class ShareInvitationComponent implements OnInit{
                           ]
                       ],
         neighborAddressId: [{ value: '' }, Validators.required], // Renamed from location
-        startTime: [{ value: this.convertToLocalTime(new Date()), disabled: false}, [Validators.required]],
-        endTime: [{ value: this.convertToLocalTime(new Date()), disabled: false }, [Validators.required]],
-        isReusable: [{ value: 'No', disabled: false }, Validators.required],
+        startTime: [{ value: this.convertToLocalTime(new Date()), disabled: true}, [Validators.required]],
+        endTime: [{ value: this.convertToLocalTime(new Date()), disabled: true }, [Validators.required]],
+        isReusable: ['No', Validators.required],
         accessType: ['1', Validators.required]
       },
       { validators: dateRangeValidator }
@@ -257,16 +257,24 @@ export class ShareInvitationComponent implements OnInit{
       return;
     }
 
+    // Obtener fechas sin desfase
+    const rawStart = this.form.value.startTime ? new Date(this.form.value.startTime) : new Date();
+    const rawEnd = this.form.value.endTime ? new Date(this.form.value.endTime) : new Date();
+    const startStr = this.toLocalISOString(rawStart);
+    const endStr = this.toLocalISOString(rawEnd);
+
+    
     const invitation: Invitation = {
       phoneNumber: this.form.value.phoneNumber ?? '',
-      startTime: this.form.value.startTime ? new Date(this.form.value.startTime) : new Date(),
-      endTime: this.form.value.endTime ? new Date(this.form.value.endTime) : new Date(),
+      startTime: startStr as any,
+      endTime: endStr as any,
       isReusable: this.form.value.isReusable ?? 'No',
       neighborId: this.IdNeighbor,
       isValid: true,
       GuestName: this.form.value.name ?? '',
       accessType: parseInt(this.form.value.accessType),
-      neighborAddressId: this.form.value.neighborAddressId ?? 0
+      neighborAddressId: this.form.value.neighborAddressId ?? 0,
+      InvitationTypeId: 1 // Invitacion normal
     };
 
     // Llamamos al servicio para crear la invitación
@@ -391,7 +399,7 @@ export class ShareInvitationComponent implements OnInit{
         });
 
         // Volver a deshabilitar el campo después de parcharlo
-        this.form.get('isReusable')?.disable();
+        // this.form.get('isReusable')?.disable();
   
         // Considera solo si los campos están habilitados
         if (this.form.get('startTime')?.enabled && !this.form.get('startTime')?.valid) {
@@ -438,8 +446,9 @@ export class ShareInvitationComponent implements OnInit{
     // Si es un string, agregar "Z" y convertirlo a Date
     if (typeof dateString === 'string') {
       return new Date(dateString + 'Z');
+      //return new Date(dateString);
     }
-  
+    
     // Si ya es un Date, devolverlo directamente
     return dateString;
   }
@@ -501,7 +510,13 @@ export class ShareInvitationComponent implements OnInit{
     // Volver a deshabilitar los campos según el flujo original
     this.form.get('startTime')?.disable();
     this.form.get('endTime')?.disable();
-    this.form.get('isReusable')?.disable();
+    // this.form.get('isReusable')?.disable();
   }
+
+  private toLocalISOString(date: Date): string {
+     const tzOffset = date.getTimezoneOffset() * 60000; // ms
+     const local = new Date(date.getTime() - tzOffset);
+     return local.toISOString().slice(0,10);
+   }
   
 }
