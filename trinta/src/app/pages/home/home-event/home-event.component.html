@@ -1,9 +1,35 @@
-<div class="d-flex flex-column flex-lg-row justify-content-center align-items-center" style="gap: 2rem;">
-  <mat-card *ngFor="let card of cards" class="mat-elevation-z4 w-100 w-lg-auto" [routerLink]="card.route" style="cursor:pointer; padding:1.5rem;">
-    <img mat-card-image [src]="card.img" alt="{{card.label}}" style="max-width:80px; margin: 0 auto 0.5rem; display:block;">
-    <mat-card-content style="font-size:1.2rem; text-align:center;">
-        <br>
-      <strong>{{ card.label }}</strong>
-    </mat-card-content>
+<div class="welcome-section" style="text-align: center; margin-bottom: 1rem; padding: 1.5rem 1rem 1rem 1rem;">
+  <img src="assets/images/pages/home/Evento_passo2.png" alt="Compartir passo" style="max-width: 50px; margin-bottom: 0.25rem; display: block; margin-left: auto; margin-right: auto;">
+  <h1 style="font-size: 1.2rem; font-weight: 400; color: #333; margin: 0; font-family: tahoma;"><span class="passo-text"><span class="letter-p">P</span><span class="letter-a">a</span><span class="letter-s1">s</span><span class="letter-s2">s</span><span class="letter-o">o</span></span> al evento</h1>
+ </div>
+
+<div class="cards-container" style="padding: 0 1.5rem 1.5rem 1.5rem;">
+  <mat-card *ngFor="let card of cards" 
+            class="mat-elevation-z2" 
+            [routerLink]="card.route" 
+            style="cursor: pointer; margin-bottom: 1rem; padding: 1.5rem; border-radius: 12px; transition: all 0.3s ease;">
+    
+    <div class="d-flex align-items-center" style="gap: 1rem;">
+      <!-- Ícono -->
+      <div class="icon-container" style="flex-shrink: 0; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: #f0f8ff;">
+        <img [src]="card.img" [alt]="card.titulo" style="max-width: 35px; max-height: 35px;">
+      </div>
+      
+      <!-- Contenido de texto -->
+      <div class="flex-grow-1">
+        <h3 style="margin: 0; font-size: 1.1rem; font-weight: 600; color: #333;">
+          {{ card.titulo }}
+        </h3>
+        <p style="margin: 0.25rem 0 0 0; font-size: 0.9rem; color: #666; line-height: 1.4;">
+          {{ card.subtitulo }}
+        </p>
+      </div>
+      
+      <!-- Flecha -->
+      <div class="arrow-container" style="flex-shrink: 0; color: #ccc; font-size: 1.5rem;">
+        &#8250;
+      </div>
+    </div>
+    
   </mat-card>
 </div>

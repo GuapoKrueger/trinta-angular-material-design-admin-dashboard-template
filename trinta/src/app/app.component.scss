@@ -3,9 +3,9 @@
     overflow: hidden;
     min-height: 100vh;
     padding: {
-        top: 105px;
+        top: 70px;
         left: 282px;
-        right: 25px;
+        right: 15px;
     };
     &.active, &.hide-sidebar {
         padding-left: 85px;
@@ -28,7 +28,7 @@
     // Main Content
     .main-content {
         padding: {
-            top: 150px;
+            top: 70px;
             left: 15px;
             right: 15px;
         };
@@ -48,12 +48,12 @@
     // Main Content
     .main-content {
         padding: {
-            top: 101px;
-            left: 25px;
-            right: 25px;
+            top: 70px;
+            left: 15px;
+            right: 15px;
         };
         &.active, &.hide-sidebar {
-            padding-left: 25px;
+            padding-left: 15px;
         }
     }
 
@@ -65,11 +65,11 @@
     // Main Content
     .main-content {
         padding: {
-            left: 25px;
-            right: 25px;
+            left: 15px;
+            right: 15px;
         };
         &.active, &.hide-sidebar {
-            padding-left: 25px;
+            padding-left: 15px;
         }
     }
 

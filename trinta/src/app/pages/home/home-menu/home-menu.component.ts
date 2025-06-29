@@ -12,8 +12,24 @@ import { NgForOf } from '@angular/common';
 })
 export class HomeMenuComponent {
     cards = [
-      { label: 'Visitas', route: '/home/visitas', img: 'assets/images/pages/home/visit.png' },
-      { label: 'Eventos', route: '/home/eventos', img: 'assets/images/pages/home/Eventos.png' }
+      { 
+        titulo: 'Compartir un passo',
+        subtitulo: 'Para que tus visitas ingresen fácilmente a tu domicilio.',
+        route: '/home/visitas', 
+        img: 'assets/images/pages/home/share_passo.png' 
+      },
+      { 
+        titulo: 'Enviar passo',
+        subtitulo: 'Si necesitas que alguien mas autorice el acceso en tu nombre.',
+        route: '/home/paqueteria-servicios', 
+        img: 'assets/images/pages/home/Send_passo.png' 
+      },
+      { 
+        titulo: 'Passo al evento',
+        subtitulo: 'Cuando emites una invitación para todos tus invitados.',
+        route: '/home/eventos', 
+        img: 'assets/images/pages/home/Evento_passo2.png' 
+      }
     ];
 }
 

@@ -58,6 +58,10 @@ $trinta-theme: mat.define-light-theme((
 *, ::after, ::before {
     box-sizing: border-box;
 }
+html {
+    margin: 0;
+    padding: 0;
+}
 body {
     margin: 0;
     padding: 0;
@@ -122,6 +126,56 @@ img {
 }
 .mb-25 {
     margin-bottom: 25px !important;
+}
+
+// Clases de utilidad para padding
+.p-0 {
+    padding: 0 !important;
+}
+.pt-0 {
+    padding-top: 0 !important;
+}
+.pb-0 {
+    padding-bottom: 0 !important;
+}
+.pl-0 {
+    padding-left: 0 !important;
+}
+.pr-0 {
+    padding-right: 0 !important;
+}
+.px-0 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.py-0 {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+// Clases de utilidad para márgenes
+.m-0 {
+    margin: 0 !important;
+}
+.mt-0 {
+    margin-top: 0 !important;
+}
+.mb-0 {
+    margin-bottom: 0 !important;
+}
+.ml-0 {
+    margin-left: 0 !important;
+}
+.mr-0 {
+    margin-right: 0 !important;
+}
+.mx-0 {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+.my-0 {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
 }
 input {
     color: var(--blackColor);
@@ -201,3 +255,26 @@ input {
 
 /* Min width 1600px */
 @media only screen and (min-width: 1600px) {}
+
+/* ============================================
+   ESTILOS GLOBALES PERSONALIZADOS 
+   ============================================ */
+
+/* Regla global para la palabra "passo" con colores por letra */
+.passo-text {  
+  .letter-p { color: #3E4095; } /* 'p' - morado */
+  .letter-a { color: #3E4095; } /* 'a' - morado */
+  .letter-s1 { color: #00B050; } /* Primera 's' - verde */
+  .letter-s2 { color: #00B0F0; } /* Segunda 's' - azul */
+  .letter-o { color: #0070C0; } /* 'o' - azul oscuro */
+}
+
+/* Uso: 
+   <span class="passo-text">
+     <span class="letter-p">p</span>
+     <span class="letter-a">a</span>
+     <span class="letter-s1">s</span>
+     <span class="letter-s2">s</span>
+     <span class="letter-o">o</span>
+   </span>
+*/

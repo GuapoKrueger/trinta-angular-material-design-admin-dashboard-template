@@ -183,6 +183,7 @@ import { NeighborAddressResolver } from './pages/invitations-page/resolver/neigh
 export const routes: Routes = [
     // {path: '', component: EcommerceComponent, canActivate : [authGuard]},
     {path: '', component: HomeMenuComponent, canActivate : [authGuard]},
+    {path: 'home', redirectTo: '', pathMatch: 'full'},
     {
         path: 'home', 
         component: HomeComponent, 

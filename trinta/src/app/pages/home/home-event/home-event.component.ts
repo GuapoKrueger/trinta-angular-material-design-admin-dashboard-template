@@ -12,7 +12,17 @@ import { NgForOf } from '@angular/common';
 })
 export class HomeEventComponent {
     cards = [
-      { label: 'Registrar eventos', route: '/invitations/event-invitation', img: 'assets/images/pages/home/Eventos.png' },
-      { label: 'Reporte eventos', route: '/invitations/event-list', img: 'assets/images/pages/home/ReporEventos.png' }
+         { 
+            titulo: 'Registrar eventos',
+            subtitulo: 'Para que amigos y familiares puedan entrar a visitarte.',
+            route: '/invitations/event-invitation', 
+            img: 'assets/images/pages/home/Eventos.png' 
+          },
+          { 
+            titulo: 'Reporte eventos',
+            subtitulo: 'Donde podrás consultar todas las visitas que has recibido.',
+            route: '/invitations/event-list', 
+            img: 'assets/images/pages/home/ReporEventos.png' 
+          }
     ];
 }
