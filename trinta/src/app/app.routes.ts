@@ -179,6 +179,8 @@ import { EventInvitationDetailComponent } from './pages/invitations-page/event-i
 import { EventInvitationListComponent } from './pages/invitations-page/event-invitation-list/event-invitation-list.component';
 import { NeighborAddressResolver } from './pages/invitations-page/resolver/neighbor-address.resolver';
 import { HomeAccesoServiciosComponent } from './pages/home/home-acceso-servicios/home-acceso-servicios.component';
+import { ServiceInvitationListComponent } from './pages/invitations-page/service-invitation-list/service-invitation-list.component';
+import { ServiceInvitationComponent } from './pages/invitations-page/service-invitation/service-invitation.component';
 
 
 export const routes: Routes = [
@@ -327,7 +329,8 @@ export const routes: Routes = [
             {path: 'add-invitations', component: AddInvitationsComponent},
             {path: 'invitations-list', component: InvitationsListComponent},
             {path: 'event-invitation', component: EventInvitationComponent},
-            { path: 'event-list',        component: EventInvitationListComponent }
+            { path: 'service-visit',        component: ServiceInvitationComponent },
+            { path: 'service-visit-list',        component: ServiceInvitationListComponent }
         ],
         canActivate : [authGuard]
     },
