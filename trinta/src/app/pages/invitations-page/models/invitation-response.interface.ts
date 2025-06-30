@@ -11,6 +11,11 @@ export interface InvitationResponse {
     imageEventoURL: string;
 }
 
+export interface AccessServiceType {
+    id: number;
+    name: string;
+}
+
 export interface InvitationByIdNeighborResponse { 
     id: number;
     phoneNumber: string;

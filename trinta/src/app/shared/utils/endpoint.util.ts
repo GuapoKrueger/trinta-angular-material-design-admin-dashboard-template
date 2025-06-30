@@ -26,6 +26,9 @@ export const endpoint = {
     EVENT_INVITATION_CREATE: 'EventInvitation/Create',
     EVENT_INVITATION: 'EventInvitation',
 
+    //AccessServiceType
+    ACCESS_SERVICE_TYPE: 'AccessServiceType',
+
     //
     //Abrir Puerta
     DOOR_OPEN: 'Door/open/',

@@ -99,4 +99,15 @@ let params = new HttpParams();
       .delete<BaseApiResponse<boolean>>(requestUrl);
   }
 
+  getAccessServiceType(): Observable<BaseApiResponse<AccessServiceType[]>> {
+    const requestUrl = `${env.api}${endpoint.ACCESS_SERVICE_TYPE}`;
+    return this._httpClient
+      .get<BaseApiResponse<AccessServiceType[]>>(requestUrl)
+      .pipe(
+        map((resp) => {
+          return resp;
+        })
+      );
+  }
+
 }
