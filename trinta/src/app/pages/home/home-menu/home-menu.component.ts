@@ -21,7 +21,7 @@ export class HomeMenuComponent {
       { 
         titulo: 'Enviar passo',
         subtitulo: 'Si necesitas que alguien mas autorice el acceso en tu nombre.',
-        route: '/home/paqueteria-servicios', 
+        route: '/home/acceso-servicios', 
         img: 'assets/images/pages/home/Send_passo.png' 
       },
       { 

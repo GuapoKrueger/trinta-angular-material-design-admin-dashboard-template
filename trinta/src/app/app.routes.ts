@@ -178,6 +178,7 @@ import { HomeEventComponent } from './pages/home/home-event/home-event.component
 import { EventInvitationDetailComponent } from './pages/invitations-page/event-invitation-detail/event-invitation-detail.component';
 import { EventInvitationListComponent } from './pages/invitations-page/event-invitation-list/event-invitation-list.component';
 import { NeighborAddressResolver } from './pages/invitations-page/resolver/neighbor-address.resolver';
+import { HomeAccesoServiciosComponent } from './pages/home/home-acceso-servicios/home-acceso-servicios.component';
 
 
 export const routes: Routes = [
@@ -190,7 +191,8 @@ export const routes: Routes = [
         canActivate: [authGuard],
         children: [
             { path: 'visitas', component: HomeVisitasComponent, canActivate: [authGuard] },
-            { path: 'eventos', component: HomeEventComponent, canActivate: [authGuard] }
+            { path: 'eventos', component: HomeEventComponent, canActivate: [authGuard] },
+            { path: 'acceso-servicios', component: HomeAccesoServiciosComponent, canActivate: [authGuard] }
         ]
     },
     {path: 'crm', component: CrmComponent},
