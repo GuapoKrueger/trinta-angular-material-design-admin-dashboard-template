@@ -177,7 +177,7 @@ import { EventInvitationComponent } from './pages/invitations-page/event-invitat
 import { HomeEventComponent } from './pages/home/home-event/home-event.component';
 import { EventInvitationDetailComponent } from './pages/invitations-page/event-invitation-detail/event-invitation-detail.component';
 import { EventInvitationListComponent } from './pages/invitations-page/event-invitation-list/event-invitation-list.component';
-import { NeighborAddressResolver } from './pages/invitations-page/resolver/neighbor-address.resolver';
+import { neighborAddressResolver } from './pages/invitations-page/resolver/neighbor-address.resolver';
 import { HomeAccesoServiciosComponent } from './pages/home/home-acceso-servicios/home-acceso-servicios.component';
 import { ServiceInvitationListComponent } from './pages/invitations-page/service-invitation-list/service-invitation-list.component';
 import { ServiceInvitationComponent } from './pages/invitations-page/service-invitation/service-invitation.component';
@@ -325,7 +325,7 @@ export const routes: Routes = [
         component: InvitationsPageComponent,
         children: [
             {path: '', component: ShareInvitationComponent },
-            {path: 'share-invitation', component: ShareInvitationComponent, resolve: { addresses: NeighborAddressResolver }},
+            {path: 'share-invitation', component: ShareInvitationComponent, resolve: { addresses: neighborAddressResolver }},
             {path: 'add-invitations', component: AddInvitationsComponent},
             {path: 'invitations-list', component: InvitationsListComponent},
             {path: 'event-invitation', component: EventInvitationComponent},
