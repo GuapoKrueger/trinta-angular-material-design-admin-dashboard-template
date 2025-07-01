@@ -5,7 +5,7 @@ import { BaseApiResponse } from '../../../shared/commons/base-api-response-inter
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { environment as env } from '../../../../environments/environment.development';
 import { endpoint } from '../../../shared/utils/endpoint.util';
-import { EventInvitationByIdNeighborResponse, InvitationByIdNeighborResponse, InvitationResponse } from '../models/invitation-response.interface';
+import { EventInvitationByIdNeighborResponse, InvitationByIdNeighborResponse, InvitationResponse, AccessServiceType } from '../models/invitation-response.interface';
 
 @Injectable({
   providedIn: 'root'
