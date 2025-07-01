@@ -315,28 +315,62 @@ export class ShareInvitationComponent implements OnInit{
 
   }
 
-  compartir(token: string): void {
-     const shareUrl = `https://www.passo.mx/invitation/detail/${token}`;
+  // compartir(token: string): void {
+  //    const shareUrl = `https://www.passo.mx/invitation/detail/${token}`;
 
-    const message = `¡Has recibido una invitación! Para acceder, pulsa en el siguiente enlace: ${shareUrl}. Gracias por usar nuestro servicio.`;
+  //   const message = `¡Has recibido una invitación! Para acceder, pulsa en el siguiente enlace: ${shareUrl}. Gracias por usar nuestro servicio.`;
     
   
+  //   if (navigator.share) {
+  //     navigator.share({
+  //       title: `Passo te abre las puertas.`,
+  //       text: `No hay que pensarlo mucho, un Passo y estás dentro, Vamos!. ¡Haz clic!.`, 
+  //       url: shareUrl
+  //     }).then(() => {
+  //       console.log('Invitación compartida exitosamente');
+  //     }).catch(console.error);
+  //   } else {
+  //     Swal.fire({
+  //       title: 'Error!',
+  //       text: 'La función de compartir no está disponible en este navegador.',
+  //       icon: 'error',
+  //       confirmButtonText: 'Aceptar',
+  //     });
+  //   }
+  // }
+
+
+  compartir(token: string): void {
+  //const shareUrl = `https://qa.front.passo.mx:8084/invitation/detail/${token}`;
+  const baseUrl = window.location.origin;
+  const shareUrl = `${baseUrl}/invitation/detail/${token}`;
+
+    const fallbackShare = () => {
+      if ((window as any).flutter_inappwebview?.callHandler) {
+        (window as any).flutter_inappwebview.callHandler('shareFallback', {
+          title: 'Passo te abre las puertas.',
+          text: 'No hay que pensarlo mucho, un Passo y estás dentro, ¡Vamos! ¡Haz clic!',
+          url: shareUrl
+        });
+      } else {
+        console.error('No se pudo comunicar con Flutter WebView.');
+      }
+    };
+
     if (navigator.share) {
       navigator.share({
-        title: `Passo te abre las puertas.`,
-        text: `No hay que pensarlo mucho, un Passo y estás dentro, Vamos!. ¡Haz clic!.`, 
+        title: 'Passo te abre las puertas.',
+        text: 'No hay que pensarlo mucho, un Passo y estás dentro, ¡Vamos! ¡Haz clic!',
         url: shareUrl
       }).then(() => {
         console.log('Invitación compartida exitosamente');
-      }).catch(console.error);
-    } else {
-      Swal.fire({
-        title: 'Error!',
-        text: 'La función de compartir no está disponible en este navegador.',
-        icon: 'error',
-        confirmButtonText: 'Aceptar',
+      }).catch((error) => {
+        console.error('Error al compartir:', error);
+        fallbackShare(); // En caso de error, intenta desde Flutter
       });
-    }
+    } else {
+      fallbackShare(); // Si no está disponible, pasa el control a Flutter
+    }
   }
 
   private markFormGroupTouched(formGroup: any) {
