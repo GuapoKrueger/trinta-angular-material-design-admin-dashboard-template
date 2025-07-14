@@ -177,3 +177,14 @@ mat-card-header {
     margin-right: 0.5rem;
   }
 }
+
+// Service type icon alignment - match feather icon positioning
+.service-type-icon {
+  top: 15.5px;
+  left: -40px;
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+}

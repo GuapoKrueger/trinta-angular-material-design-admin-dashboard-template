@@ -1,3 +1,4 @@
+import { UsersService } from '../../users-page/services/users.service';
 import { ChangeDetectorRef, Component, inject, NgZone, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -5,17 +6,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MatCardModule } from '@angular/material/card';
-import { StepperOverviewComponent } from '../../../ui-elements/stepper/stepper-overview/stepper-overview.component';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { StWithFormsComponent } from '../../../ui-elements/slide-toggle/st-with-forms/st-with-forms.component';
 import { MatSelectModule } from '@angular/material/select';
 import { InvitationService } from '../services/invitation.service';
 import { Invitation } from '../models/invitation-request.interface';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2'
 import { AuthService } from '../../../authentication/services/auth.service';
-import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { ToggleService } from '../../../common/header/toggle.service';
 import { MatDatepickerModule} from '@angular/material/datepicker';
 import { MatRadioModule } from '@angular/material/radio';
@@ -23,10 +21,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { AddressResponse, NeighborAddressResponse } from '../../neighbors-page/models/neighbor-response.interface';
 import { NeighborService } from '../../neighbors-page/services/neighbor.service';
-import { InvitationByIdNeighborResponse } from '../models/invitation-response.interface';
+import { InvitationByIdNeighborResponse, AccessServiceType } from '../models/invitation-response.interface';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { FeathericonsModule } from '../../../icons/feathericons/feathericons.module';
+import { Address } from '../../neighbors-page/models/neighbor-request.interface';
+import { VigilanteList } from '../../users-page/models/user-combo.interface';
+import { ServiceInvitationRequest } from '../models/service-invitation-request.interface';
+import { ServiceInvitationService } from '../services/service-invitation/service-invitation.service';
 
 export const dateRangeValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const startTime = control.get('startTime')?.value;
@@ -56,21 +58,16 @@ export const dateRangeValidator: ValidatorFn = (control: AbstractControl): Valid
         MatInputModule,
         FeathericonsModule,
         MatCardModule,
-        StepperOverviewComponent,
         MatDatepickerModule, 
         MatNativeDateModule, 
         MatSlideToggleModule, 
-        StWithFormsComponent,
         MatSelectModule,
         CommonModule,
-        NgxMaskDirective,
-        NgxMaskPipe,
         MatRadioModule,
         MatButtonToggleModule,
         MatIconModule
   ],
   providers: [
-    provideNgxMask()
   ],
   templateUrl: './service-invitation.component.html',
   styleUrl: './service-invitation.component.scss'
@@ -81,14 +78,17 @@ export class ServiceInvitationComponent implements OnInit {
 
   form: FormGroup;
   private fb = inject(FormBuilder);
-  private _invitationService = inject(InvitationService);
+  private _serviceInvitationService = inject(ServiceInvitationService);
   private _authService = inject(AuthService);
   private _neighborService = inject(NeighborService);
   private router = inject(Router);
   private location = inject(Location);
+  private _usersService = inject(UsersService);
   public IdNeighbor : number;
   public Adresses: NeighborAddressResponse[];
+  public accessServiceTypes: AccessServiceType[] = [];
   public token: string = '';
+  public guardsList: VigilanteList[] = [];
 
   constructor(        
     public toggleService: ToggleService,
@@ -96,7 +96,16 @@ export class ServiceInvitationComponent implements OnInit {
   )
   {
     this.IdNeighbor = this._authService.userIdGet;
-    this.Adresses = this.route.snapshot.data['addresses'] || [];
+    
+    this._neighborService.getNeighborAddresses(this.IdNeighbor).subscribe({
+      next: (response) => {
+        this.Adresses = response.data; // Aquí extraes el arreglo de NeighborAddressResponse[]
+      },
+      error: (error) => {
+        console.error('Error al obtener las direcciones:', error);
+        this.Adresses = []; // Opcional: asignar arreglo vacío en caso de error
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -105,25 +114,40 @@ export class ServiceInvitationComponent implements OnInit {
       this.toggleService.closeSidebar();
     }, 0);
 
+    // Load access service types
+    this.loadAccessServiceTypes();
+
     // Inicializar el formulario
     this.form = this.fb.group(
       {
-        //agregar 
-        name: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(80)]],
-        email: ['', [Validators.email, Validators.maxLength(60)]],
-        phoneNumber: ['', [Validators.required, 
-                           Validators.maxLength(10),
-                           Validators.minLength(10), 
-                          ]
-                      ],
-        neighborAddressId: [{ value: '' }, Validators.required], // Renamed from location
-        startTime: [{ value: this.convertToLocalTime(new Date()), disabled: true}, [Validators.required]],
-        endTime: [{ value: this.convertToLocalTime(new Date()), disabled: true }, [Validators.required]],
-        isReusable: ['No', Validators.required],
-        accessType: ['1', Validators.required]
+        accessServiceTypeId: [{value:''}, Validators.required], // indica el tipo de servicio al que se le dará acceso paqueteria, comida, etc.
+        name: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(80)]], // indica el nombre del servicio por ejemplo "Mercadolibre", "Sushi Roll", etc.
+        neighborAddressId: [{ value: '' }, Validators.required], // dirección del vecino
+        guardId: [null, Validators.required], // ID del vigilante asignado
+        accessType: ['1', Validators.required], // tipo de acceso, por ejemplo: 1 vehicular, 2 peatonal
+        notes: ['', [Validators.maxLength(255)]], // notas adicionales sobre la invitación
+        startTime: [{ value: this.convertToLocalTime(new Date()), disabled: false}, [Validators.required]], // fecha de inicio de la invitación
+        endTime: [{ value: this.convertToLocalTime(new Date()), disabled: false }, [Validators.required]], // fecha de fin de la invitación
+        notas: ['', [Validators.maxLength(255)]], // notas adicionales sobre la invitación
       },
       { validators: dateRangeValidator }
     );
+
+    // Cargar lista de vigilantes
+    this._usersService.getUsersByRole('vigilante').subscribe({
+      next: (response) => {
+        if (response.isSuccess && response.data) {
+          this.guardsList = response.data;
+          console.log('Vigilantes cargados:', this.guardsList);
+        } else {
+          this.guardsList = [];
+        }
+      },
+      error: (err) => {
+        this.guardsList = [];
+        console.error('Error al cargar vigilantes', err);
+      }
+    });
 
     // Convertir startTime y endTime a objetos Date si son strings
     if (this.form.controls['startTime'].value) {
@@ -143,33 +167,7 @@ export class ServiceInvitationComponent implements OnInit {
         this.form.controls['neighborAddressId'].setValue(null); // Renamed from location
     }
 
-    this.form.get('isReusable')!.valueChanges.subscribe((value) => {
-      const today = new Date();
-    
-      if (value === 'Si') {
-        // Habilitar los campos y aplicar validaciones
-        this.form.get('startTime')?.setValidators([Validators.required]);
-        this.form.get('endTime')?.setValidators([Validators.required]);
-        this.form.get('startTime')?.enable();
-        this.form.get('endTime')?.enable();
-      } else {
-        // Deshabilitar los campos y establecer valores predeterminados
-        this.form.get('startTime')?.clearValidators();
-        this.form.get('endTime')?.clearValidators();
-        this.form.get('startTime')?.setValue(today);
-        this.form.get('endTime')?.setValue(today);
-        this.form.get('startTime')?.disable();
-        this.form.get('endTime')?.disable();
-    
-        // Marcar los campos como válidos manualmente
-        this.form.get('startTime')?.updateValueAndValidity({ onlySelf: true });
-        this.form.get('endTime')?.updateValueAndValidity({ onlySelf: true });
-      }
-    
-      // Actualizar validaciones
-      this.form.get('startTime')?.updateValueAndValidity();
-      this.form.get('endTime')?.updateValueAndValidity();
-    });
+    // Eliminar valueChanges de isReusable, ya que siempre será 'No' y estará deshabilitado
     
     // Recuperar datos del estado de navegación
     let invitationData: InvitationByIdNeighborResponse | undefined;
@@ -184,14 +182,31 @@ export class ServiceInvitationComponent implements OnInit {
       // Llenar el formulario con los datos recibidos
       this.form.patchValue({
         name: invitationData.guestName || '',
-        phoneNumber: invitationData.phoneNumber || '',
         neighborAddressId: invitationData.neighborAddressId ? invitationData.neighborAddressId : (this.Adresses && this.Adresses.length > 0 ? this.Adresses[0].id : null), // Renamed from location
         startTime: invitationData.startTime ? new Date(invitationData.startTime) : this.convertToLocalTime(new Date()),
         endTime: invitationData.endTime ? new Date(invitationData.endTime) : this.convertToLocalTime(new Date()),
-        isReusable: invitationData.isReusable ? (invitationData.isReusable === 'Si' || invitationData.isReusable === 'Si' ? 'Si' : 'No') : 'No',
         accessType: invitationData.accessType ? String(invitationData.accessType) : '1'
       });
     }
+  }
+
+  private loadAccessServiceTypes(): void {
+    this._serviceInvitationService.getAccessServiceType().subscribe({
+      next: (response) => {
+        if (response.isSuccess && response.data) {
+          this.accessServiceTypes = response.data;
+        }
+      },
+      error: (error) => {
+        console.error('Error loading access service types:', error);
+        Swal.fire({
+          title: 'Error',
+          text: 'No se pudieron cargar los tipos de servicio.',
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
+      }
+    });
   }
 
   private validateDateRange(): boolean {
@@ -236,7 +251,7 @@ export class ServiceInvitationComponent implements OnInit {
 
     if (this.form.invalid) {
       this.markFormGroupTouched(this.form);
-
+      
       Swal.fire({
         title: 'Error!',
         text: 'La invitación tiene datos sin capturar.Favor de capturar la información de la invitación antes de compartirla.',
@@ -265,27 +280,26 @@ export class ServiceInvitationComponent implements OnInit {
     const endStr = this.toLocalISOString(rawEnd);
 
     
-    const invitation: Invitation = {
-      phoneNumber: this.form.value.phoneNumber ?? '',
+    const invitation: ServiceInvitationRequest = {
+      accessServiceTypeId: this.form.value.accessServiceTypeId ?? '',
       startTime: startStr as any,
       endTime: endStr as any,
-      isReusable: this.form.value.isReusable ?? 'No',
       neighborId: this.IdNeighbor,
       isValid: true,
-      GuestName: this.form.value.name ?? '',
-      accessType: parseInt(this.form.value.accessType),
+      guestName: this.form.value.name ?? '',
+      accessType: String(this.form.value.accessType),
       neighborAddressId: this.form.value.neighborAddressId ?? 0,
-      InvitationTypeId: 1 // Invitacion normal
+      GatekeeperUserId: this.form.value.guardId ?? 0
     };
 
     // Llamamos al servicio para crear la invitación
     if(this.token===''){
-    this._invitationService.createInvitation(invitation).subscribe({
+      this._serviceInvitationService.createInvitation(invitation).subscribe({
       next: (response) => {
         if (response.isSuccess) {
           this.token = response.message;
-           this.form.disable();           // Bloquear edición tras generar
-            this.compartir(response.message); 
+          this.form.disable(); // Bloquear edición tras generar
+          this.compartir(response.message);
         } else {
           Swal.fire({
             title: 'Error al crear la invitación',
@@ -296,24 +310,46 @@ export class ServiceInvitationComponent implements OnInit {
         }
       },
       error: (err) => {
+        // Si es error de validación RFC9110
+        if (err && err.status === 400 && err.errors) {
+          // Limpiar errores previos
+          Object.keys(this.form.controls).forEach(field => {
+            this.form.get(field)?.setErrors(null);
+          });
+          // Asignar errores a los controles afectados
+          Object.keys(err.errors).forEach(key => {
+            const control = this.form.get(this.mapServerFieldToFormControl(key));
+            if (control) {
+              control.setErrors({ server: err.errors[key].join(' ') });
+              control.markAsTouched();
+            }
+          });
+        }
+        // Mensaje general
         Swal.fire({
-          title: 'Error al crear la invitación',
-          text: err,
+          title: 'Error de validación',
+          text: err.title || 'Revisa los campos marcados en el formulario.',
           icon: 'error',
           confirmButtonText: 'Aceptar',
         });
       }
     });
-  }else
-  {
-    this.compartir(this.token);
+    } else {
+      this.compartir(this.token);
+    }
   }
 
-
-
-
-
-
+  /**
+   * Mapea el nombre del campo del backend al nombre del control en el formulario
+   */
+  private mapServerFieldToFormControl(serverField: string): string {
+    // Ajusta los nombres según correspondan
+    const map: Record<string, string> = {
+      GuestName: 'name',
+      GatekeeperUserId: 'guardId',
+      // Agrega más mapeos si el backend usa otros nombres
+    };
+    return map[serverField] || serverField;
   }
 
   compartir(token: string): void {
@@ -383,7 +419,7 @@ export class ServiceInvitationComponent implements OnInit {
   
     switch (step) {
       case 1:
-        ['name', 'email', 'phoneNumber'].forEach((field) => {
+        ['accessServiceTypeId', 'name', 'neighborAddressId'].forEach((field) => {
           const control = this.form.get(field);
           if (control && !control.valid && this.token==='') {
             invalidFields.push(field);
@@ -392,16 +428,6 @@ export class ServiceInvitationComponent implements OnInit {
         break;
   
       case 2:
-        this.form.get('isReusable')?.enable();
-
-        // Parchear el valor para que Angular lo considere en la validación
-        this.form.patchValue({
-          isReusable: this.form.get('isReusable')?.value || false, // Asegurar que el valor se incluya
-        });
-
-        // Volver a deshabilitar el campo después de parcharlo
-        // this.form.get('isReusable')?.disable();
-  
         // Considera solo si los campos están habilitados
         if (this.form.get('startTime')?.enabled && !this.form.get('startTime')?.valid) {
           invalidFields.push('startTime');
@@ -409,7 +435,7 @@ export class ServiceInvitationComponent implements OnInit {
         if (this.form.get('endTime')?.enabled && !this.form.get('endTime')?.valid) {
           invalidFields.push('endTime');
         }
-  
+
         if (this.form.hasError('dateRangeInvalid')) {
           invalidFields.push('dateRange');
         }
@@ -429,12 +455,11 @@ export class ServiceInvitationComponent implements OnInit {
   markStepControlsAsTouched(step: number): void {
     switch (step) {
       case 1:
+        this.form.get('accessServiceTypeId')?.markAsTouched();
         this.form.get('name')?.markAsTouched();
-        this.form.get('email')?.markAsTouched();
-        this.form.get('phoneNumber')?.markAsTouched();
+        this.form.get('neighborAddressId')?.markAsTouched();
         break;
       case 2:
-        this.form.get('isReusable')?.markAsTouched();
         this.form.get('startTime')?.markAsTouched();
         this.form.get('endTime')?.markAsTouched();
         break;
@@ -460,7 +485,16 @@ export class ServiceInvitationComponent implements OnInit {
     }
     
     const address = this.Adresses.find(addr => addr.id === this.form.value.neighborAddressId);
-    return address?.fullAddress || 'Dirección no encontrada';
+    return address?.fullAddress || '';
+  }
+
+  getServiceTypeName(): string {
+    if (!this.accessServiceTypes || this.accessServiceTypes.length === 0) {
+      return 'No hay tipos de servicio disponibles';
+    }
+    
+    const serviceType = this.accessServiceTypes.find(service => service.id === this.form.value.accessServiceTypeId);
+    return serviceType?.name || 'Tipo de servicio no encontrado';
   }
 
   onClose(): void {
@@ -503,19 +537,18 @@ export class ServiceInvitationComponent implements OnInit {
   private clearInvitationForm(): void {
     this.token = '';
     this.form.reset({
+      accessServiceTypeId: this.accessServiceTypes?.[0]?.id ?? null,
       name: '',
       email: '',
-      phoneNumber: '',
       neighborAddressId: this.Adresses?.[0]?.id ?? null,
       startTime: this.convertToLocalTime(new Date()),
       endTime: this.convertToLocalTime(new Date()),
-      isReusable: 'No',
-      accessType: '1'
+      accessType: '1',
+      notes: ''
     });
     // Volver a deshabilitar los campos según el flujo original
-    this.form.get('startTime')?.disable();
-    this.form.get('endTime')?.disable();
-    // this.form.get('isReusable')?.disable();
+    // this.form.get('startTime')?.disable();
+    // this.form.get('endTime')?.disable();
   }
 
   private toLocalISOString(date: Date): string {

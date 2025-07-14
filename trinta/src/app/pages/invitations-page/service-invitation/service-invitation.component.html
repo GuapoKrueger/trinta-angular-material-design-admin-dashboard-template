@@ -30,10 +30,26 @@
           <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
               <div class="mb-20">
-                <label class="main-label d-block lh-1 text-black mb-10">Nombre</label>
+                <label class="main-label d-block lh-1 text-black mb-10">Tipo de Servicio</label>
                 <mat-form-field>
-                  <i-feather name="user"></i-feather>
-                  <mat-label>Nombre</mat-label>
+                  <img class="service-type-icon" src="assets/images/pages/invitations-page/Type_acces.png" alt="Tipo de Servicio" width="18" height="18">
+                  <!-- <mat-label>Selecciona el tipo de servicio</mat-label> -->
+                  <mat-select formControlName="accessServiceTypeId">
+                    <mat-option *ngFor="let serviceType of accessServiceTypes" [value]="serviceType.id">
+                      {{ serviceType.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div class="error text-danger" *ngIf="form.get('accessServiceTypeId')?.invalid && form.get('accessServiceTypeId')?.touched">
+                  <div *ngIf="form.get('accessServiceTypeId')?.hasError('required')">El tipo de servicio es requerido.</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12">
+              <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Quien</label>
+                <mat-form-field>
+                  <img class="service-type-icon" src="assets/images/pages/invitations-page/edit-text.png" alt="Tipo de Servicio" width="18" height="18">
                   <input matInput formControlName="name" minlength="4" maxlength="50">
                 </mat-form-field>
                 <div class="error text-danger" *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
@@ -60,27 +76,6 @@
                 </div>
               </div>
             </div> -->
-            <div class="col-lg-6 col-md-6 col-sm-6">
-              <div class="mb-20">
-                <label class="main-label d-block lh-1 text-black mb-10">Número de Teléfono</label>
-                <mat-form-field>
-                  <i-feather name="phone"></i-feather>
-                  <mat-label>Número de Teléfono</mat-label>
-                  <input matInput formControlName="phoneNumber" (blur)="form.get('phoneNumber')?.markAsTouched()" [showMaskTyped]="true" mask="(000) 000-0000">
-                </mat-form-field>
-                <div class="error text-danger" *ngIf="form.get('phoneNumber')?.touched">
-                  <div *ngIf="form.get('phoneNumber')?.hasError('required')">
-                    El número de teléfono es requerido.
-                  </div>
-                  <div *ngIf="form.get('phoneNumber')?.hasError('minlength') || form.get('phoneNumber')?.hasError('maxlength')">
-                    El número de teléfono está incompleto.
-                  </div>
-                  <!-- <div *ngIf="form.get('phoneNumber')?.hasError('pattern')">
-                    El Teléfono debe tener el formato (000) 000-0000.
-                  </div> -->
-                </div>             
-              </div>
-            </div>
             <div class="col-lg-12 col-md-12 col-sm-12">
               <div class="mb-20">
                 <label class="main-label d-block lh-1 text-black mb-10">Dirección de la Invitación</label>
@@ -111,6 +106,22 @@
           <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-6">
               <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Quien recibe/va a abrir</label>
+                <mat-form-field>
+                  <mat-label>Selecciona un vigilante</mat-label>
+                  <mat-select formControlName="guardId">
+                    <mat-option *ngFor="let guard of guardsList" [value]="guard.id">
+                      {{ guard.username }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div class="error text-danger" *ngIf="form.get('guardId')?.invalid && form.get('guardId')?.touched">
+                  <div *ngIf="form.get('guardId')?.hasError('required')">Debes seleccionar un vigilante.</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="mb-20">
                 <label class="main-label d-block lh-1 text-black mb-10">Tipo de Acceso</label>
                 <!-- <mat-radio-group  class="example1" formControlName="accessType">
                   <mat-radio-button value="1" class="mr-10">Vehicular</mat-radio-button>
@@ -127,9 +138,21 @@
                       <mat-icon>directions_walk</mat-icon>
                       Peatonal
                     </mat-button-toggle>
-                  </mat-button-toggle-group>
+                </mat-button-toggle-group>
                 <div class="error text-danger" *ngIf="form.get('accessType')!.hasError('required') && form.get('accessType')!.touched">
                   Debes seleccionar un tipo de acceso.
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12">
+              <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Notas</label>
+                <mat-form-field>
+                  <i-feather name="edit"></i-feather>
+                  <textarea matInput formControlName="notas" rows="3" maxlength="255"></textarea>
+                </mat-form-field>
+                <div class="error text-danger" *ngIf="form.get('notas')!.hasError('maxlength') && form.get('notas')!.touched">
+                  Las notas no pueden exceder los 255 caracteres.
                 </div>
               </div>
             </div>
@@ -140,22 +163,6 @@
             <br>
             <div class="col-lg-6 col-md-6 col-sm-6">
 
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-6">
-              <div>
-                <label class="main-label d-block lh-1 text-black mb-10">Reutilizable</label>
-                <mat-form-field>
-                  <i-feather name="list"></i-feather>
-                  <mat-label>Selecciona</mat-label>
-                  <mat-select formControlName="isReusable">
-                    <mat-option value="Si">Si</mat-option>
-                    <mat-option value="No">No</mat-option>
-                  </mat-select>
-                </mat-form-field>
-                <div class="error text-danger" *ngIf="form.get('isReusable')!.hasError('required') && form.get('isReusable')!.touched">
-                  Debes seleccionar si la invitación es reutilizable.
-                </div>
-              </div>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6">
 
@@ -248,7 +255,7 @@
                     <div class="user d-flex align-items-center">
                       <img src="assets/images/users/user-default.png" class="rounded-circle" alt="user-image">
                       <div class="info">
-                        <h6>{{ form.controls['name'].value }}</h6>
+                        <h6>{{ getServiceTypeName() }} - {{ form.controls['name'].value }}</h6>
                         <!-- <span class="d-block text-body">From - {{ form.get('startTime')?.value ? (form.get('startTime')?.value | date: 'dd/MM/yyyy') : now }}</span> -->
                       </div>
                     </div>
@@ -263,10 +270,6 @@
                       {{ form.value.accessType === '1' ? 'Vehicular' : 'Peatonal' }}
                     </li>
                     <li class="text-black">
-                      <span class="text-dark fw-medium heading-font-family">Teléfono :</span>
-                      {{ form.controls['phoneNumber'].value }}
-                    </li>
-                    <li class="text-black">
                       <span class="text-dark fw-medium heading-font-family">Inicia :</span>
                       {{ form.controls['startTime'].value | date:'dd/MM/yyyy' }}
                       <!-- {{ form.get('startTime')?.value ? (form.get('startTime')?.value | date: 'dd/MM/yyyy') : '' }} -->
@@ -277,13 +280,13 @@
                       <!-- {{ form.get('endTime')?.value ? (form.get('endTime')?.value | date: 'dd/MM/yyyy') : '' }} -->
                     </li>
                     <li class="text-black">
-                      <span class="text-dark fw-medium heading-font-family">Es reutilizable :</span>
-                      {{ form.controls['isReusable'].value }}
+                      <span class="text-dark fw-medium heading-font-family">Notas :</span>
+                      {{ form.value.notas }}
+                      <!-- {{ Adresses.find(addr => addr.id === form.value.neighborId)?.fullAddress }} -->
                     </li>
                     <li class="text-black">
-                      <span class="text-dark fw-medium heading-font-family">Locación :</span>
+                      <span class="text-dark fw-medium heading-font-family">Dirección :</span>
                       {{ getFullAddress() }}
-                      <!-- {{ Adresses.find(addr => addr.id === form.value.neighborId)?.fullAddress }} -->
                     </li>
                   </ul>
 

@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { endpoint } from '../../../shared/utils/endpoint.util';
 import { UserCreate } from '../models/user-request.interface';
 import { Observable } from 'rxjs';
+import { VigilanteList } from '../models/user-combo.interface';
 import { BaseApiResponse } from '../../../shared/commons/base-api-response-interface';
 import { environment as env } from '../../../../environments/environment.development';
 
@@ -55,5 +56,10 @@ export class UsersService {
     }
 
     return formData;
+  }
+
+getUsersByRole(roleName: string): Observable<BaseApiResponse<VigilanteList[]>> {
+    const requestUrl = `${env.api}User/ByRole/${roleName}`;
+    return this._httpClient.get<BaseApiResponse<VigilanteList[]>>(requestUrl);
   }
 }

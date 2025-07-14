@@ -329,6 +329,7 @@ export const routes: Routes = [
             {path: 'add-invitations', component: AddInvitationsComponent},
             {path: 'invitations-list', component: InvitationsListComponent},
             {path: 'event-invitation', component: EventInvitationComponent},
+            { path: 'event-list',        component: EventInvitationListComponent },
             { path: 'service-visit',        component: ServiceInvitationComponent },
             { path: 'service-visit-list',        component: ServiceInvitationListComponent }
         ],
