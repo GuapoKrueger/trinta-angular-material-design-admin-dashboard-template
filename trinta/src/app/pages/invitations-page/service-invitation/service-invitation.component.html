@@ -42,6 +42,7 @@
                 </mat-form-field>
                 <div class="error text-danger" *ngIf="form.get('accessServiceTypeId')?.invalid && form.get('accessServiceTypeId')?.touched">
                   <div *ngIf="form.get('accessServiceTypeId')?.hasError('required')">El tipo de servicio es requerido.</div>
+                  <div *ngIf="form.get('accessServiceTypeId')?.hasError('server')">{{ form.get('accessServiceTypeId')?.getError('server') }}</div>
                 </div>
               </div>
             </div>
@@ -50,12 +51,13 @@
                 <label class="main-label d-block lh-1 text-black mb-10">Quien</label>
                 <mat-form-field>
                   <img class="service-type-icon" src="assets/images/pages/invitations-page/edit-text.png" alt="Tipo de Servicio" width="18" height="18">
-                  <input matInput formControlName="name" minlength="4" maxlength="50">
+                  <input matInput formControlName="guestName" minlength="4" maxlength="50">
                 </mat-form-field>
-                <div class="error text-danger" *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
-                  <div *ngIf="form.get('name')?.hasError('required')">El nombre es requerido.</div>
-                  <div *ngIf="form.get('name')?.hasError('minlength')">El nombre debe tener al menos 4 caracteres.</div>
-                  <div *ngIf="form.get('name')?.hasError('maxlength')">El nombre no puede exceder los 50 caracteres.</div>
+                <div class="error text-danger" *ngIf="form.get('guestName')?.invalid && form.get('guestName')?.touched">
+                  <div *ngIf="form.get('guestName')?.hasError('required')">El nombre es requerido.</div>
+                  <div *ngIf="form.get('guestName')?.hasError('minlength')">El nombre debe tener al menos 4 caracteres.</div>
+                  <div *ngIf="form.get('guestName')?.hasError('maxlength')">El nombre no puede exceder los 50 caracteres.</div>
+                  <div *ngIf="form.get('guestName')?.hasError('server')">{{ form.get('guestName')?.getError('server') }}</div>
                 </div>
                 
               </div>
@@ -89,8 +91,10 @@
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
-                <div class="error text-danger" *ngIf="form.get('neighborAddressId')!.hasError('required') && form.get('neighborAddressId')!.touched">
-                  La dirección es requerida.
+                <!-- <div class="error text-danger" *ngIf="form.get('neighborAddressId')!.hasError('required') && form.get('neighborAddressId')!.touched"> -->
+                <div class="error text-danger" *ngIf="form.get('neighborAddressId')?.invalid && form.get('neighborAddressId')?.touched">
+                  <div *ngIf="form.get('neighborAddressId')?.hasError('required')">La dirección es requerida.</div>
+                  <div *ngIf="form.get('neighborAddressId')?.hasError('server')">{{ form.get('neighborAddressId')?.getError('server') }}</div>
                 </div>
               </div>
             </div>
@@ -109,14 +113,15 @@
                 <label class="main-label d-block lh-1 text-black mb-10">Quien recibe/va a abrir</label>
                 <mat-form-field>
                   <mat-label>Selecciona un vigilante</mat-label>
-                  <mat-select formControlName="guardId">
+                  <mat-select formControlName="gatekeeperUserId">
                     <mat-option *ngFor="let guard of guardsList" [value]="guard.id">
                       {{ guard.username }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
-                <div class="error text-danger" *ngIf="form.get('guardId')?.invalid && form.get('guardId')?.touched">
-                  <div *ngIf="form.get('guardId')?.hasError('required')">Debes seleccionar un vigilante.</div>
+                <div class="error text-danger" *ngIf="form.get('gatekeeperUserId')?.invalid && form.get('gatekeeperUserId')?.touched">
+                  <div *ngIf="form.get('gatekeeperUserId')?.hasError('required')">Debes seleccionar un vigilante.</div>
+                  <div *ngIf="form.get('gatekeeperUserId')?.hasError('server')">{{ form.get('gatekeeperUserId')?.getError('server') }}</div>
                 </div>
               </div>
             </div>
@@ -139,8 +144,10 @@
                       Peatonal
                     </mat-button-toggle>
                 </mat-button-toggle-group>
-                <div class="error text-danger" *ngIf="form.get('accessType')!.hasError('required') && form.get('accessType')!.touched">
-                  Debes seleccionar un tipo de acceso.
+                <!-- <div class="error text-danger" *ngIf="form.get('accessType')!.hasError('required') && form.get('accessType')!.touched"> -->
+                <div class="error text-danger" *ngIf="form.get('accessType')?.invalid && form.get('accessType')?.touched">
+                  <div *ngIf="form.get('accessType')?.hasError('required')">Debes seleccionar un tipo de acceso.</div>
+                  <div *ngIf="form.get('accessType')?.hasError('server')">{{ form.get('accessType')?.getError('server') }}</div>
                 </div>
               </div>
             </div>
@@ -149,10 +156,12 @@
                 <label class="main-label d-block lh-1 text-black mb-10">Notas</label>
                 <mat-form-field>
                   <i-feather name="edit"></i-feather>
-                  <textarea matInput formControlName="notas" rows="3" maxlength="255"></textarea>
+                  <textarea matInput formControlName="notes" rows="3" maxlength="255"></textarea>
                 </mat-form-field>
-                <div class="error text-danger" *ngIf="form.get('notas')!.hasError('maxlength') && form.get('notas')!.touched">
-                  Las notas no pueden exceder los 255 caracteres.
+                <!-- <div class="error text-danger" *ngIf="form.get('notes')!.hasError('maxlength') && form.get('notes')!.touched"> -->
+                <div class="error text-danger" *ngIf="form.get('notes')?.invalid && form.get('notes')!.touched">
+                  <div *ngIf="form.get('notes')!.hasError('maxlength')">Las notas no pueden exceder los 255 caracteres.</div>
+                  <div *ngIf="form.get('notes')?.hasError('server')">{{ form.get('notes')?.getError('server') }}</div>
                 </div>
               </div>
             </div>
@@ -177,8 +186,10 @@
                   <mat-datepicker-toggle matIconSuffix [for]="pickerInicio"></mat-datepicker-toggle>
                   <mat-datepicker #pickerInicio></mat-datepicker>
                 </mat-form-field>
-                <div class="error text-danger" *ngIf="form.get('startTime')!.hasError('required') && form.get('startTime')!.touched">
-                  La fecha de inicio es requerida.
+                <!-- <div class="error text-danger" *ngIf="form.get('startTime')!.hasError('required') && form.get('startTime')!.touched"> -->
+                <div class="error text-danger" *ngIf="form.get('startTime')?.invalid && form.get('startTime')?.touched">
+                  <div *ngIf="form.get('startTime')?.hasError('required')">La fecha de inicio es requerida.</div>
+                  <div *ngIf="form.get('startTime')?.hasError('server')">{{ form.get('startTime')?.getError('server') }}</div>
                 </div>
                 <div class="error text-danger" *ngIf="form.hasError('dateRangeInvalid')">
                   La fecha de inicio no puede ser mayor que la fecha final.
@@ -196,8 +207,10 @@
                   <mat-datepicker #pickerTermina ></mat-datepicker>
                 </mat-form-field>
 
-                <div class="error text-danger" *ngIf="form.get('endTime')!.hasError('required') && form.get('endTime')!.touched">
-                  La fecha de término es requerida.
+                <!-- <div class="error text-danger" *ngIf="form.get('endTime')!.hasError('required') && form.get('endTime')!.touched"> -->
+                <div class="error text-danger" *ngIf="form.get('endTime')?.invalid && form.get('endTime')?.touched">
+                  <div *ngIf="form.get('endTime')?.hasError('required')">La fecha de término es requerida.</div>
+                  <div *ngIf="form.get('endTime')?.hasError('server')">{{ form.get('endTime')?.getError('server') }}</div>
                 </div>
                 <div class="error text-danger" *ngIf="form.hasError('dateRangeInvalid')">
                   La fecha final no puede ser menor que la fecha de inicio.
@@ -255,7 +268,7 @@
                     <div class="user d-flex align-items-center">
                       <img src="assets/images/users/user-default.png" class="rounded-circle" alt="user-image">
                       <div class="info">
-                        <h6>{{ getServiceTypeName() }} - {{ form.controls['name'].value }}</h6>
+                        <h6>{{ getServiceTypeName() }} - {{ form.controls['guestName'].value }}</h6>
                         <!-- <span class="d-block text-body">From - {{ form.get('startTime')?.value ? (form.get('startTime')?.value | date: 'dd/MM/yyyy') : now }}</span> -->
                       </div>
                     </div>
@@ -263,7 +276,7 @@
                   <ul class="list p-0 list-unstyled">
                     <li class="text-black">
                       <span class="text-dark fw-medium heading-font-family">Nombre :</span>
-                      {{ form.controls['name'].value }}
+                      {{ form.controls['guestName'].value }}
                     </li>
                     <li class="text-black">
                       <span class="text-dark fw-medium heading-font-family">Tipo de Acceso :</span>
@@ -281,7 +294,7 @@
                     </li>
                     <li class="text-black">
                       <span class="text-dark fw-medium heading-font-family">Notas :</span>
-                      {{ form.value.notas }}
+                      {{ form.value.notes }}
                       <!-- {{ Adresses.find(addr => addr.id === form.value.neighborId)?.fullAddress }} -->
                     </li>
                     <li class="text-black">

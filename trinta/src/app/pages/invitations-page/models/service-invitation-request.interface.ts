@@ -2,7 +2,7 @@ export interface ServiceInvitationRequest {
   accessServiceTypeId: string;
   guestName: string;
   neighborAddressId: string;
-  GatekeeperUserId: number;
+  gatekeeperUserId: number;
   accessType: string;
   notes?: string;
   startTime: Date;

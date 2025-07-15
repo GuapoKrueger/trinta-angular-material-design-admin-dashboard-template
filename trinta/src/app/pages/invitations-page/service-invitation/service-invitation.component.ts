@@ -121,14 +121,13 @@ export class ServiceInvitationComponent implements OnInit {
     this.form = this.fb.group(
       {
         accessServiceTypeId: [{value:''}, Validators.required], // indica el tipo de servicio al que se le dará acceso paqueteria, comida, etc.
-        name: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(80)]], // indica el nombre del servicio por ejemplo "Mercadolibre", "Sushi Roll", etc.
+        guestName: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(80)]], // indica el nombre del servicio por ejemplo "Mercadolibre", "Sushi Roll", etc.
         neighborAddressId: [{ value: '' }, Validators.required], // dirección del vecino
-        guardId: [null, Validators.required], // ID del vigilante asignado
+        gatekeeperUserId: [null, Validators.required], // ID del vigilante asignado
         accessType: ['1', Validators.required], // tipo de acceso, por ejemplo: 1 vehicular, 2 peatonal
         notes: ['', [Validators.maxLength(255)]], // notas adicionales sobre la invitación
         startTime: [{ value: this.convertToLocalTime(new Date()), disabled: false}, [Validators.required]], // fecha de inicio de la invitación
         endTime: [{ value: this.convertToLocalTime(new Date()), disabled: false }, [Validators.required]], // fecha de fin de la invitación
-        notas: ['', [Validators.maxLength(255)]], // notas adicionales sobre la invitación
       },
       { validators: dateRangeValidator }
     );
@@ -286,10 +285,11 @@ export class ServiceInvitationComponent implements OnInit {
       endTime: endStr as any,
       neighborId: this.IdNeighbor,
       isValid: true,
-      guestName: this.form.value.name ?? '',
+      guestName: this.form.value.guestName ?? '',
       accessType: String(this.form.value.accessType),
       neighborAddressId: this.form.value.neighborAddressId ?? 0,
-      GatekeeperUserId: this.form.value.guardId ?? 0
+      gatekeeperUserId: this.form.value.gatekeeperUserId ?? 0,
+      notes: this.form.value.notes ? this.form.value.notes.trim() : ''
     };
 
     // Llamamos al servicio para crear la invitación
@@ -310,17 +310,17 @@ export class ServiceInvitationComponent implements OnInit {
         }
       },
       error: (err) => {
-        // Si es error de validación RFC9110
-        if (err && err.status === 400 && err.errors) {
-          // Limpiar errores previos
-          Object.keys(this.form.controls).forEach(field => {
-            this.form.get(field)?.setErrors(null);
-          });
-          // Asignar errores a los controles afectados
-          Object.keys(err.errors).forEach(key => {
-            const control = this.form.get(this.mapServerFieldToFormControl(key));
+        console.error('Error al crear la invitación:', err);
+        // Limpiar errores previos
+        Object.keys(this.form.controls).forEach(field => {
+          this.form.get(field)?.setErrors(null);
+        });
+        // Soporta errores como array (err.error.Errors)
+        if (err && err.status === 400 && err.error && Array.isArray(err.error.Errors)) {
+          err.error.Errors.forEach((item: any) => {
+            const control = this.form.get(this.mapServerFieldToFormControl(item.PropertyName));
             if (control) {
-              control.setErrors({ server: err.errors[key].join(' ') });
+              control.setErrors({ server: item.ErrorMessage });
               control.markAsTouched();
             }
           });
@@ -328,7 +328,7 @@ export class ServiceInvitationComponent implements OnInit {
         // Mensaje general
         Swal.fire({
           title: 'Error de validación',
-          text: err.title || 'Revisa los campos marcados en el formulario.',
+          text: err.error?.title || err.error?.Message || 'Revisa los campos marcados en el formulario.',
           icon: 'error',
           confirmButtonText: 'Aceptar',
         });
@@ -345,9 +345,15 @@ export class ServiceInvitationComponent implements OnInit {
   private mapServerFieldToFormControl(serverField: string): string {
     // Ajusta los nombres según correspondan
     const map: Record<string, string> = {
-      GuestName: 'name',
-      GatekeeperUserId: 'guardId',
-      // Agrega más mapeos si el backend usa otros nombres
+      AccessServiceTypeId: 'accessServiceTypeId',
+      StartTime: 'startTime',
+      EndTime: 'endTime',
+      NeighborId: 'neighborId', // No hay control directo, pero se mapea por si acaso
+      GuestName: 'guestName',
+      AccessType: 'accessType',
+      NeighborAddressId: 'neighborAddressId',
+      GatekeeperUserId: 'gatekeeperUserId',
+      Notes: 'notes',
     };
     return map[serverField] || serverField;
   }
