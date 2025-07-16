@@ -9,13 +9,10 @@ export const AuthInterceptorFn: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  const authReq = req.clone({
-    setHeaders: {
-      Authorization: `Bearer ${authService.userToken}`,
-    },
-  });
-
-  return next(authReq).pipe(
+  // Ya no se agrega el header Authorization, la cookie HttpOnly se envía automáticamente en el interceptor http-options.interceptor.ts
+  // Esto significa que el token de acceso se maneja automáticamente por el navegador y no es necesario agregarlo manualmente en cada solicitud.
+  
+  return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {
         // Si el servidor devuelve 401 (Unauthorized), intentar refrescar el token

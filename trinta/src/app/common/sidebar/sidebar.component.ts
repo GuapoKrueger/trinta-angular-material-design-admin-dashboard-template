@@ -5,6 +5,8 @@ import { ToggleService } from '../header/toggle.service';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
 import { FeathericonsModule } from '../../icons/feathericons/feathericons.module';
+import { AuthService } from '../../authentication/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-sidebar',
@@ -16,7 +18,9 @@ import { FeathericonsModule } from '../../icons/feathericons/feathericons.module
 export class SidebarComponent {
 
     constructor(
-        private toggleService: ToggleService
+        private toggleService: ToggleService, 
+        public authService: AuthService,
+        public router: Router
     ) {
         this.toggleService.isToggled$.subscribe(isToggled => {
             this.isToggled = isToggled;
@@ -32,4 +36,8 @@ export class SidebarComponent {
     // Mat Expansion
     panelOpenState = false;
 
+    logoutAndRedirect() {
+        this.authService.logout();
+        this.router.navigate(['/authentication/login']);
+    }
 }

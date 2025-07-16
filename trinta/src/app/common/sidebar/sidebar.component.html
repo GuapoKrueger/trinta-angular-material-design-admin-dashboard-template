@@ -170,7 +170,7 @@
                             </li>
                         </ul>
                     </mat-expansion-panel> -->
-                    <a routerLink="/authentication/logout" class="sidebar-menu-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                    <a class="sidebar-menu-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="authService.logout(); router.navigate(['/authentication/login'])">
                         <i-feather name="home"></i-feather>
                         <span class="title">Logout</span>
                     </a>

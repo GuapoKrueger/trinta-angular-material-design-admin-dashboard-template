@@ -41,8 +41,8 @@ export const endpoint = {
     LIST_PERMISSIONS: 'Permissions',
   };
   
-  export const httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-    }),
-  };
+// Opciones globales para requests HTTP, incluye withCredentials para cookies HttpOnly
+export const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+  withCredentials: true
+};

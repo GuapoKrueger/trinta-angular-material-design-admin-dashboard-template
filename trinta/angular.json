@@ -78,6 +78,14 @@
                             "buildTarget": "trinta:build:development"
                         }
                     },
+                    "options": {
+                        "browserTarget": "trinta:build",
+                        "ssl": true,
+                        "sslKey": "ssl/key.pem",
+                        "sslCert": "ssl/cert.pem",
+                        "host": "localhost",
+                        "port": 4200
+                    },
                     "defaultConfiguration": "development"
                 },
                 "extract-i18n": {

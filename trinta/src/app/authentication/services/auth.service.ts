@@ -14,18 +14,24 @@ export class AuthService {
 
   private readonly http = inject(HttpClient);
 
-  // private user: BehaviorSubject<BaseApiResponse<LoginResponse>>;
-
-  public get userToken() {
-    // return this.user.value;
-    return JSON.parse(localStorage.getItem('token')!)
+  /**
+   * Valida si el usuario está autenticado consultando al backend.
+   * Retorna un Observable<boolean>.
+   */
+  isAuthenticated(): Observable<boolean> {
+    const requestUrl = `${env.api}auth/check`;
+    return this.http.get<BaseApiResponse<any>>(requestUrl, httpOptions).pipe(
+      map((response: BaseApiResponse<any>) => {
+        return response.data;
+      })
+    );
   }
-
+  
   public get userAvatarUrl() {
     // return this.user.value;
     return JSON.parse(localStorage.getItem('avatarUrl')!)
   }
-
+  
   public get userIdGet() {
     // return this.user.value;
     return JSON.parse(localStorage.getItem('IdNeighbor')!)
@@ -50,7 +56,7 @@ export class AuthService {
         map((response: BaseApiResponse<LoginResponse>) => {
           if (response.isSuccess) {
             console.log(response.data);
-            localStorage.setItem('token', JSON.stringify(response.data.token));
+            // El token ya es guardado como HttpOnly cookie por el backend
             localStorage.setItem('userName', JSON.stringify(response.data.userName));
             localStorage.setItem('avatarUrl', JSON.stringify(response.data.avatarUrl));
             localStorage.setItem('IdNeighbor', JSON.stringify(response.data.id));
@@ -63,10 +69,19 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userName');
-    localStorage.removeItem('avatarUrl');
-    localStorage.removeItem('IdNeighbor');
-    localStorage.removeItem('Location');
+    const requestUrl = `${env.api}auth/logout`;
+    this.http.post<BaseApiResponse<any>>(requestUrl, {}, httpOptions).subscribe({
+      next: () => {
+        localStorage.removeItem('userName');
+        localStorage.removeItem('avatarUrl');
+        localStorage.removeItem('IdNeighbor');
+        localStorage.removeItem('Location');
+      },
+      error: (err) => {
+        console.error('Error during logout:', err);
+      }
+    });
   }
+
+
 }
