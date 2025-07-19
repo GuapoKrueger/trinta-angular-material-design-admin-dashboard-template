@@ -181,21 +181,39 @@ import { neighborAddressResolver } from './pages/invitations-page/resolver/neigh
 import { HomeAccesoServiciosComponent } from './pages/home/home-acceso-servicios/home-acceso-servicios.component';
 import { ServiceInvitationListComponent } from './pages/invitations-page/service-invitation-list/service-invitation-list.component';
 import { ServiceInvitationComponent } from './pages/invitations-page/service-invitation/service-invitation.component';
+import { AccessDeniedComponent } from './common/access-denied/access-denied.component';
+import { GuardInvitationsComponent } from './pages/invitations-page/guard-invitations/guard-invitations.component';
 
 
 export const routes: Routes = [
     // {path: '', component: EcommerceComponent, canActivate : [authGuard]},
-    {path: '', component: HomeMenuComponent, canActivate : [authGuard]},
-    {path: 'home', redirectTo: '', pathMatch: 'full'},
+    {
+        path: '', 
+        canActivate: [authGuard],
+        children: [
+            {
+                path: 'guard-invitations',
+                component: GuardInvitationsComponent,
+                data: { roles: ['Vigilante'] }
+            },
+            {
+                path: 'home',
+                component: HomeMenuComponent,
+                data: { roles: ['Super Admin', 'Administrador', 'Vecino'] },
+            },
+        ]
+    },
+    {path: 'home', redirectTo: '', pathMatch: 'full', data: { roles: ['Super Admin', 'Administrador', 'Vecino'] }},
     {
         path: 'home', 
         component: HomeComponent, 
         canActivate: [authGuard],
         children: [
-            { path: 'visitas', component: HomeVisitasComponent, canActivate: [authGuard] },
-            { path: 'eventos', component: HomeEventComponent, canActivate: [authGuard] },
-            { path: 'acceso-servicios', component: HomeAccesoServiciosComponent, canActivate: [authGuard] }
+            { path: 'visitas', component: HomeVisitasComponent, canActivate: [authGuard], data: { roles: ['Super Admin', 'Administrador', 'Vecino'] }},
+            { path: 'eventos', component: HomeEventComponent, canActivate: [authGuard], data: { roles: ['Super Admin', 'Administrador', 'Vecino'] }},
+            { path: 'acceso-servicios', component: HomeAccesoServiciosComponent, canActivate: [authGuard], data: { roles: ['Super Admin', 'Administrador', 'Vecino'] }}
         ]
+        , data: { roles: ['Super Admin', 'Administrador', 'Vecino'] }
     },
     {path: 'crm', component: CrmComponent},
     {path: 'project-management', component: ProjectManagementComponent},
@@ -300,22 +318,22 @@ export const routes: Routes = [
         path: 'neighborhoods',
         component: NeighborhoodsPageComponent,
         children: [
-            {path: '', component: NeighborhoodListComponent },
-            {path: 'neighborhood-list', component: NeighborhoodListComponent},
-            {path: 'add-neighborhood', component: AddNeighborhoodComponent},
-            {path: 'update-neighborhood/:id', component: UpdateNeighborhoodComponent},
-        ],
-        canActivate : [authGuard]
+            {path: '', component: NeighborhoodListComponent, canActivate : [authGuard], data: { roles: ['Super Admin', 'Administrador'] }},
+            {path: 'neighborhood-list', component: NeighborhoodListComponent, canActivate : [authGuard], data: { roles: ['Super Admin', 'Administrador'] }},
+            {path: 'add-neighborhood', component: AddNeighborhoodComponent, canActivate : [authGuard], data: { roles: ['Super Admin', 'Administrador'] }},
+            {path: 'update-neighborhood/:id', component: UpdateNeighborhoodComponent, canActivate : [authGuard], data: { roles: ['Super Admin', 'Administrador'] }},
+        ], 
+        canActivate : [authGuard], data: { roles: ['Super Admin', 'Administrador'] }
     },
     {path: 'starter', component: StarterComponent},
     {
         path: 'neighbors',
         component: NeighborsPageComponent,
         children: [
-            {path: '', component: NeighborListComponent },
-            {path: 'neighbor-list', component: NeighborListComponent},
-            {path: 'add-neighbor', component: AddNeighborComponent},
-            {path: 'update-neighbor/:id', component: UpdateNeighborComponent},
+            {path: '', component: NeighborListComponent , canActivate : [authGuard], data: { roles: ['Super Admin', 'Administrador'] } },
+            {path: 'neighbor-list', component: NeighborListComponent, canActivate : [authGuard], data: { roles: ['Super Admin', 'Administrador'] }},
+            {path: 'add-neighbor', component: AddNeighborComponent, canActivate : [authGuard], data: { roles: ['Super Admin', 'Administrador'] }},
+            {path: 'update-neighbor/:id', component: UpdateNeighborComponent, canActivate : [authGuard], data: { roles: ['Super Admin', 'Administrador'] }},
         ],
         canActivate : [authGuard]
     },
@@ -325,15 +343,15 @@ export const routes: Routes = [
         component: InvitationsPageComponent,
         children: [
             {path: '', component: ShareInvitationComponent },
-            {path: 'share-invitation', component: ShareInvitationComponent, resolve: { addresses: neighborAddressResolver }},
-            {path: 'add-invitations', component: AddInvitationsComponent},
-            {path: 'invitations-list', component: InvitationsListComponent},
-            {path: 'event-invitation', component: EventInvitationComponent},
-            { path: 'event-list',        component: EventInvitationListComponent },
-            { path: 'service-visit',        component: ServiceInvitationComponent },
-            { path: 'service-visit-list',        component: ServiceInvitationListComponent }
+            {path: 'share-invitation', component: ShareInvitationComponent, resolve: { addresses: neighborAddressResolver }, canActivate : [authGuard], data: { roles: ['Super Admin', 'Administrador', 'Vecino'] }},
+            {path: 'add-invitations', component: AddInvitationsComponent, canActivate : [authGuard], data: { roles: ['Super Admin', 'Administrador', 'Vecino'] }},
+            {path: 'invitations-list', component: InvitationsListComponent, canActivate : [authGuard], data: { roles: ['Super Admin', 'Administrador', 'Vecino'] }},
+            {path: 'event-invitation', component: EventInvitationComponent, canActivate : [authGuard], data: { roles: ['Super Admin', 'Administrador', 'Vecino'] }},
+            { path: 'event-list',        component: EventInvitationListComponent, canActivate : [authGuard], data: { roles: ['Super Admin', 'Administrador', 'Vecino'] } },
+            { path: 'service-visit',        component: ServiceInvitationComponent, canActivate : [authGuard], data: { roles: ['Super Admin', 'Administrador', 'Vecino'] } },
+            { path: 'service-visit-list',        component: ServiceInvitationListComponent, canActivate : [authGuard], data: { roles: ['Super Admin', 'Administrador', 'Vecino'] } }
         ],
-        canActivate : [authGuard]
+        canActivate : [authGuard], data: { roles: ['Super Admin', 'Administrador', 'Vecino'] }
     },
     {
         path: 'invitation',
@@ -352,6 +370,6 @@ export const routes: Routes = [
             {path: 'detail', component: EventInvitationDetailComponent},
         ]
     },
-
+    { path: 'access-denied', component: AccessDeniedComponent },
     {path: '**', component: NotFoundComponent} // This line will remain down from the whole pages component list
 ];

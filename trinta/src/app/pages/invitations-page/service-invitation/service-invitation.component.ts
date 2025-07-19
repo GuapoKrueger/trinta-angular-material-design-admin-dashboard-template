@@ -125,7 +125,7 @@ export class ServiceInvitationComponent implements OnInit {
         neighborAddressId: [{ value: '' }, Validators.required], // dirección del vecino
         gatekeeperUserId: [null, Validators.required], // ID del vigilante asignado
         accessType: ['1', Validators.required], // tipo de acceso, por ejemplo: 1 vehicular, 2 peatonal
-        notes: ['', [Validators.maxLength(255)]], // notas adicionales sobre la invitación
+        notes: ['', [Validators.maxLength(250)]], // notas adicionales sobre la invitación
         startTime: [{ value: this.convertToLocalTime(new Date()), disabled: false}, [Validators.required]], // fecha de inicio de la invitación
         endTime: [{ value: this.convertToLocalTime(new Date()), disabled: false }, [Validators.required]], // fecha de fin de la invitación
       },

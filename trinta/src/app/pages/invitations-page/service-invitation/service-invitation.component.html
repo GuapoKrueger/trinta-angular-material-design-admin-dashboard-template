@@ -160,7 +160,7 @@
                 </mat-form-field>
                 <!-- <div class="error text-danger" *ngIf="form.get('notes')!.hasError('maxlength') && form.get('notes')!.touched"> -->
                 <div class="error text-danger" *ngIf="form.get('notes')?.invalid && form.get('notes')!.touched">
-                  <div *ngIf="form.get('notes')!.hasError('maxlength')">Las notas no pueden exceder los 255 caracteres.</div>
+                  <div *ngIf="form.get('notes')!.hasError('maxlength')">Las notas no pueden exceder los 250 caracteres.</div>
                   <div *ngIf="form.get('notes')?.hasError('server')">{{ form.get('notes')?.getError('server') }}</div>
                 </div>
               </div>

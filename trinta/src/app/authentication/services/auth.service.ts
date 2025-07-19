@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable, of } from 'rxjs';
 import { BaseApiResponse } from '../../shared/commons/base-api-response-interface';
 import { environment as env } from '../../../environments/environment.development';
 import { endpoint, httpOptions } from '../../shared/utils/endpoint.util';
@@ -83,5 +83,15 @@ export class AuthService {
     });
   }
 
+  /**
+   * Obtiene el rol del usuario desde el backend.
+   * Realiza una solicitud HTTP para obtener el rol del usuario.
+   */
+  public getUserRole(): Observable<string> {
+    const requestUrl = `${env.api}auth/role`;
+    return this.http.get<BaseApiResponse<string>>(requestUrl, httpOptions).pipe(
+      map((response: BaseApiResponse<string>) => response.data)
+    );
+  }
 
 }

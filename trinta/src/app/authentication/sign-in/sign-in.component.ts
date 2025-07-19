@@ -8,7 +8,7 @@ import { FeathericonsModule } from '../../icons/feathericons/feathericons.module
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { NgIf } from '@angular/common';
 import { AuthService } from '../services/auth.service';
-import { BaseApiResponse } from '../../shared/commons/base-api-response-interface';
+import { BaseApiResponse, ApiError } from '../../shared/commons/base-api-response-interface';
 import { LoginResponse } from '../model/login-response.interface';
 import Swal from 'sweetalert2';
 
@@ -76,14 +76,47 @@ export class SignInComponent implements OnInit{
             }
           },
           error: (error) => {
-            // Capturar errores en caso de fallo en la petición
-            Swal.fire({
-              icon: 'error',
-              title: 'Error de conexión',
-              text: 'Ocurrió un error al iniciar sesión. Inténtalo de nuevo.',
-              confirmButtonText: 'Cerrar'
-            });
+
+            //si el error  trae status code 400
+            if (error.status === 400) {
+              //parsear el mensaje de error del backend en BaseApiResponse
+              const backendResponse = error.error;
+              
+              // Mapear PascalCase del backend a camelCase de la interfaz
+              const errorResponse: BaseApiResponse<null> = {
+                isSuccess: backendResponse.IsSuccess,
+                data: backendResponse.Data,
+                message: backendResponse.Message,
+                totalRecords: backendResponse.TotalRecords,
+                errors: backendResponse.Errors?.map((e: any): ApiError => ({
+                  propertyName: e.PropertyName,
+                  errorMessage: e.ErrorMessage
+                })) || []
+              };
+              
+              //si el errorResponse tiene un mensaje en errors[] donde propertyName == ''
+              if (errorResponse.errors && errorResponse.errors.length > 0) {
+                const errorMessage = errorResponse.errors.find(e => e.propertyName === '')?.errorMessage || 'Ha surgido un error';
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error de autenticación',
+                  text: errorMessage,
+                  confirmButtonText: 'Intentar de nuevo'
+                });
+              }
+
+            }
+            else{
+              // Capturar errores en caso de fallo en la petición
+              Swal.fire({
+                icon: 'error',
+                title: 'Error de conexión',
+                text: 'Ocurrió un error al iniciar sesión. Inténtalo de nuevo.',
+                confirmButtonText: 'Cerrar'
+              });
+            }
             console.error(error);
+
           }
         });
       }
