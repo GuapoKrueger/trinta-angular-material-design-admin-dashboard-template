@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { NgClass } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { NgClass, AsyncPipe } from '@angular/common';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { ToggleService } from '../header/toggle.service';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -11,11 +11,11 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'app-sidebar',
     standalone: true,
-    imports: [NgScrollbarModule, MatExpansionModule, RouterLinkActive, RouterModule, RouterLink, NgClass, FeathericonsModule],
+    imports: [NgScrollbarModule, MatExpansionModule, RouterLinkActive, RouterModule, RouterLink, NgClass, FeathericonsModule, AsyncPipe],
     templateUrl: './sidebar.component.html',
     styleUrl: './sidebar.component.scss'
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
 
     constructor(
         private toggleService: ToggleService, 
@@ -25,6 +25,11 @@ export class SidebarComponent {
         this.toggleService.isToggled$.subscribe(isToggled => {
             this.isToggled = isToggled;
         });
+    }
+
+    ngOnInit() {
+        // Inicializar el rol del usuario si no está cargado
+        this.authService.initializeUserRole();
     }
 
     // Toggle Service

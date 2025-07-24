@@ -69,80 +69,83 @@
                             </li> -->
                         <!-- </ul> -->
                     </mat-expansion-panel> 
-                    <span class="sub-title text-body">
-                        APPS
-                    </span>
-                    <!-- <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = true">
-                        <mat-expansion-panel-header>
-                            <mat-panel-title>
-                                <i-feather name="home"></i-feather>
-                                <span class="title">
-                                    Fraccionamientos
-                                </span>
-                            </mat-panel-title>
-                        </mat-expansion-panel-header>
-                        <ul class="sidebar-sub-menu">
-                            <li class="sidemenu-item">
-                                <a routerLink="/neighborhoods/neighborhood-list" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
-                                    Listado de Fraccionamientos
-                                </a>
-                            </li>
-                            <li class="sidemenu-item">
-                                <a routerLink="/neighborhoods/add-neighborhood" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
-                                    Agregar
-                                </a>
-                            </li>
-                        </ul>
-                    </mat-expansion-panel> -->
-                    <!-- <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = true">
-                        <mat-expansion-panel-header>
-                            <mat-panel-title>
-                                <i-feather name="user-check"></i-feather>
-                                <span class="title">
-                                    Residentes
-                                </span>
-                            </mat-panel-title>
-                        </mat-expansion-panel-header>
-                        <ul class="sidebar-sub-menu">
-                            <li class="sidemenu-item">
-                                <a routerLink="/neighbors/neighbor-list" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
-                                    Listado de Residentes
-                                </a>
-                            </li>
-                            <li class="sidemenu-item">
-                                <a routerLink="/neighbors/add-neighbor" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
-                                    Agregar
-                                </a>
-                            </li>
-                        </ul>
-                    </mat-expansion-panel> -->
-                    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = true">
-                        <mat-expansion-panel-header>
-                            <mat-panel-title>
-                                <i-feather name="mail"></i-feather>
-                                <span class="title">
-                                    Invitación
-                                </span>
-                            </mat-panel-title>
-                        </mat-expansion-panel-header>
-                        <ul class="sidebar-sub-menu">
-                            <li class="sidemenu-item">
-                                <a routerLink="/home/visitas" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
-                                    Individual
-                                </a>
-                            </li>
-                            <li class="sidemenu-item">
-                                <a routerLink="/home/eventos" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
-                                    Evento
-                                </a>
-                            </li>
-                            <!-- <li class="sidemenu-item">
-                                <a routerLink="/invitations/add-invitations" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
-                                    Crear Invitación
-                                </a>
-                            </li> -->
-                        </ul>
-                    </mat-expansion-panel>
+                    <!-- Mostrar contenido del menú solo si NO es Vigilante -->
+                    @if (!(authService.isVigilante$ | async)) {
+                        <span class="sub-title text-body">
+                            APPS
+                        </span>
+                        <!-- <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = true">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <i-feather name="home"></i-feather>
+                                    <span class="title">
+                                        Fraccionamientos
+                                    </span>
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <ul class="sidebar-sub-menu">
+                                <li class="sidemenu-item">
+                                    <a routerLink="/neighborhoods/neighborhood-list" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                        Listado de Fraccionamientos
+                                    </a>
+                                </li>
+                                <li class="sidemenu-item">
+                                    <a routerLink="/neighborhoods/add-neighborhood" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                        Agregar
+                                    </a>
+                                </li>
+                            </ul>
+                        </mat-expansion-panel> -->
+                        <!-- <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = true">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <i-feather name="user-check"></i-feather>
+                                    <span class="title">
+                                        Residentes
+                                    </span>
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <ul class="sidebar-sub-menu">
+                                <li class="sidemenu-item">
+                                    <a routerLink="/neighbors/neighbor-list" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                        Listado de Residentes
+                                    </a>
+                                </li>
+                                <li class="sidemenu-item">
+                                    <a routerLink="/neighbors/add-neighbor" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                        Agregar
+                                    </a>
+                                </li>
+                            </ul>
+                        </mat-expansion-panel> -->
+                        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = true">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <i-feather name="mail"></i-feather>
+                                    <span class="title">
+                                        Invitación
+                                    </span>
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <ul class="sidebar-sub-menu">
+                                <li class="sidemenu-item">
+                                    <a routerLink="/home/visitas" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                        Individual
+                                    </a>
+                                </li>
+                                <li class="sidemenu-item">
+                                    <a routerLink="/home/eventos" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                        Evento
+                                    </a>
+                                </li>
+                                <!-- <li class="sidemenu-item">
+                                    <a routerLink="/invitations/add-invitations" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                        Crear Invitación
+                                    </a>
+                                </li> -->
+                            </ul>
+                        </mat-expansion-panel>
+                    }
                     <!-- <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = true">
                         <mat-expansion-panel-header>
                             <mat-panel-title>

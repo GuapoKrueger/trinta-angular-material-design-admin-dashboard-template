@@ -16,6 +16,8 @@ export const authGuard: CanActivateFn = (route, state) => {
 
       return authService.getUserRole().pipe(
         map(userRole => {
+          // Inicializar el rol del usuario en el AuthService para uso reactivo
+          authService.initializeUserRole();
           if (state.url === '/') {
             if (userRole === 'Vigilante') {
               router.navigate(['/guard-invitations']); // Redirect Vigilante to GuardInvitationsComponent
