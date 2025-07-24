@@ -51,21 +51,18 @@
   <div *ngFor="let invitation of visibleInvitations" class="invitation-card" [class.inactive]="activeTab === 'inactive'">
     <div class="invitation-content">
       <!-- Sección izquierda con fecha, tipo de servicio e información -->
-      <div class="left-section">        
+      <div class="left-section">
+        <!-- Badge de fecha -->
+        <div class="date-badge">
+          <span class="day">{{ getFormattedDay(invitation.startTime) }}</span>
+          <span class="month">{{ getFormattedMonth(invitation.startTime) }}</span>
+        </div>
+        
         <!-- Información principal -->
         <div class="details">
           <div class="service-type-row d-inline-flex align-items-center gap-3 flex-wrap">
             <img src="assets/images/pages/invitations-page/Type_acces.png" alt="Tipo de acceso" class="service-type-img" />
             <span class="service-type-text">{{ invitation.accessServiceTypeName }}</span>
-            <div class="action-section ms-auto">
-              <button 
-                class="open-button right-align" 
-                [disabled]="invitation.isUsed || loading || activeTab === 'inactive'"
-                (click)="openAccess(invitation)">
-                <span *ngIf="!loading">{{ invitation.isUsed ? 'Utilizada' : (activeTab === 'inactive' ? 'Inactiva' : 'Abrir') }}</span>
-                <span *ngIf="loading">Abriendo...</span>
-              </button>
-            </div>
           </div>
           <br />
           <div class="guest-name">
@@ -80,6 +77,17 @@
             {{ invitation.notes }}
           </div>
         </div>
+      </div>
+      
+      <!-- Sección de acción -->
+      <div class="action-section">
+        <button 
+          class="open-button" 
+          [disabled]="invitation.isUsed || loading || activeTab === 'inactive'"
+          (click)="openAccess(invitation)">
+          <span *ngIf="!loading">{{ invitation.isUsed ? 'Utilizada' : (activeTab === 'inactive' ? 'Inactiva' : 'Abrir') }}</span>
+          <span *ngIf="loading">Abriendo...</span>
+        </button>
       </div>
     </div>
   </div>
