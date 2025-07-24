@@ -7,6 +7,7 @@ import { BaseApiResponse } from '../../../../shared/commons/base-api-response-in
 import { environment as env } from '../../../../../environments/environment.development';
 import { endpoint } from '../../../../shared/utils/endpoint.util';
 import { ServiceInvitationRequest } from '../../models/service-invitation-request.interface';
+import { ServiceInvitationResponse } from '../../models/service-invitation-response.interface';
 
 
 @Injectable({
@@ -29,11 +30,89 @@ export class ServiceInvitationService {
       );
   }
 
+  /**
+   * Obtiene las invitaciones de servicio de un guardia por su ID.
+   * @param gatekeeperId ID del guardia
+   */
+  getInvitationsByGatekeeper(gatekeeperId: number): Observable<BaseApiResponse<ServiceInvitationResponse[]>> {
+    const requestUrl = `${env.api}ServiceInvitation/ByGatekeeper/${gatekeeperId}`;
+    return this._httpClient.get<BaseApiResponse<ServiceInvitationResponse[]>>(requestUrl).pipe(
+      map((resp) => resp),
+      catchError((error) => {
+        if (error.status === 400 && error.error && error.error.errors) {
+          // Retorna el error RFC9110 completo para que el componente lo maneje
+          return throwError(() => error.error);
+        }
+        return throwError(() => error);
+      })
+    );
+  }
 
   
   createInvitation(invitation: ServiceInvitationRequest): Observable<BaseApiResponse<boolean>> {
     const requestUrl = `${env.api}${endpoint.SERVICE_INVITATION_CREATE}`;
     return this._httpClient.post<BaseApiResponse<boolean>>(requestUrl, invitation).pipe(
+      catchError((error) => {
+        if (error.status === 400 && error.error && error.error.errors) {
+          // Retorna el error RFC9110 completo para que el componente lo maneje
+          return throwError(() => error.error);
+        }
+        return throwError(() => error);
+      })
+    );
+  }
+
+  /**
+   * Obtiene las invitaciones de servicio filtradas y paginadas por guardia
+   * @param gatekeeperId ID del guardia
+   * @param numRecordsPage Número de registros por página (default: 10)
+   * @param numPage Número de página (default: 1)
+   * @param stateFilter Filtro de estado: 'active' para activas, 'inactive' para inactivas
+   * @param textFilter Filtro de texto para buscar en los campos de la invitación
+   */
+  getInvitationsByGatekeeperFiltered(
+    gatekeeperId: number, 
+    numRecordsPage: number = 10, 
+    numPage: number = 1,
+    stateFilter?: 'active' | 'inactive',
+    textFilter?: string
+  ): Observable<BaseApiResponse<ServiceInvitationResponse[]>> {
+    let requestUrl = `${env.api}ServiceInvitation/ByGatekeeper/filtered?UserId=${gatekeeperId}&NumRecordsPage=${numRecordsPage}&NumPage=${numPage}`;
+    
+    // Agregar filtro de estado si se proporciona
+    if (stateFilter) {
+      requestUrl += `&StateFilter=${stateFilter}`;
+    }
+    
+    // Agregar filtro de texto si se proporciona
+    if (textFilter && textFilter.trim()) {
+      requestUrl += `&TextFilter=${encodeURIComponent(textFilter.trim())}`;
+    }
+    
+    return this._httpClient.get<BaseApiResponse<ServiceInvitationResponse[]>>(requestUrl).pipe(
+      map((resp) => resp),
+      catchError((error) => {
+        if (error.status === 400 && error.error && error.error.errors) {
+          return throwError(() => error.error);
+        }
+        return throwError(() => error);
+      })
+    );
+  }
+
+  /**
+   * Abre la puerta por parte del vigilante utilizando el token de la invitación
+   * @param gatekeeperId ID del vigilante
+   * @param token Token de la invitación de servicio
+   */
+  openDoorByGatekeeper(gatekeeperId: number, token: string): Observable<BaseApiResponse<any>> {
+    const requestUrl = `${env.api}ServiceInvitation/OpenDoorByGatekeeper`;
+    const payload = {
+      gatekeeperId: gatekeeperId,
+      token: token
+    };
+    
+    return this._httpClient.post<BaseApiResponse<any>>(requestUrl, payload).pipe(
       catchError((error) => {
         if (error.status === 400 && error.error && error.error.errors) {
           // Retorna el error RFC9110 completo para que el componente lo maneje

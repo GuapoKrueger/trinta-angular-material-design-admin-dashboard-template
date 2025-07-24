@@ -183,6 +183,7 @@ import { ServiceInvitationListComponent } from './pages/invitations-page/service
 import { ServiceInvitationComponent } from './pages/invitations-page/service-invitation/service-invitation.component';
 import { AccessDeniedComponent } from './common/access-denied/access-denied.component';
 import { GuardInvitationsComponent } from './pages/invitations-page/guard-invitations/guard-invitations.component';
+import { GatekeeperServiceInvitationsListComponent } from './pages/invitations-page/components/gatekeeper-service-invitations-list/gatekeeper-service-invitations-list.component';
 
 
 export const routes: Routes = [
@@ -193,7 +194,7 @@ export const routes: Routes = [
         children: [
             {
                 path: 'guard-invitations',
-                component: GuardInvitationsComponent,
+                component: GatekeeperServiceInvitationsListComponent,
                 data: { roles: ['Vigilante'] }
             },
             {

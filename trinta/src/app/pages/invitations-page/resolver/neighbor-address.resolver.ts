@@ -10,7 +10,7 @@ export const neighborAddressResolver: ResolveFn<NeighborAddressResponse[]> = (ro
   const neighborService = inject(NeighborService);
   const authService = inject(AuthService);
   
-  const neighborId = authService.userIdGet;
+  const neighborId = authService.neighboorIdGet;
   return neighborService.getNeighborAddresses(neighborId).pipe(
     map(resp => resp.data),
     catchError(() => of([]))

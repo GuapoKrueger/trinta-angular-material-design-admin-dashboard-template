@@ -95,7 +95,7 @@ export class ShareInvitationComponent implements OnInit{
     private route: ActivatedRoute
   )
   {
-    this.IdNeighbor = this._authService.userIdGet;
+    this.IdNeighbor = this._authService.neighboorIdGet;
     this.Adresses = this.route.snapshot.data['addresses'];
   }
 

@@ -1,0 +1,101 @@
+<!-- Header principal -->
+<div class="header-section">
+  <h1 class="page-title">Control Guardia principal</h1>
+  
+  <!-- Tabs Activas/Inactivas -->
+  <div class="tabs-container">
+    <button 
+      class="tab-button" 
+      [class.active]="activeTab === 'active'"
+      (click)="setActiveTab('active')">
+      Activas
+    </button>
+    <button 
+      class="tab-button" 
+      [class.active]="activeTab === 'inactive'"
+      (click)="setActiveTab('inactive')">
+      Inactivas
+    </button>
+  </div>
+</div>
+
+<!-- Mensaje informativo -->
+<div class="info-banner">
+  <i class="info-icon">ℹ️</i>
+  <span>Recuerda dar click en <strong>Abrir</strong> hasta que lleguen. Cada acceso <strong>solo puede</strong> ser utilizado una vez.</span>
+</div>
+
+<!-- Campo de búsqueda -->
+<div class="search-container">
+  <label class="search-label">Buscar:</label>
+  <input 
+    type="text" 
+    class="search-input" 
+    placeholder="Buscar invitación..."
+    [(ngModel)]="searchTerm"
+    (input)="onSearch()">
+</div>
+
+<!-- Loading spinner -->
+<div *ngIf="loading" class="spinner-container">
+  <mat-spinner></mat-spinner>
+</div>
+
+<!-- Error message -->
+<div *ngIf="errorMsg && !loading" class="error-message">
+  {{ errorMsg }}
+</div>
+
+<!-- Cards de invitaciones según el tab activo -->
+<div *ngIf="!loading && currentInvitations.length > 0" class="invitations-grid">
+  <div *ngFor="let invitation of visibleInvitations" class="invitation-card" [class.inactive]="activeTab === 'inactive'">
+    <div class="invitation-content">
+      <!-- Sección izquierda con fecha, tipo de servicio e información -->
+      <div class="left-section">        
+        <!-- Información principal -->
+        <div class="details">
+          <div class="service-type-row d-inline-flex align-items-center gap-3 flex-wrap">
+            <img src="assets/images/pages/invitations-page/Type_acces.png" alt="Tipo de acceso" class="service-type-img" />
+            <span class="service-type-text">{{ invitation.accessServiceTypeName }}</span>
+            <div class="action-section ms-auto">
+              <button 
+                class="open-button right-align" 
+                [disabled]="invitation.isUsed || loading || activeTab === 'inactive'"
+                (click)="openAccess(invitation)">
+                <span *ngIf="!loading">{{ invitation.isUsed ? 'Utilizada' : (activeTab === 'inactive' ? 'Inactiva' : 'Abrir') }}</span>
+                <span *ngIf="loading">Abriendo...</span>
+              </button>
+            </div>
+          </div>
+          <br />
+          <div class="guest-name">
+            <i class="guest-icon">👤</i>
+            {{ invitation.guestName }}
+          </div>
+          <div class="address">
+            <i class="location-icon">📍</i>
+            {{ invitation.fullAddress }}
+          </div>
+          <div *ngIf="invitation.notes" class="additional-info">
+            {{ invitation.notes }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Botón Ver más -->
+<div class="text-center" *ngIf="!loading && !loadingMore && hasMorePages">
+  <button mat-button color="primary" (click)="onViewMore()">Ver más</button>
+</div>
+
+<!-- Loading para "Ver más" -->
+<div class="text-center" *ngIf="loadingMore">
+  <mat-spinner diameter="30"></mat-spinner>
+</div>
+
+<!-- Mensaje cuando no hay resultados -->
+<div *ngIf="!loading && currentInvitations.length === 0 && !errorMsg" class="no-results">
+  <p>No hay invitaciones {{ activeTab === 'active' ? 'activas' : 'inactivas' }} disponibles.</p>
+</div>

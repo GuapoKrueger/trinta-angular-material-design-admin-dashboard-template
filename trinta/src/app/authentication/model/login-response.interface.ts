@@ -1,5 +1,6 @@
 export interface LoginResponse {
     id: number;
+    userId: number;
     token : string;
     userName: string;
     fullName: string;

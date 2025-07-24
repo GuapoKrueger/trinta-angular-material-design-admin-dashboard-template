@@ -32,7 +32,7 @@ export class AuthService {
     return JSON.parse(localStorage.getItem('avatarUrl')!)
   }
   
-  public get userIdGet() {
+  public get neighboorIdGet() {
     // return this.user.value;
     return JSON.parse(localStorage.getItem('IdNeighbor')!)
   }
@@ -40,6 +40,10 @@ export class AuthService {
   public get userLocation() {
     // return this.user.value;
     return JSON.parse(localStorage.getItem('Location')!)
+  }
+
+  public get userIdGet() {
+    return JSON.parse(localStorage.getItem('userId')!);
   }
 
   constructor() {
@@ -57,6 +61,7 @@ export class AuthService {
           if (response.isSuccess) {
             console.log(response.data);
             // El token ya es guardado como HttpOnly cookie por el backend
+            localStorage.setItem('userId', JSON.stringify(response.data.userId));
             localStorage.setItem('userName', JSON.stringify(response.data.userName));
             localStorage.setItem('avatarUrl', JSON.stringify(response.data.avatarUrl));
             localStorage.setItem('IdNeighbor', JSON.stringify(response.data.id));
@@ -72,6 +77,7 @@ export class AuthService {
     const requestUrl = `${env.api}auth/logout`;
     this.http.post<BaseApiResponse<any>>(requestUrl, {}, httpOptions).subscribe({
       next: () => {
+        localStorage.removeItem('userId');
         localStorage.removeItem('userName');
         localStorage.removeItem('avatarUrl');
         localStorage.removeItem('IdNeighbor');

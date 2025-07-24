@@ -102,7 +102,7 @@ export class EventInvitationComponent implements OnInit{
   constructor(        
     public toggleService: ToggleService
   ){
-    this.IdNeighbor = this._authService.userIdGet;
+    this.IdNeighbor = this._authService.neighboorIdGet;
 
     this._neighborService.getNeighborAddresses(this.IdNeighbor).subscribe({
       next: (response) => {
@@ -139,7 +139,7 @@ export class EventInvitationComponent implements OnInit{
         // accessType: ['1', Validators.required],
         startTimeHour: [null, Validators.required],
         endTimeHour: [null, Validators.required],
-        image: [null, [Validators.required, this.fileValidator(['png','jpg'], 5_000_000)]]
+        image: [null, [this.fileValidator(['png','jpg', 'jpeg', 'WebP'], 5_000_000)]]
       },
       { validators: dateAndTimeRangeValidator }
     );

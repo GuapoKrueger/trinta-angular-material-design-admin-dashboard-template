@@ -95,7 +95,7 @@ export class ServiceInvitationComponent implements OnInit {
     private route: ActivatedRoute
   )
   {
-    this.IdNeighbor = this._authService.userIdGet;
+    this.IdNeighbor = this._authService.neighboorIdGet;
     
     this._neighborService.getNeighborAddresses(this.IdNeighbor).subscribe({
       next: (response) => {
