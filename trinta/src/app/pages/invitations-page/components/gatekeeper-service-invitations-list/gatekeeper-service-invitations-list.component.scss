@@ -1,3 +1,35 @@
+// Hide scrollbars globally for this component
+:host {
+  overflow: auto;
+  
+  // Hide scrollbar for webkit browsers (Chrome, Safari, Edge)
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  
+  // Hide scrollbar for IE and Edge legacy
+  -ms-overflow-style: none;
+  
+  // Hide scrollbar for Firefox
+  scrollbar-width: none;
+}
+
+// Apply to main container
+.main-container {
+  overflow: auto;
+  
+  // Hide scrollbar for webkit browsers (Chrome, Safari, Edge)
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  
+  // Hide scrollbar for IE and Edge legacy
+  -ms-overflow-style: none;
+  
+  // Hide scrollbar for Firefox
+  scrollbar-width: none;
+}
+
 // Service type row styling
 .service-type-row {
   display: flex;
@@ -138,154 +170,120 @@
   gap: 0.75rem;
 }
 
-// Invitation card
+// Invitation card - Using same style as service-invitation-list
 .invitation-card {
-  background: white;
-  border: 1px solid #e0e0e0;
+  background: #f8f9fa;
   border-radius: 12px;
-  padding: 1.25rem;
-  margin-bottom: 0.75rem;
-  transition: box-shadow 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  padding: 16px;
+  margin-bottom: 15px;
+  overflow: hidden;
   
-  &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  // Hide scrollbars
+  &::-webkit-scrollbar {
+    display: none;
   }
-  
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
   .invitation-content {
     display: flex;
-    align-items: center;
-    gap: 1rem;
-    width: 100%;
+    justify-content: space-between;
+    align-items: flex-start;
+    overflow: hidden;
+    
+    // Hide scrollbars
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
-  
+
   .left-section {
     display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex: 1;
-    
-    .date-badge {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: #f0f0f0;
-      border-radius: 50%;
-      width: 60px;
-      height: 60px;
-      flex-shrink: 0;
-      
-      .day {
-        font-size: 1.4rem;
-        font-weight: 700;
-        color: #333;
-        line-height: 1;
-      }
-      
-      .month {
-        font-size: 0.7rem;
-        font-weight: 600;
-        color: #666;
-        margin-top: 0.1rem;
-        text-transform: uppercase;
-      }
+    gap: 10px;
+
+    .icon {
+      font-size: 28px;
+      color: #b0b0b0;
     }
-    
+
     .details {
-      flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 0.3rem;
-      
-      .service-type {
-        font-size: 1rem;
-        font-weight: 600;
+      gap: 4px;
+
+      strong {
+        font-size: 16px;
         color: #333;
-        margin-bottom: 0.4rem;
       }
-      
-      .guest-name {
-        display: flex;
+
+      .service-type, .dates, .address, .notes {
+        display: inline-flex;
         align-items: center;
-        gap: 0.5rem;
-        color: #333;
-        font-size: 0.95rem;
-        font-weight: 500;
+        margin-right: 16px;
+        color: #666;
+        font-size: 14px;
         
-        .guest-icon {
-          font-size: 1rem;
-          color: #666;
+        .icon-image {
+          width: 20px;
+          height: 20px;
+          object-fit: contain;
         }
-      }
-      
-      .address {
-        display: flex;
-        align-items: flex-start;
-        gap: 0.5rem;
-        color: #666;
-        font-size: 0.9rem;
-        line-height: 1.3;
-        
-        .location-icon {
-          font-size: 1rem;
-          color: #666;
-          margin-top: 0.1rem;
-        }
-      }
-      
-      .time-range {
-        color: #666;
-        font-size: 0.85rem;
-        margin-bottom: 0.5rem;
-      }
-      
-      .additional-info {
-        margin-top: 0.3rem;
-        color: #666;
-        font-size: 0.85rem;
-        line-height: 1.3;
-        font-style: italic;
-        padding: 0.5rem;
-        background: #f8f9fa;
-        border-radius: 6px;
-        border-left: 3px solid #e0e0e0;
       }
     }
   }
-  
-  .action-section {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    flex-shrink: 0;
 
-    .open-button {
-      background: #00b8d4;
-      color: white;
-      border: none;
-      border-radius: 25px;
-      padding: 0.75rem 2rem;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      min-width: 120px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+  .icon-image-small {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    margin-right: 8px;
+  }
 
-      &:hover:not(:disabled) {
-        background: #0097a7;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0, 184, 212, 0.3);
-      }
+  .status-icon {
+    margin-top: 4px;
+    .material-symbols-outlined {
+      font-size: 28px;
+      color: #00b69b;
+    }
+  }
 
-      &:disabled {
-        background: #bdbdbd;
-        cursor: not-allowed;
-        opacity: 0.6;
-        transform: none;
-        box-shadow: none;
-      }
+  // Open button styling
+  .open-button {
+    background: #00b8d4;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 0.6rem 1.8rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 100px;
+    text-transform: none;
+    letter-spacing: 0.3px;
+    box-shadow: 0 2px 8px rgba(0, 184, 212, 0.2);
+
+    &:hover:not(:disabled) {
+      background: #0097a7;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 184, 212, 0.35);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(0, 184, 212, 0.3);
+    }
+
+    &:disabled {
+      background: #e0e0e0;
+      color: #9e9e9e;
+      cursor: not-allowed;
+      opacity: 0.7;
+      transform: none;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
   }
 }
@@ -471,5 +469,44 @@
   .search-container {
     margin: 1rem 0;
     padding: 0.5rem;
+  }
+}
+
+// Additional styles from service-invitation-list component
+.invitation-card-detail-spacer {
+  height: 10px;
+}
+
+.botom_details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 20px;
+  
+  .rotating {
+    animation: rotate 1s linear infinite;
+    font-size: 24px;
+    color: #00b69b;
+  }
+  
+  p {
+    color: #666;
+    margin: 0;
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
