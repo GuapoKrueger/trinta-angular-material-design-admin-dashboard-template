@@ -510,3 +510,8 @@
     transform: rotate(360deg);
   }
 }
+
+// Adjust button container for better spacing
+.d-flex.gap-2 {
+  gap: 0.5rem !important;
+}

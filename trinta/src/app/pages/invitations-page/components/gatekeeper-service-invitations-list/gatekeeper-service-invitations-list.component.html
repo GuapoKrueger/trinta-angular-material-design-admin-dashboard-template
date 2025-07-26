@@ -57,14 +57,25 @@
           <div class="details">
             <div class="d-flex justify-content-between align-items-start">
               <strong>{{ invitation.accessServiceTypeName }}</strong>
-              <!-- BOTÓN ABRIR - Posicionado en la parte superior derecha -->
-              <div class="mb-20 mt-3">
+              <!-- BOTONES - Posicionados en la parte superior derecha -->
+              <div class="mb-20 mt-3 d-flex gap-2">
+                <!-- BOTÓN ABRIR -->
                 <button 
+                  *ngIf="activeTab === 'active'"
                   class="btn btn-primary open-button" 
-                  [disabled]="invitation.isUsed || loading || activeTab === 'inactive'"
+                  [disabled]="invitation.isUsed || loading"
                   (click)="openAccess(invitation)">
-                  <span *ngIf="!loading">{{ invitation.isUsed ? 'Utilizada' : (activeTab === 'inactive' ? 'Inactiva' : 'Abrir') }}</span>
+                  <span *ngIf="!loading">{{ invitation.isUsed ? 'Utilizada' : 'Abrir' }}</span>
                   <span *ngIf="loading">Abriendo...</span>
+                </button>
+                <!-- BOTÓN DUPLICAR - Solo visible en tab inactivas -->
+                <button 
+                  *ngIf="activeTab === 'inactive'"
+                  class="btn btn-primary open-button" 
+                  [disabled]="loading"
+                  (click)="duplicateInvitation(invitation)">
+                  <span *ngIf="!loading">Duplicar</span>
+                  <span *ngIf="loading">Duplicando...</span>
                 </button>
               </div>
             </div>

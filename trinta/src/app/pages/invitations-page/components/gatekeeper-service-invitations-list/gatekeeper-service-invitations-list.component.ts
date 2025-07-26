@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ServiceInvitationService } from '../../services/service-invitation/service-invitation.service';
 import { ServiceInvitationResponse } from '../../models/service-invitation-response.interface';
+import { ServiceInvitationRequest } from '../../models/service-invitation-request.interface';
 import { BaseApiResponse } from '../../../../shared/commons/base-api-response-interface';
 import { AuthService } from '../../../../authentication/services/auth.service';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
@@ -19,7 +23,16 @@ import Swal from 'sweetalert2';
   templateUrl: './gatekeeper-service-invitations-list.component.html',
   styleUrls: ['./gatekeeper-service-invitations-list.component.scss'],
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatProgressSpinnerModule, FormsModule, MatButtonModule]
+  imports: [
+    CommonModule, 
+    MatTableModule, 
+    MatProgressSpinnerModule, 
+    FormsModule, 
+    MatButtonModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule
+  ]
 })
 export class GatekeeperServiceInvitationsListComponent implements OnInit {
   // Listas para las invitaciones mostradas
@@ -49,7 +62,8 @@ export class GatekeeperServiceInvitationsListComponent implements OnInit {
 
   constructor(
     private invitationService: ServiceInvitationService,
-    private authService: AuthService
+    private authService: AuthService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -188,6 +202,83 @@ export class GatekeeperServiceInvitationsListComponent implements OnInit {
           this.errorMsg = error.title;
         } else {
           this.errorMsg = error?.message || 'Error al abrir el acceso. Intente nuevamente.';
+        }
+        
+        this.loading = false;
+      }
+    });
+  }
+
+  /**
+   * Abre el modal para duplicar una invitación inactiva
+   */
+  duplicateInvitation(invitation: ServiceInvitationResponse): void {
+    Swal.fire({
+      title: '¿Por qué quieres duplicar el acceso?',
+      input: 'textarea',
+      inputPlaceholder: 'Escribe el motivo de la duplicación...',
+      inputAttributes: {
+        'aria-label': 'Motivo de duplicación'
+      },
+      showCancelButton: true,
+      confirmButtonText: 'Duplicar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      inputValidator: (value) => {
+        if (!value || value.trim().length < 1) {
+          return 'Debes proporcionar un motivo válido';
+        }
+        return null;
+      }
+    }).then((result) => {
+      if (result.isConfirmed && result.value) {
+        this.performDuplication(invitation, result.value.trim());
+      }
+    });
+  }
+
+  /**
+   * Ejecuta la duplicación de la invitación después de la confirmación
+   */
+  private performDuplication(invitation: ServiceInvitationResponse, reason: string): void {
+    if (!this.gatekeeperId) {
+      this.errorMsg = 'No se pudo obtener el ID del vigilante.';
+      return;
+    }
+
+    this.loading = true;
+    this.errorMsg = null;
+
+    // Usar el nuevo método de solicitud de duplicación
+    this.invitationService.createDuplicationRequest(
+      invitation.id,
+      this.gatekeeperId,
+      reason
+    ).subscribe({
+      next: (response) => {
+        if (response.isSuccess) {
+          Swal.fire({
+            title: '¡Solicitud enviada!',
+            text: `Se ha enviado la solicitud de duplicación para ${invitation.guestName}. El administrador la revisará próximamente.`,
+            icon: 'success',
+            timer: 4000,
+            timerProgressBar: true
+          });
+        } else {
+          this.errorMsg = response.message || 'Error al enviar la solicitud de duplicación.';
+        }
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error al solicitar duplicación:', error);
+        
+        if (error.errors && error.errors.length > 0) {
+          this.errorMsg = error.errors.join('. ');
+        } else if (error.title) {
+          this.errorMsg = error.title;
+        } else {
+          this.errorMsg = error?.message || 'Error al solicitar la duplicación. Intente nuevamente.';
         }
         
         this.loading = false;

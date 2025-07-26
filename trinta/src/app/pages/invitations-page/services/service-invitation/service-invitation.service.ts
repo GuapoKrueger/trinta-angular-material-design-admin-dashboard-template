@@ -162,4 +162,32 @@ export class ServiceInvitationService {
       })
     );
   }
+
+  /**
+   * Crea una solicitud de duplicación de invitación
+   * @param originalInvitationId ID de la invitación original a duplicar
+   * @param requestedByUserId ID del usuario que solicita la duplicación
+   * @param requestReason Razón por la cual se solicita la duplicación
+   */
+  createDuplicationRequest(
+    originalInvitationId: number,
+    requestedByUserId: number,
+    requestReason: string
+  ): Observable<BaseApiResponse<boolean>> {
+    const requestUrl = `${env.api}ServiceInvitation/DuplicationRequest`;
+    const payload = {
+      originalInvitationId: originalInvitationId,
+      requestedByUserId: requestedByUserId,
+      requestReason: requestReason
+    };
+    
+    return this._httpClient.post<BaseApiResponse<boolean>>(requestUrl, payload).pipe(
+      catchError((error) => {
+        if (error.status === 400 && error.error && error.error.errors) {
+          return throwError(() => error.error);
+        }
+        return throwError(() => error);
+      })
+    );
+  }
 }
