@@ -35,15 +35,15 @@
                     <div class="invitation-card-detail-spacer"></div>
                     
                     <div class="botom_details mt-4 d-flex justify-content-center border-t pt-4">
-                        <!-- CANCELAR - Solo si isActive = false -->
-                        <div class="text-center" *ngIf="!invitation.isActive">
+                        <!-- CANCELAR - Solo si isActive = true -->
+                        <div class="text-center" *ngIf="invitation.isActive">
                             <a class="text-red-600 text-sm font-medium cancelar-link" (click)="onDelete(invitation)">
                                 Cancelar
                             </a>
                         </div>
 
-                        <!-- DUPLICAR - Solo si isActive = true -->
-                        <div class="text-center" *ngIf="invitation.isActive">
+                        <!-- DUPLICAR - Solo si isActive = false -->
+                        <div class="text-center" *ngIf="!invitation.isActive">
                             <a class="text-green-600 text-sm font-medium compartir-link" (click)="duplicar(invitation)">
                                 Duplicar
                             </a>
