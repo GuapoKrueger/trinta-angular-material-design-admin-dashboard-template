@@ -146,4 +146,20 @@ export class ServiceInvitationService {
       })
     );
   }
+
+  /**
+   * Elimina una invitación de servicio por su ID
+   * @param id ID de la invitación de servicio
+   */
+  deleteServiceInvitation(id: number): Observable<BaseApiResponse<boolean>> {
+    const requestUrl = `${env.api}ServiceInvitation/${id}`;
+    return this._httpClient.delete<BaseApiResponse<boolean>>(requestUrl).pipe(
+      catchError((error) => {
+        if (error.status === 400 && error.error && error.error.errors) {
+          return throwError(() => error.error);
+        }
+        return throwError(() => error);
+      })
+    );
+  }
 }

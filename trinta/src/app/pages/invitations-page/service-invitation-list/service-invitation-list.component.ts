@@ -103,8 +103,38 @@ export class ServiceInvitationListComponent implements OnInit {
       cancelButtonText: 'Cancelar'
     }).then(result => {
       if (result.isConfirmed) {
-        // TODO: Implement delete service invitation endpoint
-        Swal.fire('Eliminada', 'La invitación ha sido eliminada.', 'success');
+        this.serviceInvitationService.deleteServiceInvitation(invitation.id).subscribe({
+          next: (response) => {
+            if (response.isSuccess) {
+              // Remove the invitation from the local data source
+              this.dataSource.data = this.dataSource.data.filter(inv => inv.id !== invitation.id);
+              this.displayCount = this.dataSource.data.length;
+              
+              Swal.fire({
+                title: 'Eliminada',
+                text: 'La invitación ha sido eliminada exitosamente.',
+                icon: 'success',
+                confirmButtonText: 'Aceptar'
+              });
+            } else {
+              Swal.fire({
+                title: 'Error',
+                text: response.message || 'No se pudo eliminar la invitación.',
+                icon: 'error',
+                confirmButtonText: 'Aceptar'
+              });
+            }
+          },
+          error: (error) => {
+            console.error('Error al eliminar la invitación:', error);
+            Swal.fire({
+              title: 'Error',
+              text: 'Ocurrió un error al eliminar la invitación. Inténtalo de nuevo.',
+              icon: 'error',
+              confirmButtonText: 'Aceptar'
+            });
+          }
+        });
       }
     });
   }

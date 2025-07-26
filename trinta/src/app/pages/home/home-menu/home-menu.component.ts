@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { RouterLink, RouterModule } from '@angular/router';
 import { NgForOf } from '@angular/common';
+import { AuthService } from '../../../authentication/services/auth.service';
 
 @Component({
   selector: 'app-home-menu',
@@ -11,6 +12,15 @@ import { NgForOf } from '@angular/common';
   styleUrl: './home-menu.component.scss'
 })
 export class HomeMenuComponent {
+  private authService = inject(AuthService);
+  
+  get userName(): string {
+    try {
+      return this.authService.nameGet || 'Usuario';
+    } catch {
+      return 'Usuario';
+    }
+  }
     cards = [
       { 
         titulo: 'Compartir un passo',
