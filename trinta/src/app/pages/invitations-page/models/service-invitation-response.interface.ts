@@ -11,5 +11,9 @@ export interface ServiceInvitationResponse {
   neighborName: string;
   fullAddress: string;
   createDate: string;
+  gatekeeperUserId?: number;
+  accessServiceTypeId?: number;
+  neighborAddressId?: number;
+  accessType?: string;
 }
 

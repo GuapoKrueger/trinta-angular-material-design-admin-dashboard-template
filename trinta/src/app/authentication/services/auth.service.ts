@@ -46,6 +46,10 @@ export class AuthService {
     return JSON.parse(localStorage.getItem('userId')!);
   }
 
+  public get nameGet() {
+    return JSON.parse(localStorage.getItem('name')!);
+  }
+
   constructor() {
     // this.user = new BehaviorSubject<BaseApiResponse<LoginResponse>>(
     //   JSON.parse(localStorage.getItem('token')!)
@@ -63,6 +67,7 @@ export class AuthService {
             // El token ya es guardado como HttpOnly cookie por el backend
             localStorage.setItem('userId', JSON.stringify(response.data.userId));
             localStorage.setItem('userName', JSON.stringify(response.data.userName));
+            localStorage.setItem('name', JSON.stringify(response.data.name));
             localStorage.setItem('avatarUrl', JSON.stringify(response.data.avatarUrl));
             localStorage.setItem('IdNeighbor', JSON.stringify(response.data.id));
             localStorage.setItem('Location', JSON.stringify(response.data.location));
@@ -79,6 +84,7 @@ export class AuthService {
       next: () => {
         localStorage.removeItem('userId');
         localStorage.removeItem('userName');
+        localStorage.removeItem('name');
         localStorage.removeItem('avatarUrl');
         localStorage.removeItem('IdNeighbor');
         localStorage.removeItem('Location');

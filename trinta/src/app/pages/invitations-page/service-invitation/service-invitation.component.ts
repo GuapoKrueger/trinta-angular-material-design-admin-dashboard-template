@@ -89,6 +89,7 @@ export class ServiceInvitationComponent implements OnInit {
   public accessServiceTypes: AccessServiceType[] = [];
   public token: string = '';
   public guardsList: VigilanteList[] = [];
+  private invitationDataToLoad: any;
 
   constructor(        
     public toggleService: ToggleService,
@@ -97,9 +98,18 @@ export class ServiceInvitationComponent implements OnInit {
   {
     this.IdNeighbor = this._authService.neighboorIdGet;
     
+    // Store invitation data from navigation state
+    const nav = this.router.getCurrentNavigation();
+    if (nav?.extras?.state?.['invitationData']) {
+      this.invitationDataToLoad = nav.extras.state['invitationData'];
+    } else if (this.location.getState() && (this.location.getState() as any).invitationData) {
+      this.invitationDataToLoad = ((this.location.getState() as any).invitationData);
+    }
+    
     this._neighborService.getNeighborAddresses(this.IdNeighbor).subscribe({
       next: (response) => {
         this.Adresses = response.data; // Aquí extraes el arreglo de NeighborAddressResponse[]
+        this.loadInvitationDataIfAvailable();
       },
       error: (error) => {
         console.error('Error al obtener las direcciones:', error);
@@ -167,26 +177,6 @@ export class ServiceInvitationComponent implements OnInit {
     }
 
     // Eliminar valueChanges de isReusable, ya que siempre será 'No' y estará deshabilitado
-    
-    // Recuperar datos del estado de navegación
-    let invitationData: InvitationByIdNeighborResponse | undefined;
-    const nav = this.router.getCurrentNavigation();
-    if (nav?.extras?.state?.['invitationData']) {
-      invitationData = nav.extras.state['invitationData'] as InvitationByIdNeighborResponse;
-    } else if (this.location.getState() && (this.location.getState() as any).invitationData) {
-      invitationData = ((this.location.getState() as any).invitationData) as InvitationByIdNeighborResponse;
-    }
-
-    if (invitationData) {
-      // Llenar el formulario con los datos recibidos
-      this.form.patchValue({
-        name: invitationData.guestName || '',
-        neighborAddressId: invitationData.neighborAddressId ? invitationData.neighborAddressId : (this.Adresses && this.Adresses.length > 0 ? this.Adresses[0].id : null), // Renamed from location
-        startTime: invitationData.startTime ? new Date(invitationData.startTime) : this.convertToLocalTime(new Date()),
-        endTime: invitationData.endTime ? new Date(invitationData.endTime) : this.convertToLocalTime(new Date()),
-        accessType: invitationData.accessType ? String(invitationData.accessType) : '1'
-      });
-    }
   }
 
   private loadAccessServiceTypes(): void {
@@ -194,6 +184,7 @@ export class ServiceInvitationComponent implements OnInit {
       next: (response) => {
         if (response.isSuccess && response.data) {
           this.accessServiceTypes = response.data;
+          this.loadInvitationDataIfAvailable();
         }
       },
       error: (error) => {
@@ -206,6 +197,39 @@ export class ServiceInvitationComponent implements OnInit {
         });
       }
     });
+  }
+
+  private loadInvitationDataIfAvailable(): void {
+    if (this.invitationDataToLoad && this.accessServiceTypes.length > 0 && this.Adresses && this.Adresses.length > 0) {
+      // Usar accessServiceTypeId directamente si está disponible, sino buscar por nombre
+      let accessServiceTypeId = this.invitationDataToLoad.accessServiceTypeId || '';
+      if (!accessServiceTypeId) {
+        const serviceType = this.accessServiceTypes.find(type => type.name === this.invitationDataToLoad.accessServiceTypeName);
+        accessServiceTypeId = serviceType?.id || '';
+      }
+
+      // Usar neighborAddressId directamente si está disponible, sino buscar por fullAddress
+      let neighborAddressId = this.invitationDataToLoad.neighborAddressId;
+      if (!neighborAddressId) {
+        const address = this.Adresses?.find(addr => addr.fullAddress === this.invitationDataToLoad.fullAddress);
+        neighborAddressId = address?.id || (this.Adresses && this.Adresses.length > 0 ? this.Adresses[0].id : null);
+      }
+
+      // Llenar el formulario con los datos recibidos
+      this.form.patchValue({
+        guestName: this.invitationDataToLoad.guestName || '',
+        neighborAddressId: neighborAddressId,
+        startTime: this.invitationDataToLoad.startTime ? new Date(this.invitationDataToLoad.startTime) : this.convertToLocalTime(new Date()),
+        endTime: this.invitationDataToLoad.endTime ? new Date(this.invitationDataToLoad.endTime) : this.convertToLocalTime(new Date()),
+        accessType: this.invitationDataToLoad.accessType || '1',
+        notes: this.invitationDataToLoad.notes || '',
+        accessServiceTypeId: accessServiceTypeId,
+        gatekeeperUserId: this.invitationDataToLoad.gatekeeperUserId || null
+      });
+
+      // Clear the data to prevent reloading
+      this.invitationDataToLoad = null;
+    }
   }
 
   private validateDateRange(): boolean {
@@ -299,7 +323,7 @@ export class ServiceInvitationComponent implements OnInit {
         if (response.isSuccess) {
           this.token = response.message;
           this.form.disable(); // Bloquear edición tras generar
-          this.compartir(response.message);
+          this.showInvitationCreatedMessage();
         } else {
           Swal.fire({
             title: 'Error al crear la invitación',
@@ -335,7 +359,7 @@ export class ServiceInvitationComponent implements OnInit {
       }
     });
     } else {
-      this.compartir(this.token);
+      this.showInvitationCreatedMessage();
     }
   }
 
@@ -356,6 +380,35 @@ export class ServiceInvitationComponent implements OnInit {
       Notes: 'notes',
     };
     return map[serverField] || serverField;
+  }
+
+  private showInvitationCreatedMessage(): void {
+    Swal.fire({
+      title: '¡Invitación creada exitosamente!',
+      text: 'La invitación de servicio ha sido generada correctamente.',
+      icon: 'success',
+      confirmButtonText: 'Aceptar'
+    }).then(() => {
+      this.askForNewInvitation();
+    });
+  }
+
+  private askForNewInvitation(): void {
+    Swal.fire({
+      title: '¿Deseas crear una nueva invitación?',
+      text: 'Puedes crear otra invitación o regresar a la página principal.',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, crear nueva',
+      cancelButtonText: 'No, ir al inicio'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.clearInvitationForm();
+        this.form.enable();
+      } else {
+        this.router.navigate(['/']);
+      }
+    });
   }
 
   compartir(token: string): void {
@@ -543,18 +596,15 @@ export class ServiceInvitationComponent implements OnInit {
   private clearInvitationForm(): void {
     this.token = '';
     this.form.reset({
-      accessServiceTypeId: this.accessServiceTypes?.[0]?.id ?? null,
-      name: '',
-      email: '',
+      accessServiceTypeId: '',
+      guestName: '',
       neighborAddressId: this.Adresses?.[0]?.id ?? null,
+      gatekeeperUserId: null,
       startTime: this.convertToLocalTime(new Date()),
       endTime: this.convertToLocalTime(new Date()),
       accessType: '1',
       notes: ''
     });
-    // Volver a deshabilitar los campos según el flujo original
-    // this.form.get('startTime')?.disable();
-    // this.form.get('endTime')?.disable();
   }
 
   private toLocalISOString(date: Date): string {

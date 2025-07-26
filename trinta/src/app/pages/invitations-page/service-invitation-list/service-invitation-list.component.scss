@@ -1,0 +1,247 @@
+.trinta-card {
+    &.invitation-list-card {
+        .invitation-list-table {
+            .mat-mdc-table {
+                width: 100%;
+                overflow: hidden;
+                background-color: transparent;
+
+                .mat-mdc-header-row {
+                    height: auto;
+                    line-height: initial;
+                    letter-spacing: 0.14px;
+                    color: var(--darkColor);
+                    background: transparent;
+                    font: {
+                        weight: 500;
+                        size: var(--fontSize);
+                        family: var(--fontFamily);
+                    };
+                    .mat-mdc-header-cell {
+                        border: none;
+                        overflow: unset;
+                        text-align: start;
+                        white-space: nowrap;
+                        line-height: initial;
+                        padding: 0 15px 15px;
+                        letter-spacing: normal;
+                        background: transparent;
+                        border-bottom: 2px solid #edeff5;
+                    }
+                }
+                .mat-mdc-row, .mdc-data-table__content {
+                    line-height: initial;
+                    background: transparent;
+                    font: {
+                        weight: normal;
+                        size: var(--fontSize);
+                        family: var(--fontFamily);
+                    };
+                }
+                .mat-mdc-row {
+                    height: auto;
+                    color: var(--blackColor);
+                }
+                .mat-mdc-cell {
+                    border: none;
+                    overflow: hidden;
+                    text-align: start;
+                    padding: 18px 15px;
+                    white-space: nowrap;
+                    line-height: initial;
+                    letter-spacing: 0.14px;
+                    background: transparent;
+                    border-bottom: 1px solid #edeff5;
+
+                    .action {
+                        .mat-mdc-button {
+                            font-size: 18px;
+                            color: #818093;
+                            margin-right: 12px;
+
+                            &:last-child {
+                                margin-right: 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.invitation-card {
+    background: #f8f9fa;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    padding: 16px;
+    margin-bottom: 15px;
+    overflow: hidden;
+  
+    .invitation-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      overflow-x: hidden;
+    }
+  
+    .left-section {
+      display: flex;
+      gap: 10px;
+  
+      .icon {
+        font-size: 28px;
+        color: #b0b0b0;
+      }
+  
+      .details {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+  
+        strong {
+          font-size: 16px;
+          color: #333;
+        }
+  
+        .service-type, .dates, .address, .notes {
+          display: inline-flex;
+          align-items: center;
+          margin-right: 16px;
+          color: #666;
+          font-size: 14px;
+          
+          .icon-image {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+          }
+        }
+      }
+    }
+
+    .icon-image-small {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+      margin-right: 8px;
+    }
+  
+    .status-icon {
+      margin-top: 4px;
+      .material-symbols-outlined {
+        font-size: 28px;
+        color: #00b69b;
+      }
+    }
+}
+
+.header-back {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header-back a {
+  margin-right: 1rem;
+}
+
+.invitation-card-detail-spacer {
+  height: 10px;
+}
+
+.compartir-link {
+  color: #00b69b;
+  text-decoration: underline;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-block;
+  margin-top: 12px;
+  &:hover {
+    color: #009681;
+  }
+}
+
+.cancelar-link {
+  color: #b60000;
+  text-decoration: underline;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-block;
+  margin-top: 12px;
+  &:hover {
+    color: #b60000;
+  }
+}
+
+.botom_details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.botom_details_item_Left,
+.botom_details_item_right {
+  flex: 1;
+  align-items: center;
+}
+
+.botom_details_item_Left {
+   text-align: left;
+   padding-right: 2.5rem;
+}
+
+.botom_details_item_right {
+    text-align: left;
+    padding-left: 2.5rem;
+}
+
+.dates, .access {
+  .icon {
+    font-size: 1.4rem;
+    color: #4a4a4a;
+  }
+  span:last-child {
+    font-size: 0.95rem;
+    color: #4a4a4a;
+  }
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 20px;
+  
+  .rotating {
+    animation: rotate 1s linear infinite;
+    font-size: 24px;
+    color: #00b69b;
+  }
+  
+  p {
+    color: #666;
+    margin: 0;
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Max width 767px */
+@media only screen and (max-width : 767px) {
+    .botom_details_item_Left {
+        padding-right: 1rem;
+    }
+    
+    .botom_details_item_right {
+        padding-left: 1rem;
+    }
+}

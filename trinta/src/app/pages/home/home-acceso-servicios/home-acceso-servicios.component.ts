@@ -13,13 +13,13 @@ import { NgForOf } from '@angular/common';
 export class HomeAccesoServiciosComponent {
     cards = [
       { 
-        titulo: 'Registrar eventos',
+        titulo: 'Registrar acceso',
         subtitulo: 'Para que te ayuden abrir a paqueteria, proveedores, repartidores, etc.',
         route: '/invitations/service-visit', 
         img: 'assets/images/pages/home/Send_Add.png' 
       },
       { 
-        titulo: 'Reporte eventos',
+        titulo: 'Reporte accesos',
         subtitulo: 'Donde podrás consultar todos los accesos que has enviado.',
         route: '/invitations/service-visit-list', 
         img: 'assets/images/pages/home/Send_Report.png' 

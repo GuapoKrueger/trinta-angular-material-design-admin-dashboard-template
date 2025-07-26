@@ -1,1 +1,75 @@
-<p>service-invitation-list works!</p>
+<!-- Card Layout for Service Invitations -->
+<div class="invitation-card-detail-spacer"></div>
+
+<div class="header-back">
+    <a routerLink="/">
+        <img src="assets/images/pages/back-arrow.png" alt="Volver" width="24" height="24">
+    </a>
+    <h5 class="mb-0">INVITACIONES DE SERVICIO</h5>
+</div>
+
+<br>
+<div class="row" *ngIf="!isLoading">
+    <div class="col-md-6 col-xxl-4 col-xxxl-3" *ngFor="let invitation of dataSource.data | slice:0:displayCount">
+        <div class="invitation-card">
+            <div class="invitation-content">
+              <div class="left-section">
+                <img src="assets/images/pages/invitations-page/Type_acces.png" alt="Tipo de acceso" class="icon-image-small">
+                <div class="details">
+                    <strong>{{ invitation.accessServiceTypeName }}</strong>
+                    <div class="invitation-card-detail-spacer"></div>
+                    <div class="service-type">
+                        <img src="assets/images/pages/invitations-page/edit-text.png" alt="Tipo de acceso" class="icon-image-small">
+                        {{ invitation.guestName }}
+                    </div>
+                    <div class="invitation-card-detail-spacer"></div>
+                    <div class="dates">
+                        <img src="assets/images/pages/invitations-page/calendar.png" alt="Tipo de acceso" class="icon-image-small">
+                        {{ invitation.startTime | date:'dd/MM' }} – {{ invitation.endTime | date:'dd/MM' }}
+                    </div>
+                    <div class="invitation-card-detail-spacer"></div>
+                    <div class="address">
+                        <span class="material-symbols-outlined icon">home_pin</span>
+                        {{ invitation.fullAddress }}
+                    </div>
+                    <div class="invitation-card-detail-spacer"></div>
+                    
+                    <div class="botom_details mt-4 d-flex justify-content-center border-t pt-4">
+                        <!-- CANCELAR - Solo si isActive = false -->
+                        <div class="text-center" *ngIf="!invitation.isActive">
+                            <a class="text-red-600 text-sm font-medium cancelar-link" (click)="onDelete(invitation)">
+                                Cancelar
+                            </a>
+                        </div>
+
+                        <!-- DUPLICAR - Solo si isActive = true -->
+                        <div class="text-center" *ngIf="invitation.isActive">
+                            <a class="text-green-600 text-sm font-medium compartir-link" (click)="duplicar(invitation)">
+                                Duplicar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+              </div>
+              <div class="status-icon">
+                <span class="material-symbols-outlined">
+                  {{ invitation.isUsed ? 'check_circle' : 'radio_button_unchecked' }}
+                </span>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading indicator -->
+<div class="text-center" *ngIf="isLoading">
+    <div class="loading-spinner">
+        <span class="material-symbols-outlined rotating">refresh</span>
+        <p>Cargando invitaciones...</p>
+    </div>
+</div>
+
+<!-- Botón Ver más -->
+<div class="text-center" *ngIf="hasMoreData && !isLoading">
+  <button mat-button color="primary" (click)="onViewMore()">Ver más</button>
+</div>

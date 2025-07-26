@@ -101,6 +101,30 @@ export class ServiceInvitationService {
   }
 
   /**
+   * Obtiene las invitaciones de servicio filtradas y paginadas por vecino
+   * @param neighborId ID del vecino
+   * @param numRecordsPage Número de registros por página (default: 10)
+   * @param numPage Número de página (default: 1)
+   */
+  getInvitationsByNeighborFiltered(
+    neighborId: number, 
+    numRecordsPage: number = 10, 
+    numPage: number = 1
+  ): Observable<BaseApiResponse<ServiceInvitationResponse[]>> {
+    const requestUrl = `${env.api}ServiceInvitation/ByNeighbor/filtered?UserId=${neighborId}&NumRecordsPage=${numRecordsPage}&NumPage=${numPage}`;
+    
+    return this._httpClient.get<BaseApiResponse<ServiceInvitationResponse[]>>(requestUrl).pipe(
+      map((resp) => resp),
+      catchError((error) => {
+        if (error.status === 400 && error.error && error.error.errors) {
+          return throwError(() => error.error);
+        }
+        return throwError(() => error);
+      })
+    );
+  }
+
+  /**
    * Abre la puerta por parte del vigilante utilizando el token de la invitación
    * @param gatekeeperId ID del vigilante
    * @param token Token de la invitación de servicio

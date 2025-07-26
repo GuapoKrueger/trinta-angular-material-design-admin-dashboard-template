@@ -4,6 +4,7 @@ export interface LoginResponse {
     token : string;
     userName: string;
     fullName: string;
+    name: string;
     role: string;
     location: [{
         idNeighborsAddress: number;
