@@ -90,6 +90,8 @@ export class ServiceInvitationComponent implements OnInit {
   public token: string = '';
   public guardsList: VigilanteList[] = [];
   private invitationDataToLoad: any;
+  public isDuplicationrequestedByGateKeeper: boolean = false;
+  public duplicationRequestId: number | null = null;
 
   constructor(        
     public toggleService: ToggleService,
@@ -201,6 +203,16 @@ export class ServiceInvitationComponent implements OnInit {
 
   private loadInvitationDataIfAvailable(): void {
     if (this.invitationDataToLoad && this.accessServiceTypes.length > 0 && this.Adresses && this.Adresses.length > 0) {
+      // Verificar si es una duplicación
+      if (this.invitationDataToLoad.isDuplicationrequestedByGateKeeper) {
+        this.isDuplicationrequestedByGateKeeper = true;
+        this.duplicationRequestId = this.invitationDataToLoad.duplicationRequestId;
+        console.log('Cargando datos de duplicación:', {
+          isDuplicationrequestedByGateKeeper: this.isDuplicationrequestedByGateKeeper,
+          duplicationRequestId: this.duplicationRequestId
+        });
+      }
+
       // Usar accessServiceTypeId directamente si está disponible, sino buscar por nombre
       let accessServiceTypeId = this.invitationDataToLoad.accessServiceTypeId || '';
       if (!accessServiceTypeId) {
@@ -226,6 +238,16 @@ export class ServiceInvitationComponent implements OnInit {
         accessServiceTypeId: accessServiceTypeId,
         gatekeeperUserId: this.invitationDataToLoad.gatekeeperUserId || null
       });
+
+      // Mostrar mensaje informativo si es una duplicación
+      if (this.isDuplicationrequestedByGateKeeper) {
+        Swal.fire({
+          title: 'Duplicación de invitación',
+          text: 'Se han cargado los datos de la solicitud de duplicación. Revisa y modifica los campos según sea necesario.',
+          icon: 'info',
+          confirmButtonText: 'Entendido'
+        });
+      }
 
       // Clear the data to prevent reloading
       this.invitationDataToLoad = null;
@@ -313,8 +335,18 @@ export class ServiceInvitationComponent implements OnInit {
       accessType: String(this.form.value.accessType),
       neighborAddressId: this.form.value.neighborAddressId ?? 0,
       gatekeeperUserId: this.form.value.gatekeeperUserId ?? 0,
-      notes: this.form.value.notes ? this.form.value.notes.trim() : ''
+      notes: this.form.value.notes ? this.form.value.notes.trim() : '',
+      ...(this.isDuplicationrequestedByGateKeeper && this.duplicationRequestId && {
+        duplicationRequestId: this.duplicationRequestId
+      })
     };
+
+    // Debug: Verificar el payload completo
+    console.log('=== DEBUG INVITATION PAYLOAD ===');
+    console.log('isDuplicationrequestedByGateKeeper:', this.isDuplicationrequestedByGateKeeper);
+    console.log('duplicationRequestId:', this.duplicationRequestId);
+    console.log('Final invitation payload:', invitation);
+    console.log('================================');
 
     // Llamamos al servicio para crear la invitación
     if(this.token===''){

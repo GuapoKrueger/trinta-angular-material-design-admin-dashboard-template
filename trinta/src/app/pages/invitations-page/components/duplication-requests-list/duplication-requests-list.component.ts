@@ -7,6 +7,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 /**
  * Componente para mostrar las solicitudes de duplicación de invitaciones
@@ -42,7 +44,8 @@ export class DuplicationRequestsListComponent implements OnInit {
 
   constructor(
     private invitationService: ServiceInvitationService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -163,16 +166,86 @@ export class DuplicationRequestsListComponent implements OnInit {
    * @param request La solicitud a cancelar
    */
   cancelRequest(request: DuplicationRequestResponse): void {
-    console.log('Cancelar solicitud:', request);
-    // TODO: Implementar lógica de cancelación
+    // Mostrar confirmación antes de cancelar
+    Swal.fire({
+      title: '¿Cancelar solicitud?',
+      text: `¿Está seguro que desea cancelar la solicitud de duplicación para ${request.guestName}?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, cancelar',
+      cancelButtonText: 'No cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.performCancelRequest(request);
+      }
+    });
   }
 
   /**
-   * Duplica una solicitud
+   * Ejecuta la cancelación de la solicitud después de la confirmación
+   */
+  private performCancelRequest(request: DuplicationRequestResponse): void {
+    this.loading = true;
+    this.errorMsg = null;
+
+    this.invitationService.cancelDuplicationRequest(request.id).subscribe({
+      next: (response) => {
+        if (response.isSuccess) {
+          // Remover la solicitud de la lista local
+          this.duplicationRequests = this.duplicationRequests.filter(r => r.id !== request.id);
+          
+          Swal.fire({
+            title: '¡Solicitud cancelada!',
+            text: 'La solicitud de duplicación ha sido cancelada exitosamente.',
+            icon: 'success',
+            timer: 3000,
+            timerProgressBar: true
+          });
+        } else {
+          this.errorMsg = response.message || 'Error al cancelar la solicitud.';
+        }
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error al cancelar solicitud:', error);
+        
+        if (error.errors && error.errors.length > 0) {
+          this.errorMsg = error.errors.join('. ');
+        } else if (error.title) {
+          this.errorMsg = error.title;
+        } else {
+          this.errorMsg = error?.message || 'Error al cancelar la solicitud. Intente nuevamente.';
+        }
+        
+        this.loading = false;
+      }
+    });
+  }
+
+  /**
+   * Duplica una solicitud navegando al formulario de invitación con datos precargados
    * @param request La solicitud a duplicar
    */
   duplicateRequest(request: DuplicationRequestResponse): void {
     console.log('Duplicar solicitud:', request);
-    // TODO: Implementar lógica de duplicación
+    
+    this.router.navigate(['/invitations/service-visit'], {
+      state: {
+        invitationData: {
+          accessServiceTypeId: request.accessServiceTypeId,
+          guestName: request.guestName,
+          neighborAddressId: request.neighborAddressId,
+          gatekeeperUserId: request.gatekeeperUserId,
+          accessType: request.accessType,
+          notes: request.notes,
+          startTime: request.startTime,
+          endTime: request.endTime,
+          duplicationRequestId: request.id,
+          isDuplicationrequestedByGateKeeper: true
+        }
+      }
+    });
   }
 }

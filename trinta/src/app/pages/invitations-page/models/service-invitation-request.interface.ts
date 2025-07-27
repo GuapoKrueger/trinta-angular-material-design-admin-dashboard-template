@@ -9,4 +9,5 @@ export interface ServiceInvitationRequest {
   endTime: Date;
   isValid: boolean;
   neighborId: number;
+  duplicationRequestId?: number;
 }

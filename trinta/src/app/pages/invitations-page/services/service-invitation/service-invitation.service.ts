@@ -208,4 +208,41 @@ export class ServiceInvitationService {
       })
     );
   }
+
+  /**
+   * Cancela una solicitud de duplicación de invitación
+   * @param id ID de la solicitud de duplicación a cancelar
+   */
+  cancelDuplicationRequest(id: number): Observable<BaseApiResponse<boolean>> {
+    const requestUrl = `${env.api}ServiceInvitation/DuplicationRequest/Cancel/${id}`;
+    return this._httpClient.put<BaseApiResponse<boolean>>(requestUrl, {}).pipe(
+      catchError((error) => {
+        if (error.status === 400 && error.error && error.error.errors) {
+          return throwError(() => error.error);
+        }
+        return throwError(() => error);
+      })
+    );
+  }
+
+  /**
+   * Aprueba una solicitud de duplicación de invitación
+   * @param id ID de la solicitud de duplicación a aprobar
+   * @param newInvitationId ID de la nueva invitación creada
+   */
+  approveDuplicationRequest(id: number, newInvitationId: number): Observable<BaseApiResponse<boolean>> {
+    const requestUrl = `${env.api}ServiceInvitation/DuplicationRequest/Approve/${id}`;
+    const payload = {
+      newInvitationId: newInvitationId
+    };
+    
+    return this._httpClient.put<BaseApiResponse<boolean>>(requestUrl, payload).pipe(
+      catchError((error) => {
+        if (error.status === 400 && error.error && error.error.errors) {
+          return throwError(() => error.error);
+        }
+        return throwError(() => error);
+      })
+    );
+  }
 }
