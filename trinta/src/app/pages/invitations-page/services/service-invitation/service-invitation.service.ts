@@ -8,6 +8,7 @@ import { environment as env } from '../../../../../environments/environment.deve
 import { endpoint } from '../../../../shared/utils/endpoint.util';
 import { ServiceInvitationRequest } from '../../models/service-invitation-request.interface';
 import { ServiceInvitationResponse } from '../../models/service-invitation-response.interface';
+import { DuplicationRequestResponse } from '../../models/duplication-request.interface';
 
 
 @Injectable({
@@ -182,6 +183,23 @@ export class ServiceInvitationService {
     };
     
     return this._httpClient.post<BaseApiResponse<boolean>>(requestUrl, payload).pipe(
+      catchError((error) => {
+        if (error.status === 400 && error.error && error.error.errors) {
+          return throwError(() => error.error);
+        }
+        return throwError(() => error);
+      })
+    );
+  }
+
+  /**
+   * Obtiene las solicitudes de duplicación por ID de vecino
+   * @param neighborId ID del vecino
+   */
+  getDuplicationRequestsByNeighbor(neighborId: number): Observable<BaseApiResponse<DuplicationRequestResponse[]>> {
+    const requestUrl = `${env.api}ServiceInvitation/DuplicationRequests/${neighborId}`;
+    return this._httpClient.get<BaseApiResponse<DuplicationRequestResponse[]>>(requestUrl).pipe(
+      map((resp) => resp),
       catchError((error) => {
         if (error.status === 400 && error.error && error.error.errors) {
           return throwError(() => error.error);

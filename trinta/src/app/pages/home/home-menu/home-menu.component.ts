@@ -3,11 +3,12 @@ import { MatCardModule } from '@angular/material/card';
 import { RouterLink, RouterModule } from '@angular/router';
 import { NgForOf } from '@angular/common';
 import { AuthService } from '../../../authentication/services/auth.service';
+import { DuplicationRequestsListComponent } from '../../invitations-page/components/duplication-requests-list/duplication-requests-list.component';
 
 @Component({
   selector: 'app-home-menu',
   standalone: true,
-  imports: [MatCardModule, RouterLink, NgForOf, RouterModule],
+  imports: [MatCardModule, RouterLink, NgForOf, RouterModule, DuplicationRequestsListComponent],
   templateUrl: './home-menu.component.html',
   styleUrl: './home-menu.component.scss'
 })
