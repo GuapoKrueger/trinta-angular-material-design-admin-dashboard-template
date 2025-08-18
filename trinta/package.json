@@ -27,6 +27,7 @@
         "@fullcalendar/core": "^6.1.10",
         "@fullcalendar/daygrid": "^6.1.10",
         "@iplab/ngx-file-upload": "^17.1.0",
+        "@microsoft/signalr": "^9.0.6",
         "@nguniversal/express-engine": "^7.0.2",
         "angular-feather": "^6.5.1",
         "apexcharts": "^3.47.0",

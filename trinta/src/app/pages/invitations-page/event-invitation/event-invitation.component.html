@@ -305,77 +305,130 @@
           </div>
         </mat-step>
 
-        <mat-step>
-          <ng-template matStepLabel>Compartir</ng-template>
-          <div class="row">
-            <div class="col-md-6 col-xxl-4 col-xxxl-3">
-              <mat-card class="trinta-card customer-card mb-25 bg-white border-none d-block">
-                <mat-card-content>
-                  <div class="d-flex align-items-center justify-content-between">
-                    <div class="user d-flex align-items-center">
-                      <img src="assets/images/users/user-default.png" class="rounded-circle" alt="user-image">
-                      <div class="info">
-                        <h6>{{ form.controls['name'].value }}</h6>
-                        <!-- <span class="d-block text-body">From - {{ form.get('startTime')?.value ? (form.get('startTime')?.value | date: 'dd/MM/yyyy') : now }}</span> -->
-                      </div>
-                    </div>
-                  </div>
-                  <ul class="list p-0 list-unstyled">
-                    <li class="text-black">
-                      <span class="text-dark fw-medium heading-font-family">Evento :</span>
-                      {{ form.controls['name'].value }}
-                    </li>
-                    <!-- <li class="text-black">
-                      <span class="text-dark fw-medium heading-font-family">Tipo de Acceso :</span>
-                      {{ form.value.accessType === '1' ? 'Vehicular' : 'Peatonal' }}
-                    </li> -->
-                    <!-- <li class="text-black">
-                      <span class="text-dark fw-medium heading-font-family">Teléfono :</span>
-                      {{ form.controls['phoneNumber'].value }}
-                    </li> -->
-                    <li class="text-black">
-                      <span class="text-dark fw-medium heading-font-family">Fecha :</span>
-                      {{ form.controls['startTime'].value | date:'dd/MM/yyyy' }}
-                      <!-- {{ form.get('startTime')?.value ? (form.get('startTime')?.value | date: 'dd/MM/yyyy') : '' }} -->
-                    </li>
-                    <li class="text-black">
-                      <span class="text-dark fw-medium heading-font-family">Hora inicio :</span>
-                      {{ form.controls['startTimeHour'].value }}
-                      <!-- {{ form.get('endTime')?.value ? (form.get('endTime')?.value | date: 'dd/MM/yyyy') : '' }} -->
-                    </li>
+<mat-step>
+  <ng-template matStepLabel>Compartir</ng-template>
 
-                    <li class="text-black">
-                      <span class="text-dark fw-medium heading-font-family">Hora fin :</span>
-                      {{ form.controls['endTimeHour'].value }}
-                      <!-- {{ form.get('endTime')?.value ? (form.get('endTime')?.value | date: 'dd/MM/yyyy') : '' }} -->
-                    </li>
-                    <!-- <li class="text-black">
-                      <span class="text-dark fw-medium heading-font-family">Es reutilizable :</span>
-                      {{ form.controls['isReusable'].value }}
-                    </li> -->
-                    <li class="text-black">
-                      <span class="text-dark fw-medium heading-font-family">Locación :</span>
-                      {{ getFullAddress() }}
-                      <!-- {{ Adresses.find(addr => addr.id === form.value.neighborId)?.fullAddress }} -->
-                    </li>
+  <div class="share-card">
 
-                  </ul>
+    <!-- Encabezado compacto -->
+    <div class="share-header">
+      <img src="assets/images/Passo_Logo_64.png" alt="Passo" class="brand" />
+      <div class="titles">
+        <h3>Revisa y comparte</h3>
+        <p>Confirma los datos del evento antes de enviar la invitación.</p>
+      </div>
+    </div>
 
-                </mat-card-content>
-              </mat-card>
-            </div>
+    <!-- Imagen / preview -->
+    <div class="preview-block" *ngIf="imagePreview; else noImg">
+      <img [src]="imagePreview" alt="Imagen del evento" class="preview-img"/>
+      <div class="preview-caption">
+        {{ form.controls['name'].value || 'Evento' }}
+      </div>
+    </div>
+    <ng-template #noImg>
+      <div class="preview-empty">
+        <mat-icon>image</mat-icon>
+        <span>Sin imagen</span>
+      </div>
+    </ng-template>
+
+    <!-- Datos del evento -->
+    <div class="info-list">
+      <div class="row-item">
+        <div class="icon-pill"><mat-icon>badge</mat-icon></div>
+        <div class="content">
+          <div class="label">Nombre del evento</div>
+          <div class="value">{{ form.controls['name'].value }}</div>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="row-item">
+        <div class="icon-pill"><mat-icon>event</mat-icon></div>
+        <div class="content">
+          <div class="label">Fecha</div>
+          <div class="value">{{ form.controls['startTime'].value | date:'dd/MM/yyyy' }}</div>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="row-two">
+        <div class="row-item">
+          <div class="icon-pill soft"><mat-icon>schedule</mat-icon></div>
+          <div class="content">
+            <div class="label">Inicia</div>
+            <div class="value">{{ form.controls['startTimeHour'].value }}</div>
           </div>
-          <div class="d-flex justify-content-between">
-            <!-- ensure Back arrow image also uses click to go back -->
-            <img src="assets/images/pages/invitations-page/up.png" alt="Atrás"
-                 style="cursor:pointer; width:32px; height:32px; margin-right:0.5rem;"
-                 (click)="stepper.previous()" />
-            <!-- <button mat-flat-button color="warn" (click)="stepper.reset()">Inicio</button> -->
-            <a class="default-btn" mat-button (click)="onSubmit()">
-              <i class="ri-share-fill"></i> Compartir Invitación
-            </a>
+        </div>
+        <div class="row-item">
+          <div class="icon-pill soft"><mat-icon>alarm_on</mat-icon></div>
+          <div class="content">
+            <div class="label">Termina</div>
+            <div class="value">{{ form.controls['endTimeHour'].value }}</div>
           </div>
-        </mat-step>   
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="row-item">
+        <div class="icon-pill"><mat-icon>home_pin</mat-icon></div>
+        <div class="content">
+          <div class="label">Locación</div>
+          <div class="value">{{ getFullAddress() }}</div>
+        </div>
+      </div>
+
+          <!-- Tipo de acceso -->
+      <mat-divider></mat-divider>
+
+      <!-- …después de Locación -->
+      <div class="row-item">
+        <div class="icon-pill"
+            [ngClass]="form.value.accessType === '1' ? 'vehicular' : 'peatonal'">
+          <mat-icon>
+            {{ form.value.accessType === '1' ? 'directions_car' : 'directions_walk' }}
+          </mat-icon>
+        </div>
+
+        <div class="content">
+          <div class="label">Tipo de acceso</div>
+          <div class="value">
+            {{ form.value.accessType === '1' ? 'Vehicular' : 'Peatonal' }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+    <!-- Acciones -->
+    <div class="share-actions">
+      <button type="button"
+              class="ghost-btn"
+              (click)="stepper.previous()">
+        <mat-icon>arrow_back</mat-icon>
+        Atrás
+      </button>
+
+      <button mat-flat-button
+              color="primary"
+              class="cta-btn"
+              (click)="onSubmit()">
+        <mat-icon>share</mat-icon>
+        Compartir invitación
+      </button>
+    </div>
+  </div>
+
+</mat-step>
+ 
 
       </mat-stepper>
     </form>

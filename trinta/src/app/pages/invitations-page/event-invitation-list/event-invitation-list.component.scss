@@ -287,6 +287,7 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     padding: 16px;
     margin-bottom: 15px;
+    position: relative; 
   
     .invitation-content {
       display: flex;
@@ -325,11 +326,22 @@
   
     .status-icon {
       margin-top: 4px;
+      position: absolute;
+        top: 10px;
+        right: 10px;
       .material-symbols-outlined {
         font-size: 28px;
         color: #00b69b;
       }
     }
+
+    .status-icon__glyph {
+  font-size: 28px;   /* tamaño visible */
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+}
+
   
     .duplicate-btn {
       width: 100%;
@@ -467,4 +479,22 @@
 
 .invitation-content {
   overflow-x: hidden;
+}
+
+.status-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  .material-symbols-outlined {
+    font-variation-settings: 'wght' 600;
+    font-size: 28px;
+    line-height: 1;
+  }
+
+
+/* Colores por estado */
+.status--used    { color: #00b69b; }  /* verde */
+.status--expired { color: #ef4444; }  /* rojo */
+.status--active  { color: #00b69b; }  /* gris */
 }

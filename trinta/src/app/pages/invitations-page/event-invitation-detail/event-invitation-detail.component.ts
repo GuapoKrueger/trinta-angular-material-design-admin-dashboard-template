@@ -33,8 +33,8 @@ import { environment as env } from '../../../../environments/environment.develop
     CommonModule,
     MatButtonToggleModule,
     MatIconModule],
-  templateUrl: './event-invitation-detail.component.html',
-  styleUrl: './event-invitation-detail.component.scss'
+  templateUrl: './event-invitation-detail-nuevo.component.html',
+  styleUrl: './event-invitation-detail-nuevo.component.scss'
 })
 export class EventInvitationDetailComponent {
     // isToggled
@@ -43,8 +43,9 @@ export class EventInvitationDetailComponent {
     invitationDetails: InvitationResponse | null = null;
     isAccessSelected = false;
     imagenBase64?: string;
+    selectedAccess: 1 | 2 | null = null;
 
-    private _invitationService = inject(InvitationService);
+    private _invitationService = inject(InvitationService); 
 
     constructor(
       private fb: FormBuilder,

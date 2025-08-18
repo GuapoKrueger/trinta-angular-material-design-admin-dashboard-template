@@ -10,9 +10,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { InvitationSocketService } from '../../services/invitation-socket.service';
+import { MatTabsModule } from '@angular/material/tabs';
+import { TgwAsynchronouslyLoadingTcComponent } from '../../../../ui-elements/tabs/tgw-asynchronously-loading-tc/tgw-asynchronously-loading-tc.component';
+import { UtwaCustomLabelTemplateComponent } from '../../../../ui-elements/tabs/utwa-custom-label-template/utwa-custom-label-template.component';
+import { MatCardModule } from '@angular/material/card';
+import { FeathericonsModule } from '../../../../icons/feathericons/feathericons.module';
 
 /**
  * Componente exclusivo para el rol de vigilante (gatekeeper).
@@ -31,7 +37,13 @@ import Swal from 'sweetalert2';
     MatButtonModule,
     MatDialogModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatTabsModule,
+    TgwAsynchronouslyLoadingTcComponent, 
+    UtwaCustomLabelTemplateComponent, 
+    DatePipe,
+    MatCardModule,
+      FeathericonsModule
   ]
 })
 export class GatekeeperServiceInvitationsListComponent implements OnInit {
@@ -60,16 +72,49 @@ export class GatekeeperServiceInvitationsListComponent implements OnInit {
   
   gatekeeperId: number | null = null;
 
+  // Tab group where the tab content is loaded lazily (when activated)
+    tabLoadTimes: Date[] = [];
+    getTimeLoaded(index: number) {
+        if (!this.tabLoadTimes[index]) {
+            this.tabLoadTimes[index] = new Date();
+        }
+        return this.tabLoadTimes[index];
+    }
+
+    // Tab group with paginated tabs
+    lotsOfTabs = new Array(30).fill(0).map((_, index) => `Tab ${index}`);
+
   constructor(
     private invitationService: ServiceInvitationService,
     private authService: AuthService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private invitationSocket: InvitationSocketService 
   ) {}
 
   ngOnInit(): void {
     // Obtener el ID del vigilante desde AuthService
     this.gatekeeperId = this.authService.userIdGet;
     this.loadInitialInvitations();
+
+    if (this.gatekeeperId) {
+      this.invitationSocket.joinGatekeeper(this.gatekeeperId);
+
+      this.invitationSocket.newInvitation$.subscribe((newInvitation) => {
+        if (this.activeTab === 'active') {
+          this.activeInvitations.unshift(newInvitation);
+
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'info',
+            title: 'Nueva invitación recibida',
+            showConfirmButton: false,
+            timer: 5000
+          });
+        }
+      });
+    }
+
   }
 
   /**

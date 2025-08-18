@@ -189,6 +189,14 @@ import { GatekeeperServiceInvitationsListComponent } from './pages/invitations-p
 export const routes: Routes = [
     // {path: '', component: EcommerceComponent, canActivate : [authGuard]},
     {
+        path: 'eventinvitation/detail/:token',
+        component: EventInvitationDetailComponent
+    },
+        {
+        path: 'invitation/detail/:token',
+        component: InvitationDetailComponent
+    },
+    {
         path: '', 
         canActivate: [authGuard],
         children: [
@@ -358,7 +366,7 @@ export const routes: Routes = [
         path: 'invitation',
         component: InvitationsPageComponent,
         children: [
-            {path: '', component: SignInComponent},
+            // {path: '', component: SignInComponent},
             {path: 'detail/:token', component: InvitationDetailComponent},
         ]
     },
@@ -366,7 +374,7 @@ export const routes: Routes = [
         path: 'eventinvitation',
         component: InvitationsPageComponent,
         children: [
-            {path: '', component: SignInComponent},
+            // {path: '', component: SignInComponent},
             {path: 'detail/:token', component: EventInvitationDetailComponent},
             {path: 'detail', component: EventInvitationDetailComponent},
         ]

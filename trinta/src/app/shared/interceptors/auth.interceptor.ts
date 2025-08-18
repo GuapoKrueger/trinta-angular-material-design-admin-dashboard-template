@@ -9,12 +9,31 @@ export const AuthInterceptorFn: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
+    const isPublicApi =
+    req.url.includes('/api/Invitation/detail') ||   // detalle por token (AllowAnonymous)
+    req.url.includes('/api/EventInvitation/detail'); // si tienes el de eventos separado
+
+      // 2) Marca rutas públicas del frontend
+  const currentUrl = router.url || '';
+  const isPublicPage =
+    currentUrl.startsWith('/eventinvitation/detail') ||
+    currentUrl.startsWith('/invitation/detail');
+
+      // Si estás en página pública, trata tb. el endpoint de rol como "ignorable"
+  const isRoleEndpoint = req.url.includes('/api/auth/role');
+
   // Ya no se agrega el header Authorization, la cookie HttpOnly se envía automáticamente en el interceptor http-options.interceptor.ts
   // Esto significa que el token de acceso se maneja automáticamente por el navegador y no es necesario agregarlo manualmente en cada solicitud.
   
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {
+
+        // Si es público, NO redirijas ni hagas logout:
+       if (isPublicApi || isPublicPage || isRoleEndpoint){
+          return throwError(() => error);
+        }
+
         // Si el servidor devuelve 401 (Unauthorized), intentar refrescar el token
         authService.logout();
         router.navigate(['/authentication']);

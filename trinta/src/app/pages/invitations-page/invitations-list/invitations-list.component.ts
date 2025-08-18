@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild, LOCALE_ID } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router, RouterLink } from '@angular/router';
 
@@ -7,11 +7,16 @@ import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { InvitationByIdNeighborResponse } from '../models/invitation-response.interface';
 import { InvitationService } from '../services/invitation.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { FeathericonsModule } from '../../../icons/feathericons/feathericons.module';
 import { PhoneNumberPipe } from '../../../shared/pipes/phone-number.pipe';
 import Swal from 'sweetalert2';
+import { TPaymentHistoryComponent } from '../../../tables/t-payment-history/t-payment-history.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
+
+import localeEs from '@angular/common/locales/es';
+registerLocaleData(localeEs);
 
 @Component({
   selector: 'app-invitations-list',
@@ -25,10 +30,14 @@ import Swal from 'sweetalert2';
     CommonModule,
     MatIconModule,
     FeathericonsModule,
-    PhoneNumberPipe
+    PhoneNumberPipe,
+    MatTooltipModule
   ],
-  templateUrl: './invitations-list.component.html',
-  styleUrl: './invitations-list.component.scss'
+  providers: [
+    { provide: LOCALE_ID, useValue: 'es' },
+  ],
+  templateUrl: './invitations-list-nuevo.component.html',
+  styleUrl: './invitations-list-nuevo.component.scss'
 })
 export class InvitationsListComponent implements OnInit {
   displayedColumns: string[] = [
@@ -73,6 +82,7 @@ export class InvitationsListComponent implements OnInit {
         next: (response) => {
           this.dataSource = new MatTableDataSource(response.data);
           // no más paginación integrada
+          console.log('lista de invitaciones', this.dataSource);
         },
         error: (err) => {
           console.error('Error al cargar invitaciones:', err);
@@ -118,5 +128,9 @@ export class InvitationsListComponent implements OnInit {
         });
       }
     }
+
+  goToCreate() : void {
+    this.router.navigate(['/invitations/share-invitation']);
+  }
   
 }

@@ -9,6 +9,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { InvitationSocketService } from '../../services/invitation-socket.service';
+import { Subscription } from 'rxjs';
 
 /**
  * Componente para mostrar las solicitudes de duplicación de invitaciones
@@ -42,16 +44,44 @@ export class DuplicationRequestsListComponent implements OnInit {
   // ID del usuario (vecino)
   neighborId: number | null = null;
 
+  private subs = new Subscription();
+
   constructor(
     private invitationService: ServiceInvitationService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private invitationSocket: InvitationSocketService 
   ) {}
 
   ngOnInit(): void {
     // Obtener el ID del usuario desde AuthService
     this.neighborId = this.authService.neighboorIdGet;
     this.loadDuplicationRequests();
+
+    this.invitationSocket.joinResident(this.authService.neighboorIdGet);
+
+    this.invitationSocket.duplicationRequested$.subscribe((newInvitation) => {
+    this.duplicationRequests = [newInvitation, ...this.duplicationRequests];
+
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'info',
+          title: 'Nueva invitación recibida',
+          showConfirmButton: false,
+          timer: 5000
+        });
+      
+    });
+
+
+  }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
+    if (this.neighborId) {
+      this.invitationSocket.leaveResident(this.neighborId);
+    }
   }
 
   /**
@@ -65,8 +95,6 @@ export class DuplicationRequestsListComponent implements OnInit {
     
     this.loading = true;
     this.errorMsg = null;
-
-    console.log('Cargando solicitudes de duplicación para el vecino con ID:', this.neighborId);
     
     this.invitationService.getDuplicationRequestsByNeighbor(this.neighborId).subscribe({
       next: (resp: BaseApiResponse<DuplicationRequestResponse[]>) => {

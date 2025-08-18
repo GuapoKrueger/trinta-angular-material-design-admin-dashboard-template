@@ -1,0 +1,194 @@
+<mat-card class="trinta-card mb-25 bg-white border-none d-block">
+  <mat-card-header class="header-back compact">
+    <mat-card-title >
+      <h5 class="mt-0 mb-0">Control Guardia Principal</h5>
+    </mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+
+    <!-- Info -->
+    <div class="info-banner mb-3">
+      <i class="info-icon">ℹ️</i>
+      <span>
+        Recuerda dar click en <strong>Abrir</strong> hasta que lleguen.
+        Cada acceso <strong>solo puede ser utilizado una vez.</strong>
+      </span>
+    </div>
+
+    <!-- Buscador -->
+    <mat-form-field appearance="outline" class="w-100 mb-3">
+      <!-- <mat-label>Buscar acceso...</mat-label> -->
+      <input matInput placeholder="Buscar acceso..." [(ngModel)]="searchTerm" (input)="onSearch()" />
+    </mat-form-field>
+
+    <mat-tab-group
+      dynamicHeight
+      animationDuration="2000ms"
+      [selectedIndex]="activeTab === 'active' ? 0 : 1"
+      (selectedIndexChange)="setActiveTab($event === 0 ? 'active' : 'inactive')"
+    >
+      <!-- Tab ACTIVAS -->
+      <mat-tab label="Activas">
+        <ng-container
+          *ngTemplateOutlet="tabContent; context: {
+            $implicit: activeInvitations,
+            isActive: true,
+            hasMore: hasMoreActivePages
+          }">
+        </ng-container>
+      </mat-tab>
+
+      <!-- Tab INACTIVAS -->
+      <mat-tab label="Inactivas">
+        <ng-container
+          *ngTemplateOutlet="tabContent; context: {
+            $implicit: inactiveInvitations,
+            isActive: false,
+            hasMore: hasMoreInactivePages
+          }">
+        </ng-container>
+      </mat-tab>
+    </mat-tab-group>
+
+    <!-- Template reutilizable para ambas pestañas -->
+    <ng-template #tabContent let-list let-isActive="isActive" let-hasMore="hasMore">
+
+      <!-- Loading -->
+      <div *ngIf="loading" class="d-flex justify-content-center my-4">
+        <mat-spinner></mat-spinner>
+      </div>
+
+      <!-- Error -->
+      <div *ngIf="errorMsg && !loading" class="error-message my-3">
+        {{ errorMsg }}
+      </div>
+
+      <!-- Lista -->
+      <div *ngIf="!loading && list?.length > 0" class="row g-4">
+        <div *ngFor="let invitation of list" class="col-md-6 col-xxl-4 col-xxxl-3" style="padding-bottom: 30px;">
+          <mat-card class="service-card mat-elevation-z3 h-100" [ngClass]="{ 'card-disabled': !invitation.isActive }">
+            <mat-card-content class="p-0">
+
+              <!-- Píldora de estado -->
+              <div
+                class="status-pill"
+                [ngClass]="{
+                  'used': invitation.isUsed,
+                  'active': !invitation.isUsed && isActive,
+                  'inactive': !invitation.isUsed && !isActive
+                }"
+              >
+                <span class="material-symbols-outlined">
+                  {{ invitation.isUsed ? 'task_alt' : (isActive ? 'radio_button_unchecked' : 'block') }}
+                </span>
+                {{ invitation.isUsed ? 'Usada' : (isActive ? 'Activa' : 'Inactiva') }}
+              </div>
+
+              <!-- Encabezado -->
+              <div class="head">
+                <span class="material-symbols-outlined avatar-ico" [ngSwitch]="invitation.accessServiceTypeName">
+                  <ng-container *ngSwitchCase="'Paqueteria'">local_shipping</ng-container>
+                  <ng-container *ngSwitchCase="'Proveedor'">store</ng-container>
+                  <ng-container *ngSwitchCase="'Comida'">restaurant</ng-container>
+                  <ng-container *ngSwitchCase="'Repartidor'">delivery_dining</ng-container>
+                  <ng-container *ngSwitchCase="'Servicio de limpieza'">cleaning_services</ng-container>
+                  <ng-container *ngSwitchCase="'Servicio generales'">build</ng-container>
+                  <ng-container *ngSwitchCase="'Otros'">miscellaneous_services</ng-container>
+                  <ng-container *ngSwitchDefault>help_outline</ng-container>
+                </span>
+
+                <div class="who">
+                  <div class="name">{{ invitation.accessServiceTypeName }}</div>
+                  <div class="type">Acceso de servicio</div>
+                </div>
+              </div>
+
+              <!-- Bloque info -->
+              <div class="info">
+                <div class="row">
+                  <span class="material-symbols-outlined ico tel">edit</span>
+                  <div class="col">
+                    <div class="label">Nombre del proveedor</div>
+                    <div class="value">{{ invitation.guestName }}</div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <span class="material-symbols-outlined ico date">calendar_month</span>
+                  <div class="col">
+                    <div class="label">Rango</div>
+                    <div class="value">{{ invitation.startTime | date:'dd/MM' }} – {{ invitation.endTime | date:'dd/MM' }}</div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <span class="material-symbols-outlined ico addr">home_pin</span>
+                  <div class="col">
+                    <div class="label">Dirección</div>
+                    <div class="value">{{ invitation.fullAddress }}</div>
+                  </div>
+                </div>
+
+                <div class="row" *ngIf="invitation.notes">
+                  <span class="material-symbols-outlined ico note">note</span>
+                  <div class="col">
+                    <div class="label">Notas</div>
+                    <div class="value">{{ invitation.notes }}</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Acción (fondo blanco, icono y texto con color) -->
+              <div class="actions">
+                <button
+                  *ngIf="isActive; else duplicateBtn"
+                  mat-raised-button
+                  
+                  class="full-btn white primary-outline"
+                  [disabled]="invitation.isUsed || loading"
+                  (click)="openAccess(invitation)">
+                  <span class="material-symbols-outlined">{{ invitation.isUsed ? 'lock' : 'meeting_room' }}</span>
+                  <span *ngIf="!loading">{{ invitation.isUsed ? 'Utilizada' : 'Abrir puerta' }}</span>
+                  <span *ngIf="loading">Abriendo...</span>
+                </button>
+
+                <ng-template #duplicateBtn>
+                  <button
+                    mat-raised-button
+                    
+                    class="full-btn white neutral-outline"
+                    [disabled]="loading"
+                    (click)="duplicateInvitation(invitation)">
+                    <span class="material-symbols-outlined">content_copy</span>
+                    <span *ngIf="!loading">Duplicar</span>
+                    <span *ngIf="loading">Duplicando...</span>
+                  </button>
+                </ng-template>
+              </div>
+
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+
+      <!-- Ver más -->
+      <div class="text-center my-3" *ngIf="!loading && !loadingMore && hasMore">
+        <button mat-button color="primary" (click)="onViewMore()">Ver más</button>
+      </div>
+      <div class="text-center my-3" *ngIf="loadingMore">
+        <mat-spinner diameter="30"></mat-spinner>
+      </div>
+
+      <!-- Vacío -->
+      <div *ngIf="!loading && (!list || list.length === 0) && !errorMsg" class="no-results my-3">
+        <p>No hay invitaciones {{ isActive ? 'activas' : 'inactivas' }} disponibles.</p>
+      </div>
+    </ng-template>
+  </mat-card-content>
+</mat-card>
+
+
+
+
+
