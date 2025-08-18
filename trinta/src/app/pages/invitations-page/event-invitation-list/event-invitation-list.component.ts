@@ -12,6 +12,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { FeathericonsModule } from '../../../icons/feathericons/feathericons.module';
 import { PhoneNumberPipe } from '../../../shared/pipes/phone-number.pipe';
 import Swal from 'sweetalert2';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 
 @Component({
   selector: 'app-event-invitation-list',
@@ -25,10 +27,11 @@ import Swal from 'sweetalert2';
     CommonModule,
     MatIconModule,
     FeathericonsModule,
-    PhoneNumberPipe
+    PhoneNumberPipe,
+    MatTooltipModule 
   ],
-  templateUrl: './event-invitation-list.component.html',
-  styleUrl: './event-invitation-list.component.scss'
+  templateUrl: './event-invitation-list-nuevo.component.html',
+  styleUrl: './event-invitation-list-nuevo.component.scss'
 })
 export class EventInvitationListComponent implements OnInit {
   displayedColumns: string[] = [
@@ -43,7 +46,7 @@ export class EventInvitationListComponent implements OnInit {
   ];
   dataSource = new MatTableDataSource<EventInvitationByIdNeighborResponse>();
 
-  // Control para 'ver más'
+  // Control para 'ver más'   
   displayCount = 5;
 
   onViewMore(): void {
@@ -73,13 +76,38 @@ export class EventInvitationListComponent implements OnInit {
         next: (response) => {
           this.dataSource = new MatTableDataSource(response.data);
           // no más paginación integrada
-          console.log('Invitaciones cargadas:', response.data);
+          console.log('Invitaciones cargadas:', this.dataSource);
         },
         error: (err) => {
           console.error('Error al cargar invitaciones:', err);
         },
       });
   }
+
+  getStatusIcon(inv: any): string {
+  // eliminada o inactiva
+  if (this.asBool(inv?.delete) || this.asBool(inv?.isActive) === false) return 'block';
+  // usada o activa sin usar
+  return 'task_alt';
+}
+
+getStatusClass(inv: any): string {
+  if (this.asBool(inv?.delete) || this.asBool(inv?.isActive) === false) return 'status--expired';
+  return 'status--active'; // activa o usada
+}
+
+getStatusText(inv: any): string {
+  if (this.asBool(inv?.delete) || this.asBool(inv?.isActive) === false) return 'Cancelada/expirada';
+  if (this.asBool(inv?.isUsed)) return 'Usada';
+  return 'Activa';
+}
+
+private asBool(v: any): boolean {
+  return v === true || v === 'true';
+}
+
+
+
 
   onViewDetails(invitation: InvitationByIdNeighborResponse): void {
     console.log('Detalles de la invitación:', invitation);
@@ -115,7 +143,7 @@ export class EventInvitationListComponent implements OnInit {
   }
 
   onDuplicate(element: any): void {
-    this.router.navigate(['/invitations/share-invitation'], { state: { invitationData: element } });
+    this.router.navigate(['/invitations/event-invitation'], { state: { invitationData: element } });
   }
   
   compartir(token: string): void {

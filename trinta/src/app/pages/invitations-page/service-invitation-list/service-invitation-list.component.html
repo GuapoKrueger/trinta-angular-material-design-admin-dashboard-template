@@ -5,13 +5,13 @@
     <a routerLink="/">
         <img src="assets/images/pages/back-arrow.png" alt="Volver" width="24" height="24">
     </a>
-    <h5 class="mb-0">INVITACIONES DE SERVICIO</h5>
+    <h5 class="mb-0">Reporte de accesos</h5>
 </div>
 
 <br>
 <div class="row" *ngIf="!isLoading">
     <div class="col-md-6 col-xxl-4 col-xxxl-3" *ngFor="let invitation of dataSource.data | slice:0:displayCount">
-        <div class="invitation-card">
+        <div class="invitation-card" [ngClass]="{ 'invitation-card--disabled': !invitation.isActive }">
             <div class="invitation-content">
               <div class="left-section">
                 <img src="assets/images/pages/invitations-page/Type_acces.png" alt="Tipo de acceso" class="icon-image-small">

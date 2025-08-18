@@ -1,0 +1,221 @@
+/* Contenedor general */
+.list-wrap {
+  padding: 8px 12px 80px; /* espacio inferior para el FAB */
+}
+
+.header-back {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+
+  a {
+    z-index: 1; // para que siempre quede clickeable encima del título
+  }
+
+  h5 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    font-weight: 700;
+    font-size: 18px;
+    white-space: nowrap;
+  }
+}
+
+
+/* Card */
+.visit-card {
+  position: relative;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 22px rgba(9, 30, 66, .06);
+  padding: 12px;
+  margin: 10px 0;
+
+/* Atenuar SOLO el contenido, NO la sección .actions */
+  &.card-disabled {
+    /* no uses opacity en el contenedor */
+
+    /* atenúa todos los hijos directos menos .actions */
+    > *:not(.actions) {
+      opacity: .50;
+      filter: grayscale(.05);
+    }
+  }
+}
+
+/* Píldora de estado arriba derecha */
+.status-pill {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #e8f2ff;   /* por defecto: sin usar */
+  color: #2b5fb8;
+
+  &.used {
+    background: #e7f6ed;
+    color: #208a52;
+  }
+
+  &.unused {
+    background: #e8f2ff;
+    color: #2b5fb8;
+  }
+
+  .material-symbols-outlined {
+    font-size: 18px;
+    line-height: 18px;
+  }
+}
+
+/* Encabezado (avatar + nombre) */
+.head {
+  display: grid;
+  grid-template-columns: 40px 1fr; /* mismo tamaño que los íconos de info */
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 6px;
+
+  .avatar-ico {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: #eef7f2;
+    color: #1a8e5a;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .who {
+    .name { font-weight: 600; color: #1f2a3a; } /* menos negro */
+    .type { color: #7b8a97; font-size: 12px; margin-top: 2px; }
+  }
+}
+
+/* Homogeniza el rendering de Material Symbols */
+.material-symbols-outlined {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1; /* evita “salto” vertical */
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* Bloque info, denso y alineado */
+.info {
+  display: grid;
+  gap: 8px;
+  margin-left: 11px;
+
+  .row {
+    display: grid;
+    grid-template-columns: 40px 1fr; /* ícono + contenido */
+    gap: 10px;
+    align-items: center;
+    padding: 8px 0;
+    border-top: 1px solid #eef2f7;
+
+    &:first-child { border-top: 0; }
+
+    .ico {
+      inline-size: 40px;   /* mismo ancho */
+      block-size: 40px;    /* misma altura */
+      border-radius: 50%;  /* círculo real */
+      display: flex;
+      place-items: center;
+      font-size: 18px;
+      box-sizing: border-box;
+      padding: 8px 0;
+
+      /* fondos muy sutiles por tipo */
+      &.tel  { background: #eaf7f0; color: #1a8e5a; }
+      &.date { background: #eaf2ff; color: #2b5fb8; }
+      &.addr { background: #fff4e7; color: #d97706; }
+    }
+
+    .col {
+      .label { font-size: 12px; color: #7b8a97; margin-bottom: 2px; margin-left: -11px;}
+      .value { font-weight: 600; color: #1f2a3a; line-height: 1.25; margin-left: -11px;} /* menos negro */
+    }
+  }
+}
+
+/* Suaviza cualquier <strong> suelto */
+.visit-card strong { color: #1f2a3a; font-weight: 600; }
+
+/* Acciones */
+.actions { margin-top: 10px; }
+
+.full-btn {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-weight: 700;
+  border: 2px solid transparent; /* para que no salte el layout al hover */
+  background: #fff; /* fondo blanco */
+  transition: transform .06s ease, box-shadow .2s ease, border-color .2s ease;
+
+  .material-symbols-outlined {
+    font-size: 20px;
+    line-height: 20px;
+  }
+
+  &.primary {
+    color: #15a97c;
+
+    &:hover { background: #f0faf7; }
+  }
+
+  &.neutral {
+    color: #3b82f6;
+
+    &:hover { background: #f3f8ff; }
+  }
+}
+
+
+/* Evita que botones hereden atenuación del card deshabilitado */
+.no-dim {
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+/* Ver más */
+.more {
+  text-align: center;
+  padding: 8px 0 4px;
+}
+
+/* FAB */
+.fab {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 0;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  background: #0ea5a6;
+  color: #fff;
+  box-shadow: 0 14px 30px rgba(14,165,166,.35);
+
+  .material-symbols-outlined { font-size: 28px; }
+}

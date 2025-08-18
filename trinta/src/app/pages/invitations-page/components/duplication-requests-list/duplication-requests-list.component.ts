@@ -7,6 +7,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { InvitationSocketService } from '../../services/invitation-socket.service';
+import Swal from 'sweetalert2';
+import { Subscription } from 'rxjs';
 
 /**
  * Componente para mostrar las solicitudes de duplicación de invitaciones
@@ -40,15 +43,43 @@ export class DuplicationRequestsListComponent implements OnInit {
   // ID del usuario (vecino)
   neighborId: number | null = null;
 
+  private subs = new Subscription();
+
   constructor(
     private invitationService: ServiceInvitationService,
-    private authService: AuthService
+    private authService: AuthService,
+    private invitationSocket: InvitationSocketService 
   ) {}
 
   ngOnInit(): void {
     // Obtener el ID del usuario desde AuthService
     this.neighborId = this.authService.neighboorIdGet;
     this.loadDuplicationRequests();
+
+    this.invitationSocket.joinResident(this.authService.neighboorIdGet);
+
+    this.invitationSocket.duplicationRequested$.subscribe((newInvitation) => {
+    this.duplicationRequests = [newInvitation, ...this.duplicationRequests];
+
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'info',
+          title: 'Nueva invitación recibida',
+          showConfirmButton: false,
+          timer: 5000
+        });
+      
+    });
+
+
+  }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
+    if (this.neighborId) {
+      this.invitationSocket.leaveResident(this.neighborId);
+    }
   }
 
   /**
@@ -62,8 +93,6 @@ export class DuplicationRequestsListComponent implements OnInit {
     
     this.loading = true;
     this.errorMsg = null;
-
-    console.log('Cargando solicitudes de duplicación para el vecino con ID:', this.neighborId);
     
     this.invitationService.getDuplicationRequestsByNeighbor(this.neighborId).subscribe({
       next: (resp: BaseApiResponse<DuplicationRequestResponse[]>) => {

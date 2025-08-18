@@ -1,0 +1,87 @@
+<div class="invite-wrap">
+  <ng-container *ngIf="invitationDetails as inv">
+    <mat-card class="invite-card">
+      <!-- Hero -->
+      <div class="invite-hero">
+        <img src="assets/images/Passo_Logo_64.png" alt="Passo" class="brand" />
+        <h2 class="title">Recibiste un Passo</h2>
+        <p class="subtitle">Accede al fraccionamiento usando esta invitación.</p>
+      </div>
+
+      <!-- Imagen -->
+      <div class="event-media">
+        <img *ngIf="inv.imageEventoURL; else noImage"
+             [src]="inv.imageEventoURL"
+             alt="Imagen del evento"
+             class="event-img" />
+        <ng-template #noImage>
+          <div class="event-img placeholder">
+            <span class="material-symbols-outlined">image</span>
+          </div>
+        </ng-template>
+        <div class="host-name">{{ inv.neighborName }}</div>
+      </div>
+
+      <!-- Detalles -->
+      <div class="details">
+        <div class="detail-row">
+          <span class="material-symbols-outlined">event</span>
+          <div class="detail-text">
+            <div class="label">Nombre del evento</div>
+            <div class="value">{{ inv.guestName }}</div>
+          </div>
+        </div>
+
+        <div class="detail-row">
+          <span class="material-symbols-outlined">calendar_month</span>
+          <div class="detail-text">
+            <div class="label">Fecha</div>
+            <div class="value">{{ inv.startTime | date:'dd/MM/yyyy' }}</div>
+          </div>
+        </div>
+
+        <div class="detail-row two-col">
+          <div class="col">
+            <span class="material-symbols-outlined">schedule</span>
+            <div class="detail-text">
+              <div class="label">Inicia</div>
+              <div class="value">{{ inv.startTime | date:'hh:mm a' }}</div>
+            </div>
+          </div>
+          <div class="col">
+            <span class="material-symbols-outlined">alarm_on</span>
+            <div class="detail-text">
+              <div class="label">Termina</div>
+              <div class="value">{{ inv.endTime | date:'hh:mm a' }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tipo de acceso -->
+      <div class="access">
+        <div class="access-label">Tipo de Acceso</div>
+        <mat-button-toggle-group
+          class="access-toggle"
+          [value]="selectedAccess"
+          (change)="onAccessTypeChange($event.value)">
+          <mat-button-toggle [value]="1">
+            <span class="material-symbols-outlined">directions_car</span>
+            Vehicular
+          </mat-button-toggle>
+          <mat-button-toggle [value]="2">
+            <span class="material-symbols-outlined">directions_walk</span>
+            Peatonal
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+
+      <!-- CTA -->
+      <button mat-raised-button color="primary" class="cta"
+              [disabled]="!isAccessSelected"
+              (click)="onSubmit()">
+        Entrar
+      </button>
+    </mat-card>
+  </ng-container>
+</div>

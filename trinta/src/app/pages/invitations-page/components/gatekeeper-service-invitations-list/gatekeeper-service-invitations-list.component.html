@@ -1,7 +1,7 @@
 <div class="invitation-card-detail-spacer"></div>
 <!-- Header principal -->
 <div class="header-section">
-  <h1 class="page-title">Control Guardia principal</h1>
+  <h1 class="page-title">Control Guardia principal</h1> 
   
   <!-- Tabs Activas/Inactivas -->
   <div class="tabs-container">
@@ -23,16 +23,16 @@
 <!-- Mensaje informativo -->
 <div class="info-banner">
   <i class="info-icon">ℹ️</i>
-  <span>Recuerda dar click en <strong>Abrir</strong> hasta que lleguen. Cada acceso <strong>solo puede</strong> ser utilizado una vez.</span>
+  <span>Recuerda dar click en <strong>Abrir</strong> hasta que lleguen. Cada acceso <strong>solo puede ser utilizado una vez.</strong></span>
 </div>
 
 <!-- Campo de búsqueda -->
 <div class="search-container">
-  <label class="search-label">Buscar:</label>
+  <!-- <label class="search-label">Buscar:</label> -->
   <input 
     type="text" 
     class="search-input" 
-    placeholder="Buscar invitación..."
+    placeholder="Buscar acceso..."
     [(ngModel)]="searchTerm"
     (input)="onSearch()">
 </div>

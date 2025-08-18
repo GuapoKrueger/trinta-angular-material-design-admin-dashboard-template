@@ -375,13 +375,13 @@
   }
 }
 
-.invitation-card--disabled {
-  .invitation-content,
-  .botom_details_item_Left {
-    opacity: 0.5;
-    pointer-events: none;
-  }
-}
+// .invitation-card--disabled {
+//   .invitation-content,
+//   .botom_details_item_Left {
+//     opacity: 0.5;
+//     pointer-events: none;
+//   }
+// }
 
 .duplicate-link.disabled {
   opacity: 0.5;
@@ -456,6 +456,12 @@
   }
 }
 
+.invitation-card--disabled .invitation-content {
+  opacity: 0.5;
+  filter: grayscale(0.3);
+}
+
+
 
 .duplicate-link {
   display: block;      /* hace que el <a> ocupe toda la línea */
@@ -475,3 +481,6 @@
   pointer-events: auto !important;
   cursor: pointer !important;
 }
+
+
+

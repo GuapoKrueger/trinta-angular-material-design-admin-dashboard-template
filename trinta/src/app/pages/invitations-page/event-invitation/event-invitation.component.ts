@@ -30,6 +30,7 @@ import { FeathericonsModule } from '../../../icons/feathericons/feathericons.mod
 import { EventInvitation } from '../models/event-invitation-request.inteface';
 import { EventInvitationService } from '../services/event-invitation.service';
 import { environment as env } from '../../../../environments/environment.development';
+import { MatDividerModule } from '@angular/material/divider';
 
 
 export const dateAndTimeRangeValidator: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
@@ -75,12 +76,13 @@ export const dateAndTimeRangeValidator: ValidatorFn = (group: AbstractControl): 
       NgxMaskPipe,
       MatRadioModule,
       MatButtonToggleModule,
-      MatIconModule
+      MatIconModule,
+      MatDividerModule
     ],
   providers: [
     provideNgxMask() 
   ],
-  templateUrl: './event-invitation.component.html',
+  templateUrl: './event-invitation-nuevo.component.html', 
   styleUrl: './event-invitation.component.scss'
 })
 export class EventInvitationComponent implements OnInit{
@@ -115,6 +117,27 @@ export class EventInvitationComponent implements OnInit{
     });
 
   }
+
+  formatTimeRange(start?: string, end?: string): string {
+  const to12 = (t?: string) => {
+    if (!t) return '';
+    const [h, m] = t.split(':').map(Number);
+    const d = new Date();
+    d.setHours(h ?? 0, m ?? 0, 0, 0);
+    // “es-MX”/“es-ES” muestran “p. m.” — lo normalizo a “pm”
+    return d
+      .toLocaleTimeString('es-MX', { hour: 'numeric', minute: '2-digit', hour12: true })
+      .toLowerCase()
+      .replace(/\s*p\.\s*m\./g, ' pm')
+      .replace(/\s*a\.\s*m\./g, ' am');
+  };
+
+  const s = to12(start);
+  const e = to12(end);
+  if (s && e) return `${s} – ${e}`;
+  return s || e || '';
+}
+
 
   ngOnInit(): void {
 
@@ -320,6 +343,7 @@ export class EventInvitationComponent implements OnInit{
       image: this.form.value.image ?? null
     };
 
+    console.log('invitacion',  invitation);
     // Llamamos al servicio para crear la invitación
     if(this.token===''){
     this._invitationService.createEventInvitation(invitation).subscribe({
@@ -359,14 +383,27 @@ export class EventInvitationComponent implements OnInit{
   }
 
   compartir(token: string): void {
-    const shareUrl = `https://www.passo.mx/eventinvitation/detail/${token}`;
+    // const shareUrl = `https://www.passo.mx/eventinvitation/detail/${token}`;
 
-    // const baseUrl = window.location.origin;
-    // const shareUrl = `${baseUrl}/eventinvitation/detail/${token}`;
+    const baseUrl = window.location.origin;
+    const shareUrl = `${baseUrl}/eventinvitation/detail/${token}`;
 
     const message = `¡Has recibido una invitación! Para acceder, pulsa en el siguiente enlace: ${shareUrl}. Gracias por usar nuestro servicio.`;
     
   
+      const fallbackShare = () => {
+      if ((window as any).flutter_inappwebview?.callHandler) {
+        (window as any).flutter_inappwebview.callHandler('shareFallback', {
+          title: 'Passo te abre las puertas.',
+          text: 'No hay que pensarlo mucho, un Passo y estás dentro, ¡Vamos! ¡Haz clic!',
+          url: shareUrl
+        });
+      } else {
+        console.error('No se pudo comunicar con Flutter WebView.');
+      }
+    };
+
+
     if (navigator.share) {
       navigator.share({
         title: `Passo te abre las puertas.`,
@@ -374,14 +411,18 @@ export class EventInvitationComponent implements OnInit{
         url: shareUrl
       }).then(() => {
         console.log('Invitación compartida exitosamente');
-      }).catch(console.error);
-    } else {
-      Swal.fire({
-        title: 'Error!',
-        text: 'La función de compartir no está disponible en este navegador.',
-        icon: 'error',
-        confirmButtonText: 'Aceptar',
+      }).catch((error) => {
+        console.error('Error al compartir:', error);
+        fallbackShare(); // En caso de error, intenta desde Flutter
       });
+    } else {
+      fallbackShare();
+      // Swal.fire({
+      //   title: 'Error!',
+      //   text: 'La función de compartir no está disponible en este navegador.',
+      //   icon: 'error',
+      //   confirmButtonText: 'Aceptar',
+      // });
     }
   }
 

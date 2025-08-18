@@ -1,0 +1,132 @@
+<!-- HEADER centrado -->
+<div class="header-back">
+  <a routerLink="/">
+    <img src="assets/images/pages/back-arrow.png" alt="Volver" width="24" height="24" />
+  </a>
+  <h5 class="mb-0">Reporte de accesos</h5>
+</div>
+
+<!-- LISTA -->
+<div class="list-wrap" *ngIf="!isLoading">
+  <div
+    class="visit-card"
+    *ngFor="let invitation of dataSource.data | slice:0:displayCount"
+    [class.card-disabled]="!invitation.isActive"
+  >
+    <!-- Píldora de estado -->
+    <div
+      class="status-pill"
+      [ngClass]="invitation.isUsed ? 'used' : (invitation.isActive ? 'active' : 'expired')"
+      [attr.aria-label]="invitation.isUsed ? 'Usada' : (invitation.isActive ? 'Activa' : 'Inactiva')"
+    >
+      <span class="material-symbols-outlined">
+        {{ invitation.isUsed ? 'task_alt' : (invitation.isActive ? 'check_circle' : 'block') }}
+      </span>
+      <span class="txt">
+        {{ invitation.isUsed ? 'Usada' : (invitation.isActive ? 'Activa' : 'Inactiva') }}
+      </span>
+    </div>
+
+    <!-- Encabezado -->
+    <div class="head">
+      <!-- <span class="material-symbols-outlined avatar-ico">home_repair_service</span> -->
+        <span class="material-symbols-outlined icon-image-small me-3  avatar-ico" [ngSwitch]="invitation.accessServiceTypeName">
+            <ng-container *ngSwitchCase="'Paqueteria'">local_shipping</ng-container>
+            <ng-container *ngSwitchCase="'Proveedor'">store</ng-container>
+            <ng-container *ngSwitchCase="'Comida'">restaurant</ng-container>
+            <ng-container *ngSwitchCase="'Repartidor'">delivery_dining</ng-container>
+            <ng-container *ngSwitchCase="'Servicio de limpieza'">cleaning_services</ng-container>
+            <ng-container *ngSwitchCase="'Servicio generales'">build</ng-container>
+            <ng-container *ngSwitchCase="'Otros'">miscellaneous_services</ng-container>
+            <ng-container *ngSwitchDefault>help_outline</ng-container>
+        </span>
+      <div class="who">
+        <div class="name">{{ invitation.accessServiceTypeName }}</div>
+        <div class="type">Servicio</div>
+      </div>
+    </div>
+
+    <!-- Bloque de información -->
+    <div class="info">
+      <!-- PROVEEDOR / NOMBRE -->
+      <div class="row">
+        <span class="material-symbols-outlined ico user">badge</span>
+        <div class="col">
+          <div class="label">Proveedor</div>
+          <div class="value">{{ invitation.guestName }}</div>
+        </div>
+      </div>
+
+      <!-- RANGO DE FECHAS -->
+      <div class="row">
+        <span class="material-symbols-outlined ico date">calendar_month</span>
+        <div class="col">
+          <div class="label">Fecha</div>
+          <div class="value">
+            {{ invitation.startTime | date:"d 'de' MMMM" : undefined : 'es' }}
+            –
+            {{ invitation.endTime   | date:"d 'de' MMMM" : undefined : 'es' }}
+          </div>
+        </div>
+      </div>
+
+      <!-- DIRECCIÓN -->
+      <div class="row">
+        <span class="material-symbols-outlined ico addr">home_pin</span>
+        <div class="col">
+          <div class="label">Dirección</div>
+          <div class="value">{{ invitation.fullAddress }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACCIÓN principal
+         Activa   => Compartir Acceso
+         Inactiva => Duplicar Acceso
+    -->
+    <div class="actions">
+      <button
+        *ngIf="invitation.isActive; else duplicateBtn"
+        class="full-btn primary"
+        type="button"
+        (click)="compartir(invitation.token)"
+      >
+        <span class="material-symbols-outlined">inbox_text_share</span>
+        Compartir Acceso
+      </button>
+
+      <ng-template #duplicateBtn>
+        <button
+          class="full-btn neutral"
+          type="button"
+          (click)="duplicar(invitation)"
+        >
+          <span class="material-symbols-outlined">content_copy</span>
+          Duplicar Acceso
+        </button>
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- Ver más -->
+  <div class="more" *ngIf="hasMoreData">
+    <button mat-button color="primary" (click)="onViewMore()">Ver más</button>
+  </div>
+</div>
+
+<!-- FAB: Crear nuevo acceso de servicio   (click)="onCreateServiceAccess()" -->
+<button
+  class="fab"
+  type="button"
+  aria-label="Crear acceso de servicio"
+
+>
+  <span class="material-symbols-outlined">add</span>
+</button>
+
+
+<!-- LOADING -->
+<div class="loading" *ngIf="isLoading">
+  <span class="material-symbols-outlined rotating">progress_activity</span>
+  <p>Cargando invitaciones...</p>
+</div>

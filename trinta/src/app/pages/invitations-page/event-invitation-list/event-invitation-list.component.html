@@ -121,7 +121,7 @@
     <a routerLink="/">
         <img src="assets/images/pages/back-arrow.png" alt="Volver" width="24" height="24">
     </a>
-    <h5 class="mb-0">REPORTE DE EVENTOS</h5>
+    <h5 class="mb-0">Reporte de eventos</h5>
 </div>
 
 <br>
@@ -140,7 +140,7 @@
                     </div>
                     <div class="invitation-card-detail-spacer"></div>
                         <div class="dates">
-                        <span class="material-symbols-outlined icon">Schedule</span>
+                        <span class="material-symbols-outlined icon">schedule</span>
                         {{ invitation.startTime | date:'hh:mm a' }} – {{ invitation.endTime | date:'hh:mm a' }}
                         </div>
                     <div class="invitation-card-detail-spacer"></div>
@@ -180,11 +180,14 @@
 
                 </div>
               </div>
-              <div class="status-icon">
-                <span class="material-symbols-outlined">
-                  {{ invitation.isUsed ? 'check_circle' : 'radio_button_unchecked' }}
-                </span>
-              </div>
+                <!-- dentro de .invitation-card (que debe ser position: relative) -->
+                <div class="status-icon" [matTooltip]="getStatusText(invitation)">
+                <mat-icon class="status-icon__glyph" [ngClass]="getStatusClass(invitation)">
+                    {{ getStatusIcon(invitation) }}
+                </mat-icon>
+                </div>
+
+
 
 
 
