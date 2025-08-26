@@ -12,6 +12,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { InvitationService } from '../services/invitation.service';
 import { InvitationResponse } from '../models/invitation-response.interface';
 import Swal from 'sweetalert2';
+import { MatIcon } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-invitation-detail',
@@ -27,10 +29,12 @@ import Swal from 'sweetalert2';
     MatCardModule, 
     MatMenuModule,
     MatButtonModule,
-    CommonModule
+    CommonModule,
+    MatIcon,
+    MatDividerModule 
   ],
-  templateUrl: './invitation-detail.component.html',
-  styleUrl: './invitation-detail.component.scss'
+  templateUrl: './invitation-detail-nuevo.component.html',
+  styleUrl: './invitation-detail-nuevo.component.scss'
 })
 export class InvitationDetailComponent implements OnInit {
     // isToggled

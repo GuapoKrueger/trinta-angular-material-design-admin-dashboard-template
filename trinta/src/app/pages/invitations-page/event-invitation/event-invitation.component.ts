@@ -82,10 +82,10 @@ export const dateAndTimeRangeValidator: ValidatorFn = (group: AbstractControl): 
   providers: [
     provideNgxMask() 
   ],
-  templateUrl: './event-invitation-nuevo.component.html', 
+  templateUrl: './event-invitation.component.html', 
   styleUrl: './event-invitation.component.scss'
 })
-export class EventInvitationComponent implements OnInit{
+export class EventInvitationComponent implements OnInit{  
 
   now = new Date();
 
@@ -437,24 +437,24 @@ export class EventInvitationComponent implements OnInit{
       case 1:
         if (!this.isStepValid(1)) {
           this.markStepControlsAsTouched(1);
-          Swal.fire({
-            title: 'Error!',
-            text: 'Completa los campos requeridos antes de avanzar.',
-            icon: 'error',
-            confirmButtonText: 'Aceptar',
-          });
+          // Swal.fire({
+          //   title: 'Error!',
+          //   text: 'Completa los campos requeridos antes de avanzar.',
+          //   icon: 'error',
+          //   confirmButtonText: 'Aceptar',
+          // });
           return; // Detener el avance
         }
         break;
       case 2:
         if (!this.isStepValid(2)) {
           this.markStepControlsAsTouched(2);
-          Swal.fire({
-            title: 'Error!',
-            text: 'Completa los campos requeridos antes de avanzar.',
-            icon: 'error',
-            confirmButtonText: 'Aceptar',
-          });
+          // Swal.fire({
+          //   title: 'Error!',
+          //   text: 'Completa los campos requeridos antes de avanzar.',
+          //   icon: 'error',
+          //   confirmButtonText: 'Aceptar',
+          // });
           return; // Detener el avance
         }
         break;

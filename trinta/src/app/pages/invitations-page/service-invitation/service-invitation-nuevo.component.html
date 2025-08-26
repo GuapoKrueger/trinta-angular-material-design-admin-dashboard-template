@@ -1,0 +1,365 @@
+<mat-card class="trinta-card mb-25 bg-white border-none d-block">
+  <!-- NUEVO: Header con gradiente -->
+  <div class="header-gradient">
+    <img src="assets/images/Passo_Logo_64.png" alt="Passo" class="brand" />
+    <div class="heading">
+      <h1>Registrar una visita</h1>
+      <p>Crea la invitación y compártela en segundos.</p>
+    </div>
+    <button mat-icon-button class="close-btn" (click)="onClose()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <mat-card-content>
+    <form [formGroup]="form">
+      <mat-stepper #stepper orientation="vertical">
+        
+        <mat-step >
+          <ng-template matStepLabel>Información del acceso</ng-template>
+          <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+              <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Tipo de Servicio</label>
+                <mat-form-field>
+                  <img class="service-type-icon" src="assets/images/pages/invitations-page/Type_acces.png" alt="Tipo de Servicio" width="18" height="18">
+                  <!-- <mat-label>Selecciona el tipo de servicio</mat-label> -->
+                  <mat-select formControlName="accessServiceTypeId">
+                    <mat-option *ngFor="let serviceType of accessServiceTypes" [value]="serviceType.id">
+                      {{ serviceType.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div class="error text-danger" *ngIf="form.get('accessServiceTypeId')?.invalid && form.get('accessServiceTypeId')?.touched">
+                  <div *ngIf="form.get('accessServiceTypeId')?.hasError('required')">El tipo de servicio es requerido.</div>
+                  <div *ngIf="form.get('accessServiceTypeId')?.hasError('server')">{{ form.get('accessServiceTypeId')?.getError('server') }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12">
+              <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Quien</label>
+                <mat-form-field>
+                  <img class="service-type-icon" src="assets/images/pages/invitations-page/edit-text.png" alt="Tipo de Servicio" width="18" height="18">
+                  <input matInput formControlName="guestName" minlength="4" maxlength="50">
+                </mat-form-field>
+                <div class="error text-danger" *ngIf="form.get('guestName')?.invalid && form.get('guestName')?.touched">
+                  <div *ngIf="form.get('guestName')?.hasError('required')">El nombre es requerido.</div>
+                  <div *ngIf="form.get('guestName')?.hasError('minlength')">El nombre debe tener al menos 4 caracteres.</div>
+                  <div *ngIf="form.get('guestName')?.hasError('maxlength')">El nombre no puede exceder los 50 caracteres.</div>
+                  <div *ngIf="form.get('guestName')?.hasError('server')">{{ form.get('guestName')?.getError('server') }}</div>
+                </div>
+                
+              </div>
+            </div>
+            <!-- <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Correo Electrónico</label>
+                <mat-form-field>
+                  <i-feather name="mail"></i-feather>
+                  <mat-label>Correo Electrónico</mat-label>
+                  <input matInput formControlName="email" maxlength="60">
+                </mat-form-field>
+                <div class="error text-danger" *ngIf="form.get('email')!.hasError('email') && form.get('email')!.touched">
+                  Ingresa un correo electrónico válido.
+                </div>
+                <div class="error text-danger" *ngIf="form.get('email')!.hasError('required') && form.get('email')!.touched">
+                  El correo electrónico es requerido.
+                </div>
+              </div>
+            </div> -->
+            <div class="col-lg-12 col-md-12 col-sm-12">
+              <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Dirección de la Invitación</label>
+                <mat-form-field>
+                  <i-feather name="map-pin"></i-feather>
+                  <mat-label>Dirección</mat-label>
+                  <mat-select formControlName="neighborAddressId">
+                    <!-- Iterate over the locations array -->
+                    <mat-option *ngFor="let loc of Adresses" [value]="loc.id">
+                      {{ loc.fullAddress }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <!-- <div class="error text-danger" *ngIf="form.get('neighborAddressId')!.hasError('required') && form.get('neighborAddressId')!.touched"> -->
+                <div class="error text-danger" *ngIf="form.get('neighborAddressId')?.invalid && form.get('neighborAddressId')?.touched">
+                  <div *ngIf="form.get('neighborAddressId')?.hasError('required')">La dirección es requerida.</div>
+                  <div *ngIf="form.get('neighborAddressId')?.hasError('server')">{{ form.get('neighborAddressId')?.getError('server') }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end">
+            <img src="assets\images\pages\invitations-page\down.png" alt="Siguiente" (click)="onStepNext(1, stepper)"
+                 style="cursor:pointer; width:32px; height:32px;" />
+          </div>
+        </mat-step>
+
+        <mat-step>
+          <ng-template matStepLabel>Configuración de la Invitación</ng-template>
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Quien recibe/va a abrir</label>
+                <mat-form-field>
+                  <mat-label>Selecciona un vigilante</mat-label>
+                  <mat-select formControlName="gatekeeperUserId">
+                    <mat-option *ngFor="let guard of guardsList" [value]="guard.id">
+                      {{ guard.username }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div class="error text-danger" *ngIf="form.get('gatekeeperUserId')?.invalid && form.get('gatekeeperUserId')?.touched">
+                  <div *ngIf="form.get('gatekeeperUserId')?.hasError('required')">Debes seleccionar un vigilante.</div>
+                  <div *ngIf="form.get('gatekeeperUserId')?.hasError('server')">{{ form.get('gatekeeperUserId')?.getError('server') }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Tipo de Acceso</label>
+                <!-- <mat-radio-group  class="example1" formControlName="accessType">
+                  <mat-radio-button value="1" class="mr-10">Vehicular</mat-radio-button>
+                  <mat-radio-button value="2">Peatonal</mat-radio-button>
+                </mat-radio-group> -->
+                <mat-button-toggle-group
+                    formControlName="accessType"
+                    class="access‐toggle-group">
+                    <mat-button-toggle value="1">
+                      <mat-icon>directions_car</mat-icon>
+                      Vehicular
+                    </mat-button-toggle>
+                    <mat-button-toggle value="2">
+                      <mat-icon>directions_walk</mat-icon>
+                      Peatonal
+                    </mat-button-toggle>
+                </mat-button-toggle-group>
+                <!-- <div class="error text-danger" *ngIf="form.get('accessType')!.hasError('required') && form.get('accessType')!.touched"> -->
+                <div class="error text-danger" *ngIf="form.get('accessType')?.invalid && form.get('accessType')?.touched">
+                  <div *ngIf="form.get('accessType')?.hasError('required')">Debes seleccionar un tipo de acceso.</div>
+                  <div *ngIf="form.get('accessType')?.hasError('server')">{{ form.get('accessType')?.getError('server') }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12">
+              <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Notas</label>
+                <mat-form-field>
+                  <i-feather name="edit"></i-feather>
+                  <textarea matInput formControlName="notes" rows="3" maxlength="255"></textarea>
+                </mat-form-field>
+                <!-- <div class="error text-danger" *ngIf="form.get('notes')!.hasError('maxlength') && form.get('notes')!.touched"> -->
+                <div class="error text-danger" *ngIf="form.get('notes')?.invalid && form.get('notes')!.touched">
+                  <div *ngIf="form.get('notes')!.hasError('maxlength')">Las notas no pueden exceder los 250 caracteres.</div>
+                  <div *ngIf="form.get('notes')?.hasError('server')">{{ form.get('notes')?.getError('server') }}</div>
+                </div>
+              </div>
+            </div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Fecha de Inicio</label>
+                <mat-form-field appearance="fill">
+                  <i-feather name="calendar"></i-feather>
+                  <mat-label>MM/DD/YYYY</mat-label>
+                  <input matInput  formControlName="startTime" [matDatepicker]="pickerInicio">
+                  <mat-datepicker-toggle matIconSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerInicio></mat-datepicker>
+                </mat-form-field>
+                <!-- <div class="error text-danger" *ngIf="form.get('startTime')!.hasError('required') && form.get('startTime')!.touched"> -->
+                <div class="error text-danger" *ngIf="form.get('startTime')?.invalid && form.get('startTime')?.touched">
+                  <div *ngIf="form.get('startTime')?.hasError('required')">La fecha de inicio es requerida.</div>
+                  <div *ngIf="form.get('startTime')?.hasError('server')">{{ form.get('startTime')?.getError('server') }}</div>
+                </div>
+                <div class="error text-danger" *ngIf="form.hasError('dateRangeInvalid')">
+                  La fecha de inicio no puede ser mayor que la fecha final.
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Fecha Final</label>
+                <mat-form-field appearance="fill">
+                  <i-feather name="calendar"></i-feather>
+                  <mat-label>MM/DD/YYYY</mat-label>
+                  <input matInput  formControlName="endTime" [matDatepicker]="pickerTermina">
+                  <mat-datepicker-toggle matIconSuffix [for]="pickerTermina"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerTermina ></mat-datepicker>
+                </mat-form-field>
+
+                <!-- <div class="error text-danger" *ngIf="form.get('endTime')!.hasError('required') && form.get('endTime')!.touched"> -->
+                <div class="error text-danger" *ngIf="form.get('endTime')?.invalid && form.get('endTime')?.touched">
+                  <div *ngIf="form.get('endTime')?.hasError('required')">La fecha de término es requerida.</div>
+                  <div *ngIf="form.get('endTime')?.hasError('server')">{{ form.get('endTime')?.getError('server') }}</div>
+                </div>
+                <div class="error text-danger" *ngIf="form.hasError('dateRangeInvalid')">
+                  La fecha final no puede ser menor que la fecha de inicio.
+                </div>
+              </div>
+            </div>
+
+            <!-- <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Hora de Inicio</label>
+                <mat-form-field appearance="fill">
+                  <i-feather name="clock"></i-feather>
+                  <mat-label>Hora de Inicio</mat-label>
+                  <input matInput type="time" formControlName="startTimeHour" [step]="60" placeholder="HH:MM AM/PM">
+                </mat-form-field>
+                <div class="error text-danger" *ngIf="form.get('startTimeHour')!.hasError('required') && form.get('startTimeHour')!.touched">
+                  La Hora de Inicio es requerida.
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Hora Final</label>
+                <mat-form-field appearance="fill">
+                  <i-feather name="clock"></i-feather>
+                  <mat-label>Hora Final</mat-label>
+                  <input matInput type="time" formControlName="endTimeHour" [step]="60" placeholder="HH:MM AM/PM">
+                </mat-form-field>
+                <div class="error text-danger" *ngIf="form.get('endTimeHour')!.hasError('required') && form.get('endTimeHour')!.touched">
+                  La Hora Final es requerida.
+                </div>
+              </div>
+            </div> -->
+
+
+          </div>
+          <div class="d-flex justify-content-between">
+            <img src="assets\images\pages\invitations-page\up.png" alt="Atrás"
+            style="cursor:pointer; width:32px; height:32px;"
+                 (click)="stepper.previous()" />
+            
+            <img src="assets\images\pages\invitations-page\down.png" alt="Siguiente" (click)="onStepNext(2, stepper)"
+            style="cursor:pointer; width:32px; height:32px;" />
+          </div>
+        </mat-step>
+<mat-step>
+  <ng-template matStepLabel>Compartir</ng-template>
+
+  <!-- Sección a ancho completo -->
+  <div class="step3-section">
+    <mat-card class="share-card-compact">
+      <!-- Encabezado del card -->
+      <div class="share-card-head">
+        <img src="assets/images/Passo_Logo_64.png" alt="Passo" class="brand" />
+        <div>
+          <h4>Revisa y comparte</h4>
+          <p>Confirma los datos antes de enviar la invitación.</p>
+        </div>
+      </div>
+
+      <!-- Lista compacta SIN fondo por item -->
+      <div class="info-list-compact no-item-bg">
+        <!-- Tipo de servicio -->
+        <div class="item">
+          <div class="bullet cyan">
+        <!-- Usa Material Symbols o <mat-icon>, como prefieras -->
+            <span class="material-symbols-outlined">
+            {{ getServiceIcon(getServiceTypeName()) }}
+            </span>
+          </div>
+          <div class="content">
+            <div class="label">Tipo de servicio</div>
+            <div class="value">{{ getServiceTypeName() }}</div>
+          </div>
+        </div>
+
+        <!-- Quién -->
+        <div class="item">
+          <div class="bullet green"><mat-icon>person</mat-icon></div>
+          <div class="content">
+            <div class="label">Quién</div>
+            <div class="value">{{ form.controls['guestName'].value }}</div>
+          </div>
+        </div>
+
+        <!-- Tipo de acceso -->
+        <div class="item">
+          <div class="bullet blue">
+            <mat-icon *ngIf="form.value.accessType === '1'">directions_car</mat-icon>
+            <mat-icon *ngIf="form.value.accessType !== '1'">directions_walk</mat-icon>
+          </div>
+          <div class="content">
+            <div class="label">Tipo de acceso</div>
+            <div class="value">{{ form.value.accessType === '1' ? 'Vehicular' : 'Peatonal' }}</div>
+          </div>
+        </div>
+
+        <!-- Vigilante seleccionado -->
+        <div class="item">
+          <div class="bullet indigo"><mat-icon>shield_person</mat-icon></div>
+          <div class="content">
+            <div class="label">Quien recibe / abre</div>
+            <div class="value">
+              <ng-container *ngFor="let guard of guardsList">
+                <ng-container *ngIf="guard.id === form.value.gatekeeperUserId">{{ guard.username }}</ng-container>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rango de fechas -->
+        <div class="item">
+          <div class="bullet purple"><mat-icon>calendar_month</mat-icon></div>
+          <div class="content">
+            <div class="label">Fecha</div>
+            <div class="value">
+              {{ form.controls['startTime'].value | date:'dd/MM/yyyy' }}
+              – {{ form.controls['endTime'].value | date:'dd/MM/yyyy' }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Dirección -->
+        <div class="item">
+          <div class="bullet cyan"><span class="material-symbols-outlined">home_pin</span></div>
+          <div class="content">
+            <div class="label">Dirección</div>
+            <div class="value">{{ getFullAddress() }}</div>
+          </div>
+        </div>
+
+        <!-- Notas (opcional) -->
+        <div class="item" *ngIf="form.value.notes">
+          <div class="bullet gray"><span class="material-symbols-outlined ico note">sticky_note_2</span></div>
+          <div class="content">
+            <div class="label">Notas</div>
+            <div class="value">{{ form.value.notes }}</div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- Acciones: con espacio respecto al card -->
+  <div class="step3-actions">
+    <img
+      src="assets/images/pages/invitations-page/up.png"
+      alt="Atrás"
+      class="arrow-btn"
+      (click)="stepper.previous()"
+    />
+    <a class="default-btn" mat-button (click)="onSubmit()">
+      <i class="ri-share-fill"></i> Compartir Invitación
+    </a>
+  </div>
+</mat-step>
+
+
+      </mat-stepper>
+    </form>
+  </mat-card-content>
+</mat-card>

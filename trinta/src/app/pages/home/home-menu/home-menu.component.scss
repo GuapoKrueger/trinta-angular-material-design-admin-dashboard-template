@@ -1,0 +1,27 @@
+.welcome-section {
+  display: flex;                 /* flexbox horizontal */
+  align-items: center;           /* alinear verticalmente */
+  justify-content: space-between;/* saludo a la izq, banner a la der */
+  margin-bottom: 2rem;
+  padding: 1rem;
+}
+
+.welcome-text h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.welcome-text p {
+  font-size: 1rem;
+  color: #666;
+  margin: .5rem 0 0 0;
+}
+
+.welcome-banner img {
+  max-height: 100px;   /* ajusta según el diseño */
+  width: auto;
+  border-radius: 8px;
+  cursor: pointer;
+}

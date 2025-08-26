@@ -1,0 +1,328 @@
+.trinta-card {
+    &.customer-card {
+        .mat-mdc-card-content {
+            .user {
+                img {
+                    width: 61px;
+                }
+                .info {
+                    margin-left: 15px;
+
+                    h6 {
+                        font-size: 15px;
+                        margin-bottom: 8px;
+                    }
+                }
+            }
+            // .action {
+            //     .mat-mdc-button {
+            //         color: #818093;
+            //         margin-right: 12px;
+
+            //         i-feather {
+            //             width: 18px;
+            //             height: 18px;
+            //         }
+            //         &:last-child {
+            //             margin-right: 0;
+            //         }
+            //     }
+            // }
+            .list {
+                margin: {
+                    top: 25px;
+                    bottom: 25px;
+                };
+                li {
+                    margin-bottom: 11px;
+
+                    span {
+                        margin-right: 3px;
+                        letter-spacing: 1px;
+                    }
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                }
+            }
+            
+        }
+    }
+}
+
+.default-btn {
+    &.mat-mdc-button {
+        height: auto;
+        min-width: auto;
+        border-radius: 6px;
+        padding: 10.5px 15px;
+        color: var(--whiteColor);
+        background: #3E4095;
+        font: {
+            size: 14px;
+            weight: 600;
+            family: var(--headingFontFamily);
+        };
+    }
+}
+
+.mat-slide-toggle {
+    margin: 13px 0;
+    display: block;
+}
+
+.example1 .mat-mdc-radio-button ~ .mat-mdc-radio-button {
+    margin-left: 20px;
+}
+:host ::ng-deep .mat-step-icon.mat-step-icon-state-number.mat-step-icon-selected {
+    background-color: #00899E !important;
+    border-color: #00899E !important;
+    color: #FFFFFF !important;
+}
+
+:host ::ng-deep .mat-step-icon.mat-step-icon-state-edit {
+    background-color: #00899E !important;
+    border-color: #00899E !important;
+    color: #FFFFFF !important;
+}
+
+:host ::ng-deep {
+  .mat-mdc-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+  }
+
+  .close-button {
+    margin-left: auto;
+    color: #666;
+    &:hover {
+      color: #333;
+    }
+  }
+}
+
+mat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.access‐toggle-group {
+  display: inline-flex;
+  border-radius: 4px;
+  background: #f2f2f2;
+  .mat-button-toggle {
+    flex: 1;
+    border-radius: 0;
+    &.mat-button-toggle-checked {
+      background-color: #00b388;
+      color: white;
+    }
+    &:first-child { border-top-left-radius: 4px;  border-bottom-left-radius: 4px; }
+    &:last-child  { border-top-right-radius: 4px; border-bottom-right-radius: 4px; }
+    &.mat-button-toggle-checked img {
+      display: inline-block;
+    }
+    img {
+      display: inline-block;
+    }
+  }
+}
+
+// .access-toggle-group {
+//   mat-button-toggle {
+//     // Asegura que siempre se muestre la imagen dentro del toggle
+//     img {
+//       display: inline-block;
+//     }
+
+//     // También cuando esté seleccionado
+//     &.mat-button-toggle-checked img {
+//       display: inline-block;
+//     }
+//   }
+// }
+
+
+.access-toggle-group {
+  display: inline-flex;
+  background: #f1f3f5;
+  border-radius: 8px;
+  overflow: hidden;
+
+  .mat-button-toggle {
+    flex: 1;
+    text-transform: none;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    color: #5f6368;
+    border-radius: 0;
+    justify-content: center;
+  }
+
+  .mat-button-toggle-checked {
+    background-color: #20c997;  // verde éxito
+    color: #fff;
+
+    mat-icon {
+      color: #fff;
+    }
+  }
+
+  mat-icon {
+    vertical-align: middle;
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+  }
+}
+/* ===== Header con gradiente ===== */
+.header-gradient {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 12px 12px 0 0;
+  background: linear-gradient(135deg, #e8f6ff 0%, #f2fbff 60%, #ffffff 100%);
+  border: 1px solid #eaf3ff;
+  border-bottom: none;
+
+  .brand {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+  }
+
+  .heading {
+    flex: 1;
+    h1 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0;
+      line-height: 1.1;
+    }
+    p {
+      margin: 2px 0 0 0;
+      font-size: 12px;
+      color: #60708a;
+    }
+  }
+
+ .close-btn{ justify-self:end; background:#fff; border-radius:50%; box-shadow:0 4px 12px rgba(0,0,0,.08); }
+}
+
+/* Opcional: redondear la tarjeta para empatar con el header */
+.trinta-card.mb-25.bg-white.border-none.d-block {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* ===== Step 3: tarjetas compactas ===== */
+/* ===== Header con gradiente (sustituye al mat-card-header visual) ===== */
+.share-header-gradient {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ecfbff 0%, #f3f8ff 60%, #ffffff 100%);
+  border: 1px solid #e9eef5;
+  margin-bottom: 14px;
+
+  .brand { width: 40px; height: 40px; border-radius: 10px; }
+  .titles {
+    flex: 1;
+    h3 { margin: 0; font-size: 18px; font-weight: 700; color: #0f2e43; }
+    p  { margin: 2px 0 0; font-size: 12px; color: #6b7a88; }
+  }
+  .close-btn { margin-left: auto; color: #5f6b75; }
+}
+
+/* ===== Step 3: card a ancho completo y separación con botones ===== */
+.step3-section {
+  padding-inline: 0;                 /* ocupa de borde a borde dentro del step */
+}
+
+.share-card-compact {
+  width: 100%;
+  margin: 0;                          /* sin márgenes laterales para tocar bordes */
+  border-radius: 12px;
+  border: 1px solid #e9eef5;
+  background: #fff;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(16,24,40,0.04);
+}
+
+/* cabeza del card */
+.share-card-head {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 10px;
+
+  .brand { width: 36px; height: 36px; border-radius: 9px; }
+  h4 { margin: 0; font-size: 16px; font-weight: 700; color: #173c52; }
+  p  { margin: 2px 0 0; font-size: 12px; color: #6b7a88; }
+}
+
+/* Lista compacta SIN fondo en los items, con separadores sutiles */
+.info-list-compact.no-item-bg {
+  .item {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    align-items: center;
+    column-gap: 12px;
+    padding: 10px 0;
+    background: transparent;          /* <- sin fondo */
+    box-shadow: none;                 /* <- sin sombra */
+    border-radius: 0;
+
+    /* separador entre items */
+    & + .item {
+      border-top: 1px solid #eef2f6;
+    }
+  }
+
+  .bullet {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+    color: #0b3b52;
+    background: #e6f4ff;
+
+    &.cyan   { background: #e6f7fb; color:#00899e; }
+    &.green  { background: #e8f8f0; color:#20c997; }
+    &.blue   { background: #e8f0ff; color:#3e5ce3; }
+    &.indigo { background: #eef0ff; color:#5157ff; }
+    &.purple { background: #f3eaff; color:#7c4dff; }
+    &.gray   { background: #eef2f6; color:#596773; }
+  }
+
+  .content {
+    .label { font-size: 12px; color:#7a8a99; margin-bottom: 2px; }
+    .value { font-size: 14px; font-weight: 700; color:#102a3b; }
+  }
+}
+
+/* Espacio claro entre el card y los botones */
+.step3-actions {
+  margin-top: 14px;                   /* espacio pedido */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .arrow-btn {
+    cursor: pointer; width: 32px; height: 32px;
+  }
+}
+
+/* Asegura que el contenedor del stepper no meta relleno lateral extra */
+:host ::ng-deep .mat-vertical-stepper-content {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}

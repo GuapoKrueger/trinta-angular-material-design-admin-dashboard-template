@@ -69,8 +69,8 @@ export const dateRangeValidator: ValidatorFn = (control: AbstractControl): Valid
   ],
   providers: [
   ],
-  templateUrl: './service-invitation.component.html',
-  styleUrl: './service-invitation.component.scss'
+  templateUrl: './service-invitation-nuevo.component.html',
+  styleUrl: './service-invitation-nuevo.component.scss'
 })
 export class ServiceInvitationComponent implements OnInit {
 
@@ -181,6 +181,23 @@ export class ServiceInvitationComponent implements OnInit {
     // Eliminar valueChanges de isReusable, ya que siempre será 'No' y estará deshabilitado
   }
 
+  // Mapea el nombre del servicio al ícono de Material Symbols
+  private serviceIconMap: Record<string, string> = {
+    'Paqueteria': 'local_shipping',
+    'Proveedor': 'store',
+    'Comida': 'restaurant',
+    'Repartidor': 'delivery_dining',
+    'Servicio de limpieza': 'cleaning_services',
+    'Servicio generales': 'build',
+    'Otros': 'dashboard_customize'
+  };
+
+  getServiceIcon(name?: string): string {
+    const key = (name || '').trim();
+    return this.serviceIconMap[key] ?? 'help_outline';
+  }
+
+
   private loadAccessServiceTypes(): void {
     this._serviceInvitationService.getAccessServiceType().subscribe({
       next: (response) => {
@@ -227,13 +244,23 @@ export class ServiceInvitationComponent implements OnInit {
         neighborAddressId = address?.id || (this.Adresses && this.Adresses.length > 0 ? this.Adresses[0].id : null);
       }
 
+      let accessTypeValue = '1'; 
+      if (this.invitationDataToLoad.accessType) {
+        const normalized = this.invitationDataToLoad.accessType.toLowerCase();
+        if (normalized === 'vehicular') {
+          accessTypeValue = '1';
+        } else if (normalized === 'peatonal') {
+          accessTypeValue = '2';
+        }
+      }
+
       // Llenar el formulario con los datos recibidos
       this.form.patchValue({
         guestName: this.invitationDataToLoad.guestName || '',
         neighborAddressId: neighborAddressId,
         startTime: this.invitationDataToLoad.startTime ? new Date(this.invitationDataToLoad.startTime) : this.convertToLocalTime(new Date()),
         endTime: this.invitationDataToLoad.endTime ? new Date(this.invitationDataToLoad.endTime) : this.convertToLocalTime(new Date()),
-        accessType: this.invitationDataToLoad.accessType || '1',
+        accessType: accessTypeValue,
         notes: this.invitationDataToLoad.notes || '',
         accessServiceTypeId: accessServiceTypeId,
         gatekeeperUserId: this.invitationDataToLoad.gatekeeperUserId || null

@@ -66,7 +66,7 @@
 
       <!-- Lista -->
       <div *ngIf="!loading && list?.length > 0" class="row g-4">
-        <div *ngFor="let invitation of list" class="col-md-6 col-xxl-4 col-xxxl-3" style="padding-bottom: 30px;">
+        <div *ngFor="let invitation of list; trackBy: trackByInvitationId" class="col-md-6 col-xxl-4 col-xxxl-3" style="padding-bottom: 30px;">
           <mat-card class="service-card mat-elevation-z3 h-100" [ngClass]="{ 'card-disabled': !invitation.isActive }">
             <mat-card-content class="p-0">
 
@@ -94,7 +94,7 @@
                   <ng-container *ngSwitchCase="'Repartidor'">delivery_dining</ng-container>
                   <ng-container *ngSwitchCase="'Servicio de limpieza'">cleaning_services</ng-container>
                   <ng-container *ngSwitchCase="'Servicio generales'">build</ng-container>
-                  <ng-container *ngSwitchCase="'Otros'">miscellaneous_services</ng-container>
+                  <ng-container *ngSwitchCase="'Otros'">dashboard_customize</ng-container>
                   <ng-container *ngSwitchDefault>help_outline</ng-container>
                 </span>
 
@@ -107,7 +107,7 @@
               <!-- Bloque info -->
               <div class="info">
                 <div class="row">
-                  <span class="material-symbols-outlined ico tel">edit</span>
+                  <span class="material-symbols-outlined ico tel">article_person</span>
                   <div class="col">
                     <div class="label">Nombre del proveedor</div>
                     <div class="value">{{ invitation.guestName }}</div>
@@ -117,7 +117,7 @@
                 <div class="row">
                   <span class="material-symbols-outlined ico date">calendar_month</span>
                   <div class="col">
-                    <div class="label">Rango</div>
+                    <div class="label">Fecha</div>
                     <div class="value">{{ invitation.startTime | date:'dd/MM' }} – {{ invitation.endTime | date:'dd/MM' }}</div>
                   </div>
                 </div>
@@ -131,7 +131,7 @@
                 </div>
 
                 <div class="row" *ngIf="invitation.notes">
-                  <span class="material-symbols-outlined ico note">note</span>
+                  <span class="material-symbols-outlined ico note">sticky_note_2</span>
                   <div class="col">
                     <div class="label">Notas</div>
                     <div class="value">{{ invitation.notes }}</div>
@@ -181,8 +181,12 @@
       </div>
 
       <!-- Vacío -->
-      <div *ngIf="!loading && (!list || list.length === 0) && !errorMsg" class="no-results my-3">
+      <!-- <div *ngIf="!loading && (!list || list.length === 0) && !errorMsg" class="no-results my-3">
         <p>No hay invitaciones {{ isActive ? 'activas' : 'inactivas' }} disponibles.</p>
+      </div> -->
+      <div *ngIf="!loading && (!list || list.length === 0) && !errorMsg" class="no-results my-3 empty-state">
+        <img src="assets/images/SinPassoPendienteGuardia.png" alt="Sin solicitudes" class="empty-img" />
+        <p>No se encontraron solicitudes de duplicación.</p>
       </div>
     </ng-template>
   </mat-card-content>

@@ -189,7 +189,7 @@ img[alt="Vista previa"] {
   position: relative; padding: 20px 16px 24px;
   background: linear-gradient(180deg, #e6fbff 0%, #ffffff 100%);
   display: grid; grid-template-columns: 48px auto 40px; align-items: center; gap: 12px;
-  .brand { width: 48px; height: 48px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,.06); }
+  .brand { width: 48px; height: 40px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,.06); }
   .heading{ h1{ margin:0 0 4px; font-size:18px; font-weight:700; color:var(--text); } p{ margin:0; font-size:12.5px; color:var(--muted); } }
   .close-btn{ justify-self:end; background:#fff; border-radius:50%; box-shadow:0 4px 12px rgba(0,0,0,.08); }
 }
@@ -219,7 +219,20 @@ mat-form-field.full { width: 100%; }
 .image-preview { width: 100%; max-height: 220px; object-fit: cover; border-radius: 14px; box-shadow: 0 6px 16px rgba(0,0,0,.08); }
 
 /* Chips horario */
-.chip-card { background: #f7fbfd; border: 1px solid #e5f2f6; border-radius: 14px; padding: 10px; }
+.chip-card {
+  border: 1px solid #eef3f6;
+  border-radius: 16px;
+  padding: 12px;
+  margin-top: 6px;
+  background: #fff;
+  transition: border-color .2s, background-color .2s, box-shadow .2s;
+
+  &.invalid {
+    border-color: #f4b4b4;
+    background: #fff6f6;
+    box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.08) inset;
+  }
+}
 .chip-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .chip {
   background:#fff; border-radius:12px; padding:10px; display:grid; grid-template-columns:28px auto; gap:10px; align-items:center;
@@ -309,3 +322,520 @@ mat-form-field.full { width: 100%; }
   .chip-row { grid-template-columns: 1fr; }
 }
 @media (max-width:480px){ .info-list .row-two{ grid-template-columns:1fr; } }
+
+/* ---------- Tarjeta de revisión (Step 3) ---------- */
+.visit-card.event-review {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(20, 33, 61, 0.06);
+  border: 1px solid #eef2f7;
+  padding: 14px;
+  margin: 10px 0 24px;
+  position: relative;
+}
+
+/* Nota superior (info) — misma idea que warning-note, pero azul */
+.note-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+
+  .material-symbols-outlined {
+    font-size: 20px;
+    line-height: 1;
+    margin-top: 2px;
+  }
+}
+
+.info-note {
+  background: #e8f3ff;
+  border: 1px solid #cfe6ff;
+  color: #113e6c;
+
+  .material-symbols-outlined {
+    color: #2f80ed;
+  }
+}
+
+/* ----------- Preview de imagen ----------- */
+.preview-block {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f7fafc;
+  border: 1px solid #eef2f7;
+  margin-bottom: 10px;
+
+  .preview-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 260px;
+    object-fit: cover;
+  }
+
+  .preview-caption {
+    position: absolute;
+    left: 12px;
+    bottom: 10px;
+    padding: 6px 10px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 13px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #0b1f33;
+    border: 1px solid rgba(255,255,255,.8);
+    backdrop-filter: blur(2px);
+  }
+}
+
+.preview-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 160px;
+  border-radius: 12px;
+  background: #f7fafc;
+  border: 1px solid #eef2f7;
+  color: #8a99b0;
+  margin-bottom: 10px;
+
+  .material-symbols-outlined {
+    font-size: 24px;
+  }
+}
+
+/* ----------- Lista de información (mismo patrón de filas) ----------- */
+.info {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #eef2f7;
+
+  .row {
+    display: flex;
+    gap: 10px;
+    padding: 12px 14px;
+    align-items: flex-start;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid #f1f4f9;
+    }
+
+    .ico {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #f2f6ff;
+      color: #2f80ed;
+      font-size: 19px;
+      flex: 0 0 auto;
+      margin-top: 2px;
+    }
+
+    .col {
+      min-width: 0;
+
+      .label {
+        font-size: 12px;
+        color: #8a99b0;
+        margin-bottom: 2px;
+      }
+
+      .value {
+        font-size: 14px;
+        color: #0b1f33;
+        font-weight: 600;
+        word-break: break-word;
+      }
+    }
+  }
+}
+
+/* ----------- Acciones (dos botones mitad/mitad) ----------- */
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+
+  .full-btn {
+    width: 100%;
+    height: 44px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: transform .06s ease, box-shadow .12s ease, background .12s ease, color .12s ease;
+
+    /* Sin borde, estilo “ghost/outline” con fondo blanco */
+    &.white {
+      background: #fff;
+      border: none;
+      box-shadow: 0 1px 0 0 #eef2f7 inset, 0 0 0 1px #eef2f7 inset;
+
+      &:active { transform: translateY(1px); }
+    }
+
+    /* Variante neutral (atrás) */
+    &.neutral-outline {
+      color: #1f3b57;
+
+      &:hover {
+        background: #f6fbff;
+        box-shadow: 0 0 0 1px #dbe8f5 inset;
+      }
+    }
+
+    /* Variante primaria (compartir) */
+    &.primary-outline {
+      color: #2f80ed;
+
+      &:hover {
+        background: #f2f7ff;
+        box-shadow: 0 0 0 1px #cfe2ff inset;
+      }
+    }
+  }
+}
+
+/* --- Card de Revisa y comparte --- */
+.share-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 3px 10px rgba(5, 52, 73, 0.08);
+  border: 1px solid #eef3f6;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+/* Header */
+.share-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+
+  .bullet {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: #e6f8fb;
+
+    .material-symbols-outlined {
+      font-size: 24px;
+      color: #06b6d4;
+    }
+  }
+
+  .titles {
+    h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 700;
+      color: #16222f;
+    }
+    p {
+      margin: 0;
+      font-size: 13px;
+      color: #6b7a88;
+    }
+  }
+}
+
+/* Preview */
+.preview-block {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 16px;
+
+  .preview-img {
+    width: 100%;
+    border-radius: 12px;
+    object-fit: cover;
+  }
+  .preview-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 8px 12px;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+  }
+}
+
+.preview-empty {
+  border: 2px dashed #cfd9e0;
+  border-radius: 12px;
+  padding: 32px 0;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 14px;
+
+  .material-symbols-outlined {
+    display: block;
+    margin: 0 auto 8px;
+    font-size: 28px;
+    color: #94a3b8;
+  }
+}
+
+/* --- Info compacta tipo card (reutilizado) --- */
+.info-list-compact {
+  border-radius: 12px;
+  border: 1px solid #eef3f6;
+  overflow: hidden;
+
+  .item {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 8px;
+    border-bottom: 1px solid #f1f4f7;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  .bullet {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+
+    &.cyan { background: #e6f8fb; .material-symbols-outlined { color:#06b6d4; } }
+    &.green { background: #eaf9f0; .material-symbols-outlined { color:#16a34a; } }
+    &.blue  { background: #e8f1ff; .material-symbols-outlined { color:#3b82f6; } }
+    &.purple{ background: #f1eafe; .material-symbols-outlined { color:#7c3aed; } }
+  }
+
+  .material-symbols-outlined {
+    font-size: 22px;
+  }
+
+  .content {
+    .label {
+      font-size: 12px;
+      color: #6b7a88;
+      margin-bottom: 2px;
+    }
+    .value {
+      font-size: 14px;
+      font-weight: 700;
+      color: #16222f;
+    }
+  }
+}
+
+/* Banda de error en rojo (texto + fondo suave + borde) */
+.form-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 12px;
+
+  color: #d32f2f;
+  background: #ffebee;
+  border: 1px solid #ffcdd2;
+  font-size: 12px;
+  line-height: 1.3;
+
+  .material-symbols-outlined {
+    font-size: 18px;
+    color: #d32f2f;
+  }
+}
+
+/* (Opcional) si quieres que el bloque de horas se ponga rojo cuando haya error */
+.chip-card.invalid {
+  border-color: #f4b4b4;
+  background: #fff6f6;
+  box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.08) inset;
+}
+
+
+/* ----------- Responsive ----------- */
+@media (max-width: 576px) {
+  .preview-block .preview-img { max-height: 200px; }
+  .actions { gap: 8px; }
+  .actions .full-btn { height: 42px; font-size: 13.5px; }
+}
+
+
+/* ===== Header con gradiente ===== */
+.header-gradient {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 12px 12px 0 0;
+  background: linear-gradient(135deg, #e8f6ff 0%, #f2fbff 60%, #ffffff 100%);
+  border: 1px solid #eaf3ff;
+  border-bottom: none;
+
+  .brand {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+  }
+
+  .heading {
+    flex: 1;
+    h1 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0;
+      line-height: 1.1;
+    }
+    p {
+      margin: 2px 0 0 0;
+      font-size: 12px;
+      color: #60708a;
+    }
+  }
+
+  .close-btn {
+    margin-left: auto;
+    color: #60708a;
+    &:hover { color: #374151; }
+  }
+}
+
+/* Opcional: redondear la tarjeta para empatar con el header */
+.trinta-card.mb-25.bg-white.border-none.d-block {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* ===== Step 3: tarjetas compactas ===== */
+/* ===== Header con gradiente (sustituye al mat-card-header visual) ===== */
+.share-header-gradient {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ecfbff 0%, #f3f8ff 60%, #ffffff 100%);
+  border: 1px solid #e9eef5;
+  margin-bottom: 14px;
+
+  .brand { width: 40px; height: 40px; border-radius: 10px; }
+  .titles {
+    flex: 1;
+    h3 { margin: 0; font-size: 18px; font-weight: 700; color: #0f2e43; }
+    p  { margin: 2px 0 0; font-size: 12px; color: #6b7a88; }
+  }
+  .close-btn { margin-left: auto; color: #5f6b75; }
+}
+
+/* ===== Step 3: card a ancho completo y separación con botones ===== */
+.step3-section {
+  padding-inline: 0;                 /* ocupa de borde a borde dentro del step */
+}
+
+.share-card-compact {
+  width: 100%;
+  margin: 0;                          /* sin márgenes laterales para tocar bordes */
+  border-radius: 12px;
+  border: 1px solid #e9eef5;
+  background: #fff;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(16,24,40,0.04);
+}
+
+/* cabeza del card */
+.share-card-head {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 10px;
+
+  .brand { width: 36px; height: 36px; border-radius: 9px; }
+  h4 { margin: 0; font-size: 16px; font-weight: 700; color: #173c52; }
+  p  { margin: 2px 0 0; font-size: 12px; color: #6b7a88; }
+}
+
+/* Lista compacta SIN fondo en los items, con separadores sutiles */
+.info-list-compact.no-item-bg {
+  .item {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    align-items: center;
+    column-gap: 12px;
+    padding: 10px 0;
+    background: transparent;          /* <- sin fondo */
+    box-shadow: none;                 /* <- sin sombra */
+    border-radius: 0;
+
+    /* separador entre items */
+    & + .item {
+      border-top: 1px solid #eef2f6;
+    }
+  }
+
+  .bullet {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+    color: #0b3b52;
+    background: #e6f4ff;
+    margin-left: auto;
+
+    &.cyan   { background: #e6f7fb; color:#00899e; }
+    &.green  { background: #e8f8f0; color:#20c997; }
+    &.blue   { background: #e8f0ff; color:#3e5ce3; }
+    &.indigo { background: #eef0ff; color:#5157ff; }
+    &.purple { background: #f3eaff; color:#7c4dff; }
+    &.gray   { background: #eef2f6; color:#596773; }
+  }
+
+  .content {
+    .label { font-size: 12px; color:#7a8a99; margin-bottom: 2px; }
+    .value { font-size: 14px; font-weight: 700; color:#102a3b; }
+  }
+}
+
+/* Espacio claro entre el card y los botones */
+.step3-actions {
+  margin-top: 14px;                   /* espacio pedido */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .arrow-btn {
+    cursor: pointer; width: 32px; height: 32px;
+  }
+}
+
+/* Asegura que el contenedor del stepper no meta relleno lateral extra */
+:host ::ng-deep .mat-vertical-stepper-content {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+

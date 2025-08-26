@@ -172,4 +172,8 @@ private asBool(v: any): boolean {
       });
     }
   }
+
+    goToCreate() : void {
+    this.router.navigate(['/invitations/event-invitation']);
+  }
 }
