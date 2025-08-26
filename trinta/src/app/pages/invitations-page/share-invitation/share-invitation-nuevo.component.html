@@ -1,0 +1,257 @@
+<mat-card class="trinta-card mb-25 bg-white border-none d-block">
+
+  <!-- NUEVO: Header con gradiente -->
+  <div class="header-gradient">
+    <img src="assets/images/Passo_Logo_64.png" alt="Passo" class="brand" />
+    <div class="heading">
+      <h1>Registrar una visita</h1>
+      <p>Crea la invitación y compártela en segundos.</p>
+    </div>
+    <button mat-icon-button class="close-btn" (click)="onClose()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-card-content>
+    <form [formGroup]="form">
+      <mat-stepper #stepper orientation="vertical">
+        
+        <!-- STEP 1 -->
+        <mat-step >
+          <ng-template matStepLabel>Información del Invitado</ng-template>
+          <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+              <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Nombre</label>
+                <mat-form-field>
+                  <i-feather name="user"></i-feather>
+                  <mat-label>Nombre</mat-label>
+                  <input matInput formControlName="name" minlength="4" maxlength="50">
+                </mat-form-field>
+                <div class="error text-danger" *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
+                  <div *ngIf="form.get('name')?.hasError('required')">El nombre es requerido.</div>
+                  <div *ngIf="form.get('name')?.hasError('minlength')">El nombre debe tener al menos 4 caracteres.</div>
+                  <div *ngIf="form.get('name')?.hasError('maxlength')">El nombre no puede exceder los 50 caracteres.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Número de Teléfono</label>
+                <mat-form-field>
+                  <i-feather name="phone"></i-feather>
+                  <mat-label>Número de Teléfono</mat-label>
+                  <input matInput formControlName="phoneNumber" (blur)="form.get('phoneNumber')?.markAsTouched()" [showMaskTyped]="true" mask="(000) 000-0000">
+                </mat-form-field>
+                <div class="error text-danger" *ngIf="form.get('phoneNumber')?.touched">
+                  <div *ngIf="form.get('phoneNumber')?.hasError('required')">El número de teléfono es requerido.</div>
+                  <div *ngIf="form.get('phoneNumber')?.hasError('minlength') || form.get('phoneNumber')?.hasError('maxlength')">El número de teléfono está incompleto.</div>
+                </div>             
+              </div>
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-sm-12">
+              <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Dirección de la Invitación</label>
+                <mat-form-field>
+                  <i-feather name="map-pin"></i-feather>
+                  <mat-label>Dirección</mat-label>
+                  <mat-select formControlName="neighborAddressId">
+                    <mat-option *ngFor="let loc of Adresses" [value]="loc.id">{{ loc.fullAddress }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div class="error text-danger" *ngIf="form.get('neighborAddressId')!.hasError('required') && form.get('neighborAddressId')!.touched">
+                  La dirección es requerida.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-end">
+            <img src="assets/images/pages/invitations-page/down.png" alt="Siguiente"
+                 (click)="onStepNext(1, stepper)"
+                 style="cursor:pointer; width:32px; height:32px;" />
+          </div>
+        </mat-step>
+
+        <!-- STEP 2 -->
+        <mat-step>
+          <ng-template matStepLabel>Configuración de la Invitación</ng-template>
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Tipo de Acceso</label>
+                <mat-button-toggle-group formControlName="accessType" class="access‐toggle-group">
+                  <mat-button-toggle value="1">
+                    <mat-icon>directions_car</mat-icon> Vehicular
+                  </mat-button-toggle>
+                  <mat-button-toggle value="2">
+                    <mat-icon>directions_walk</mat-icon> Peatonal
+                  </mat-button-toggle>
+                </mat-button-toggle-group>
+                <div class="error text-danger" *ngIf="form.get('accessType')!.hasError('required') && form.get('accessType')!.touched">
+                  Debes seleccionar un tipo de acceso.
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <div>
+                <label class="main-label d-block lh-1 text-black mb-10">Reutilizable</label>
+                <mat-form-field>
+                  <i-feather name="list"></i-feather>
+                  <mat-label>Selecciona</mat-label>
+                  <mat-select formControlName="isReusable">
+                    <mat-option value="Si">Si</mat-option>
+                    <mat-option value="No">No</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div class="error text-danger" *ngIf="form.get('isReusable')!.hasError('required') && form.get('isReusable')!.touched">
+                  Debes seleccionar si la invitación es reutilizable.
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Fecha de Inicio</label>
+                <mat-form-field appearance="fill">
+                  <i-feather name="calendar"></i-feather>
+                  <mat-label>MM/DD/YYYY</mat-label>
+                  <input matInput formControlName="startTime" [matDatepicker]="pickerInicio">
+                  <mat-datepicker-toggle matIconSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerInicio></mat-datepicker>
+                </mat-form-field>
+                <div class="error text-danger" *ngIf="form.get('startTime')!.hasError('required') && form.get('startTime')!.touched">La fecha de inicio es requerida.</div>
+                <div class="error text-danger" *ngIf="form.hasError('dateRangeInvalid')">La fecha de inicio no puede ser mayor que la fecha final.</div>
+              </div>
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="mb-20">
+                <label class="main-label d-block lh-1 text-black mb-10">Fecha Final</label>
+                <mat-form-field appearance="fill">
+                  <i-feather name="calendar"></i-feather>
+                  <mat-label>MM/DD/YYYY</mat-label>
+                  <input matInput formControlName="endTime" [matDatepicker]="pickerTermina">
+                  <mat-datepicker-toggle matIconSuffix [for]="pickerTermina"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerTermina ></mat-datepicker>
+                </mat-form-field>
+                <div class="error text-danger" *ngIf="form.get('endTime')!.hasError('required') && form.get('endTime')!.touched">La fecha de término es requerida.</div>
+                <div class="error text-danger" *ngIf="form.hasError('dateRangeInvalid')">La fecha final no puede ser menor que la fecha de inicio.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <img src="assets/images/pages/invitations-page/up.png" alt="Atrás"
+                 style="cursor:pointer; width:32px; height:32px;"
+                 (click)="stepper.previous()" />
+            <img src="assets/images/pages/invitations-page/down.png" alt="Siguiente"
+                 (click)="onStepNext(2, stepper)"
+                 style="cursor:pointer; width:32px; height:32px;" />
+          </div>
+        </mat-step>
+
+        <!-- STEP 3 (NUEVO look compacto) -->
+        <mat-step>
+        <ng-template matStepLabel>Compartir</ng-template>
+
+        <div class="section step3-section">
+            <div class="share-card-compact">
+            <!-- Encabezado compacto dentro del card -->
+            <div class="share-card-head">
+                <img src="assets/images/Passo_Logo_64.png" alt="Passo" class="brand" />
+                <div>
+                <h4>Revisa y comparte</h4>
+                <p>Confirma los datos antes de enviar la invitación.</p>
+                </div>
+            </div>
+
+            <!-- Lista compacta SIN fondo en items -->
+            <div class="info-list-compact no-item-bg">
+                <div class="item">
+                <div class="bullet cyan">
+                    <span class="material-symbols-outlined">badge</span>
+                </div>
+                <div class="content">
+                    <div class="label">Nombre</div>
+                    <div class="value">{{ form.controls['name'].value }}</div>
+                </div>
+                </div>
+
+                <div class="item">
+                <div class="bullet green">
+                    <span class="material-symbols-outlined">directions_car</span>
+                </div>
+                <div class="content">
+                    <div class="label">Tipo de acceso</div>
+                    <div class="value">{{ form.value.accessType === '1' ? 'Vehicular' : 'Peatonal' }}</div>
+                </div>
+                </div>
+
+                <div class="item">
+                <div class="bullet blue">
+                    <span class="material-symbols-outlined">call</span>
+                </div>
+                <div class="content">
+                    <div class="label">Teléfono</div>
+                    <div class="value">{{ form.controls['phoneNumber'].value }}</div>
+                </div>
+                </div>
+
+                <div class="item">
+                <div class="bullet indigo">
+                    <span class="material-symbols-outlined">calendar_month</span>
+                </div>
+                <div class="content">
+                    <div class="label">Fecha</div>
+                    <div class="value">
+                    {{ form.controls['startTime'].value | date:'dd/MM/yyyy' }}
+                    –
+                    {{ form.controls['endTime'].value   | date:'dd/MM/yyyy' }}
+                    </div>
+                </div>
+                </div>
+
+                <div class="item">
+                <div class="bullet purple">
+                    <span class="material-symbols-outlined">home_pin</span>
+                </div>
+                <div class="content">
+                    <div class="label">Dirección</div>
+                    <div class="value">{{ getFullAddress() }}</div>
+                </div>
+                </div>
+
+                <div class="item">
+                <div class="bullet gray">
+                    <span class="material-symbols-outlined">metabolism</span>
+                </div>
+                <div class="content">
+                    <div class="label">Reutilizable</div>
+                    <div class="value">{{ form.controls['isReusable'].value }}</div>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <!-- Botones: dejan un espacio claro respecto al card -->
+        <div class="step3-actions">
+            <img src="assets/images/pages/invitations-page/up.png"
+                alt="Atrás"
+                class="arrow-btn"
+                (click)="stepper.previous()" />
+
+            <a class="default-btn" mat-button (click)="onSubmit()">
+            <i class="ri-share-fill"></i> Compartir Invitación
+            </a>
+        </div>
+        </mat-step>  
+
+      </mat-stepper>
+    </form>
+  </mat-card-content>
+</mat-card>

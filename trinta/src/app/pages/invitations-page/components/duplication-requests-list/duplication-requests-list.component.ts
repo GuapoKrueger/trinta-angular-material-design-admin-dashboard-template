@@ -1,16 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, LOCALE_ID,  ChangeDetectionStrategy,ChangeDetectorRef,NgZone } from '@angular/core';
 import { ServiceInvitationService } from '../../services/service-invitation/service-invitation.service';
 import { DuplicationRequestResponse } from '../../models/duplication-request.interface';
 import { BaseApiResponse } from '../../../../shared/commons/base-api-response-interface';
 import { AuthService } from '../../../../authentication/services/auth.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
-import { CommonModule } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { InvitationSocketService } from '../../services/invitation-socket.service';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+import localeEs from '@angular/common/locales/es';
+registerLocaleData(localeEs);
 
 /**
  * Componente para mostrar las solicitudes de duplicación de invitaciones
@@ -18,15 +22,19 @@ import { Subscription } from 'rxjs';
  */
 @Component({
   selector: 'app-duplication-requests-list',
-  templateUrl: './duplication-requests-list.component.html',
-  styleUrls: ['./duplication-requests-list.component.scss'],
+  templateUrl: './duplication-requests-list-nuevo.component.html',
+  styleUrls: ['./duplication-requests-list-nuevo.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule, 
     MatProgressSpinnerModule, 
     FormsModule, 
     MatButtonModule
-  ]
+  ],
+  providers: [
+    { provide: LOCALE_ID, useValue: 'es' },
+  ],
 })
 export class DuplicationRequestsListComponent implements OnInit {
   
@@ -46,11 +54,15 @@ export class DuplicationRequestsListComponent implements OnInit {
 
   private subs = new Subscription();
 
+  private destroy$ = new Subject<void>();
+
   constructor(
     private invitationService: ServiceInvitationService,
     private authService: AuthService,
     private router: Router,
-    private invitationSocket: InvitationSocketService 
+    private invitationSocket: InvitationSocketService,
+    private ngZone: NgZone,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -58,27 +70,40 @@ export class DuplicationRequestsListComponent implements OnInit {
     this.neighborId = this.authService.neighboorIdGet;
     this.loadDuplicationRequests();
 
-    this.invitationSocket.joinResident(this.authService.neighboorIdGet);
+    // Unirse al grupo del residente para recibir solicitudes en tiempo real
+    if (this.neighborId) {
+      this.invitationSocket.joinResident(this.neighborId);
+    }
 
-    this.invitationSocket.duplicationRequested$.subscribe((newInvitation) => {
-    this.duplicationRequests = [newInvitation, ...this.duplicationRequests];
+    // Nueva solicitud de duplicación recibida por socket
+    this.invitationSocket.duplicationRequested$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((payload) => {
+        // Asegura que el render ocurra al instante
+        this.ngZone.run(() => {
+          // Inserta al inicio creando NUEVA referencia (evita mutación in-place)
+          this.duplicationRequests = [payload, ...this.duplicationRequests];
 
-        Swal.fire({
-          toast: true,
-          position: 'top-end',
-          icon: 'info',
-          title: 'Nueva invitación recibida',
-          showConfirmButton: false,
-          timer: 5000
+          this.cdr.markForCheck();
+
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'info',
+            title: 'Nueva solicitud de duplicación',
+            showConfirmButton: false,
+            timer: 5000
+          });
         });
-      
-    });
+      });
 
 
   }
 
-  ngOnDestroy(): void {
-    this.subs.unsubscribe();
+ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+
     if (this.neighborId) {
       this.invitationSocket.leaveResident(this.neighborId);
     }
@@ -100,12 +125,14 @@ export class DuplicationRequestsListComponent implements OnInit {
       next: (resp: BaseApiResponse<DuplicationRequestResponse[]>) => {
         this.duplicationRequests = resp.data || [];
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: (err) => {
         console.error('Error al cargar solicitudes de duplicación:', err);
         this.errorMsg = err?.message || 'Error al cargar las solicitudes de duplicación.';
         this.loading = false;
         this.duplicationRequests = [];
+        this.cdr.markForCheck();
       }
     });
   }
@@ -141,6 +168,7 @@ export class DuplicationRequestsListComponent implements OnInit {
    */
   onStatusFilterChange(): void {
     // El filtro se aplica automáticamente a través del getter filteredRequests
+    this.cdr.markForCheck();
   }
 
   /**
@@ -148,6 +176,7 @@ export class DuplicationRequestsListComponent implements OnInit {
    */
   onSearch(): void {
     // El filtro se aplica automáticamente a través del getter filteredRequests
+    this.cdr.markForCheck();
   }
 
   /**
@@ -156,6 +185,8 @@ export class DuplicationRequestsListComponent implements OnInit {
   refresh(): void {
     this.loadDuplicationRequests();
   }
+
+  trackByRequestId = (_: number, r: DuplicationRequestResponse) => r.id;
 
   /**
    * Obtiene la clase CSS para el badge de estado
@@ -217,6 +248,7 @@ export class DuplicationRequestsListComponent implements OnInit {
   private performCancelRequest(request: DuplicationRequestResponse): void {
     this.loading = true;
     this.errorMsg = null;
+    this.cdr.markForCheck();
 
     this.invitationService.cancelDuplicationRequest(request.id).subscribe({
       next: (response) => {
@@ -235,6 +267,7 @@ export class DuplicationRequestsListComponent implements OnInit {
           this.errorMsg = response.message || 'Error al cancelar la solicitud.';
         }
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         console.error('Error al cancelar solicitud:', error);
@@ -248,6 +281,7 @@ export class DuplicationRequestsListComponent implements OnInit {
         }
         
         this.loading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -257,7 +291,9 @@ export class DuplicationRequestsListComponent implements OnInit {
    * @param request La solicitud a duplicar
    */
   duplicateRequest(request: DuplicationRequestResponse): void {
-    console.log('Duplicar solicitud:', request);
+    // console.log('Duplicar solicitud:', request);
+
+    const now = new Date();
     
     this.router.navigate(['/invitations/service-visit'], {
       state: {
@@ -268,8 +304,8 @@ export class DuplicationRequestsListComponent implements OnInit {
           gatekeeperUserId: request.gatekeeperUserId,
           accessType: request.accessType,
           notes: request.notes,
-          startTime: request.startTime,
-          endTime: request.endTime,
+          startTime: now.toISOString(),
+          endTime: now.toISOString(),
           duplicationRequestId: request.id,
           isDuplicationrequestedByGateKeeper: true
         }

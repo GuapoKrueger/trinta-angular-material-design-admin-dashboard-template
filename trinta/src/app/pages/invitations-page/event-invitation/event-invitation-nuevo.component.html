@@ -28,14 +28,14 @@
               <ng-template #addImg>
                 <div class="image-placeholder">
                   <mat-icon>add_a_photo</mat-icon>
-                  <span>Agregar imagen (obligatorio)</span>
+                  <span>Agregar imagen (recomendado)</span>
                 </div>
               </ng-template>
               <input #fileInput type="file" accept="image/*" hidden (change)="onFileSelected($event)" />
             </div>
 
             <!-- Errores de imagen -->
-            <div class="field-error" *ngIf="form.get('image')?.touched">
+            <div class="form-error" *ngIf="form.get('image')?.touched">
               <div *ngIf="form.get('image')?.hasError('tooLarge')">El archivo excede 5 MB.</div>
               <div *ngIf="form.get('image')?.hasError('badExt')">Solo imágenes .png, .jpg, .jpeg, .webp.</div>
               <div *ngIf="form.get('image')?.hasError('required')">La imagen es requerida.</div>
@@ -46,10 +46,16 @@
               <mat-label>Nombre del evento</mat-label>
               <mat-icon matPrefix>badge</mat-icon>
               <input matInput formControlName="name" minlength="4" maxlength="50" />
-              <mat-error *ngIf="form.get('name')?.hasError('required')">El nombre es requerido.</mat-error>
-              <mat-error *ngIf="form.get('name')?.hasError('minlength')">Debe tener al menos 4 caracteres.</mat-error>
-              <mat-error *ngIf="form.get('name')?.hasError('maxlength')">No puede exceder 50 caracteres.</mat-error>
+              <mat-error class="form-error" *ngIf="form.get('name')?.hasError('required')">El nombre es requerido.</mat-error>
+              <mat-error class="form-error" *ngIf="form.get('name')?.hasError('minlength')">Debe tener al menos 4 caracteres.</mat-error>
+              <mat-error class="form-error" *ngIf="form.get('name')?.hasError('maxlength')">No puede exceder 50 caracteres.</mat-error>
             </mat-form-field>
+
+            <!-- <div class="form-error" *ngIf="form.get('name')?.touched">
+              <div *ngIf="form.get('name')?.hasError('required')">El nombre es requerido.</div>
+              <div *ngIf="form.get('name')?.hasError('minlength')">Debe tener al menos 4 caracteres.</div>
+              <div *ngIf="form.get('name')?.hasError('maxlength')">No puede exceder 50 caracteres.</div>
+            </div> -->
 
             <!-- DIRECCIÓN -->
             <mat-form-field appearance="outline" subscriptSizing="dynamic" class="full field">
@@ -58,7 +64,7 @@
               <mat-select formControlName="neighborAddressId">
                 <mat-option *ngFor="let loc of Adresses" [value]="loc.id">{{ loc.fullAddress }}</mat-option>
               </mat-select>
-              <mat-error *ngIf="form.get('neighborAddressId')?.hasError('required')">
+              <mat-error class="form-error" *ngIf="form.get('neighborAddressId')?.hasError('required')">
                 La dirección es requerida.
               </mat-error>
             </mat-form-field>
@@ -91,7 +97,7 @@
             </mat-form-field>
 
             <!-- Validación de rango de fechas (si aplica en tu form) -->
-            <div class="field-error" *ngIf="form.hasError('dateRangeInvalid')">
+            <div class="form-error" *ngIf="form.hasError('dateRangeInvalid')">
               La fecha de inicio no puede ser mayor que la fecha final.
             </div>
 
@@ -116,13 +122,13 @@
             </div>
 
             <!-- Errores horas -->
-            <div class="field-error" *ngIf="form.get('startTimeHour')?.touched && form.get('startTimeHour')?.invalid">
+            <div class="form-error" *ngIf="form.get('startTimeHour')?.touched && form.get('startTimeHour')?.invalid">
               <div *ngIf="form.get('startTimeHour')?.hasError('required')">La hora de inicio es requerida.</div>
             </div>
-            <div class="field-error" *ngIf="form.get('endTimeHour')?.touched && form.get('endTimeHour')?.invalid">
+            <div class="form-error" *ngIf="form.get('endTimeHour')?.touched && form.get('endTimeHour')?.invalid">
               <div *ngIf="form.get('endTimeHour')?.hasError('required')">La hora de fin es requerida.</div>
             </div>
-            <div class="field-error"
+            <div class="form-error"
                  *ngIf="form.hasError('timeRangeInvalid') && (form.get('startTimeHour')?.touched || form.get('endTimeHour')?.touched)">
               La hora de inicio no puede ser mayor que la hora de fin.
             </div>
@@ -156,9 +162,9 @@
               <!-- Imagen / preview -->
               <div class="preview-block" *ngIf="imagePreview; else noImg">
                 <img [src]="imagePreview" alt="Imagen del evento" class="preview-img" />
-                <div class="preview-caption">
+                <!-- <div class="preview-caption">
                   {{ form.controls['name'].value || 'Evento' }}
-                </div>
+                </div> -->
               </div>
               <ng-template #noImg>
                 <div class="preview-empty">
@@ -168,59 +174,65 @@
               </ng-template>
 
               <!-- Datos del evento -->
-              <div class="info-list">
-                <div class="row-item">
-                  <div class="icon-pill"><mat-icon>badge</mat-icon></div>
-                  <div class="content">
-                    <div class="label">Nombre del evento</div>
-                    <div class="value">{{ form.controls['name'].value }}</div>
-                  </div>
-                </div>
+      <!-- Datos del evento -->
+      <div class="info-list-compact">
+        <!-- Nombre -->
+        <div class="item">
+          <div class="bullet cyan">
+            <span class="material-symbols-outlined">celebration</span>
+          </div>
+          <div class="content">
+            <div class="label">Nombre del evento</div>
+            <div class="value">{{ form.controls['name'].value }}</div>
+          </div>
+        </div>
 
-                <mat-divider></mat-divider>
+        <!-- Fecha -->
+        <div class="item">
+          <div class="bullet green">
+            <span class="material-symbols-outlined">calendar_month</span>
+          </div>
+          <div class="content">
+            <div class="label">Fecha</div>
+            <div class="value">{{ form.controls['startTime'].value | date:'dd/MM/yyyy' }}</div>
+          </div>
+        </div>
 
-                <div class="row-item">
-                  <div class="icon-pill"><mat-icon>event</mat-icon></div>
-                  <div class="content">
-                    <div class="label">Fecha</div>
-                    <div class="value">{{ form.controls['startTime'].value | date:'dd/MM/yyyy' }}</div>
-                  </div>
-                </div>
+        <!-- Horario -->
+        <div class="item">
+          <div class="bullet blue">
+            <span class="material-symbols-outlined">schedule</span>
+          </div>
+          <div class="content">
+            <div class="label">Horario</div>
+            <div class="value">
+              {{ formatTimeRange(form.value.startTimeHour, form.value.endTimeHour) }}
+            </div>
+          </div>
+        </div>
 
-                <!-- ...dentro de la lista de info, reemplaza el bloque de row-two por esto -->
-                <mat-divider></mat-divider>
-
-                <div class="row-item">
-                <div class="icon-pill"><mat-icon>schedule</mat-icon></div>
-                <div class="content">
-                    <div class="label">Horario</div>
-                    <div class="value">
-                    {{ formatTimeRange(form.value.startTimeHour, form.value.endTimeHour) }}
-                    </div>
-                </div>
-                </div>
-
-
-                <mat-divider></mat-divider>
-
-                <div class="row-item">
-                  <div class="icon-pill"><mat-icon>home_pin</mat-icon></div>
-                  <div class="content">
-                    <div class="label">Locación</div>
-                    <div class="value">{{ getFullAddress() }}</div>
-                  </div>
-                </div>
-
-                <mat-divider></mat-divider>
-              </div>
+        <!-- Locación -->
+        <div class="item">
+          <div class="bullet purple">
+            <span class="material-symbols-outlined">home_pin</span>
+          </div>
+          <div class="content">
+            <div class="label">Dirección</div>
+            <div class="value">{{ getFullAddress() }}</div>
+          </div>
+        </div>
+      </div>
             </div>
           </div>
 
           <!-- Acciones sticky -->
           <div class="sticky-actions">
-            <button type="button" class="ghost-btn" (click)="stepper.previous()">
+            <!-- <button type="button" class="ghost-btn" (click)="stepper.previous()">
               <mat-icon>arrow_back</mat-icon>
               Atrás
+            </button> -->
+            <button mat-fab (click)="stepper.previous()">
+              <mat-icon>arrow_upward</mat-icon>
             </button>
             <button mat-flat-button color="primary" class="cta-btn" (click)="onSubmit()">
               <mat-icon>share</mat-icon>

@@ -1,0 +1,239 @@
+/* Tipografía moderna */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --brand: #6b5cff;          /* primario */
+  --brand-2: #5ec7ff;        /* acento gradiente */
+  --ink: #222638;            /* texto */
+  --muted: #8b90a0;          /* texto secundario */
+  --card: #ffffff;
+}
+
+/* ---------- Layout base ---------- */
+.sign-in-area {
+  height: 100vh;
+  overflow: hidden;
+  padding: 30px 12.5px;
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: var(--ink);
+  position: relative;
+
+  /* Fondo con degradado suave y blobs */
+  .bg-deco {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(107, 92, 255, 0.20), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, rgba(94, 199, 255, 0.20), transparent 60%),
+      linear-gradient(180deg, #f7f9fc 0%, #eef2f7 100%);
+    z-index: 0;
+  }
+
+  .trinta-form {
+    position: relative;
+    z-index: 1;
+    max-width: 560px;
+    padding: 36px 32px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow:
+      0 10px 25px rgba(20, 16, 52, 0.06),
+      0 2px 8px rgba(20, 16, 52, 0.04);
+    backdrop-filter: saturate(140%) blur(4px);
+
+    /* Animación de entrada */
+    &.animate-in {
+      animation: fadeUp 500ms ease-out both;
+    }
+
+    /* Header de marca */
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 8px;
+
+      .brand-logo {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        box-shadow: 0 6px 14px rgba(107, 92, 255, 0.25);
+      }
+      .brand-txt {
+        text-align: left;
+
+        .app-name {
+          margin: 0;
+          font-size: 22px;
+          letter-spacing: 1.5px;
+          text-transform: lowercase;
+          font-weight: 700;
+          background: linear-gradient(90deg, var(--brand), var(--brand-2));
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+        }
+        .tagline {
+          display: block;
+          margin-top: -2px;
+          font-size: 12px;
+          color: var(--muted);
+        }
+      }
+    }
+
+    .title {
+      margin-top: 8px;
+      h3 {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        letter-spacing: 0.2px;
+      }
+      p {
+        margin: 0 0 4px;
+        color: var(--muted);
+        a {
+          color: var(--brand);
+          text-decoration: none;
+          position: relative;
+          font-weight: 600;
+
+          &::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -2px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--brand), var(--brand-2));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 200ms ease;
+          }
+          &:hover::after {
+            transform: scaleX(1);
+          }
+        }
+      }
+    }
+  }
+}
+
+/* ---------- Material inputs ---------- */
+::ng-deep {
+  .sign-in-area .trinta-form {
+    form {
+      .form-group {
+        margin-bottom: 18px;
+        position: relative;
+
+        .label {
+          margin-bottom: 10px;
+          color: var(--ink);
+          font-weight: 600;
+        }
+
+        .mat-mdc-form-field {
+          display: block;
+        }
+
+        .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+          background-color: #f5f7fa;
+        }
+
+        .mat-mdc-text-field-wrapper {
+          border-radius: 12px;
+          padding: 0 16px 0 56px;
+          border: 1px solid #eef1f6;
+          transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+        }
+
+        .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
+          color: var(--brand) !important;
+        }
+
+        .mdc-text-field--focused .mat-mdc-text-field-wrapper {
+          border-color: rgba(107, 92, 255, 0.45);
+          box-shadow: 0 0 0 4px rgba(107, 92, 255, 0.10);
+          background-color: #fff;
+        }
+
+        .mdc-line-ripple { display: none; }
+
+        i-feather {
+          position: absolute;
+          top: 16px;
+          left: 16px;
+          width: 22px;
+          color: #6f7590;
+        }
+
+        .mat-mdc-icon-button.mat-mdc-button-base {
+          padding: 12px 0;
+          margin-right: -8px;
+        }
+      }
+
+      /* Botón CTA con gradiente y micro-animación */
+      .cta.mat-mdc-button {
+        width: 100%;
+        margin-top: 24px;
+        border-radius: 12px;
+        padding: 16px 22px;
+        color: #fff;
+        background: linear-gradient(90deg, var(--brand) 0%, var(--brand-2) 100%);
+        box-shadow: 0 8px 18px rgba(107, 92, 255, 0.25);
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+        transition: transform 120ms ease, box-shadow 160ms ease, filter 160ms ease;
+        text-transform: none;
+
+        &:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 10px 22px rgba(107, 92, 255, 0.32);
+          filter: brightness(1.02);
+        }
+        &:active {
+          transform: translateY(0);
+          box-shadow: 0 6px 14px rgba(107, 92, 255, 0.28);
+        }
+        &[disabled] {
+          background: linear-gradient(90deg, #e9edf5 0%, #e3e8f2 100%);
+          box-shadow: none;
+          color: #a7afc2;
+        }
+      }
+    }
+  }
+}
+
+/* ---------- Animación ---------- */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 767px) {
+  .sign-in-area .trinta-form {
+    max-width: 100%;
+    padding: 28px 20px;
+
+    .brand .brand-logo { width: 40px; height: 40px; }
+    .brand .brand-txt .app-name { font-size: 20px; }
+  }
+
+  ::ng-deep .sign-in-area .trinta-form form .form-group .mat-mdc-text-field-wrapper {
+    padding: 0 15px 0 52px;
+  }
+}

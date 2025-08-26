@@ -1,0 +1,122 @@
+<div class="lock-screen-area redesigned">
+  <div class="d-table">
+    <div class="d-table-cell">
+      <div class="invite-card">
+
+        <!-- Header con gradiente -->
+        <div class="invite-header">
+          <div class="logo-wrap">
+            <img src="assets/images/Passo_Logo_64.png" alt="Passo" />
+          </div>
+          <h3>Recibiste un Passo</h3>
+          <p>Accede al fraccionamiento usando esta invitación.</p>
+        </div>
+
+        <!-- Imagen (opcional) -->
+        <!-- <div class="hero-image" *ngIf="invitationDetails?.imageUrl; else noImage">
+          <img [src]="invitationDetails?.imageUrl" alt="Imagen de la invitación" />
+        </div>
+        <ng-template #noImage></ng-template> -->
+
+        <!-- Nombre del vecino / remitente -->
+        <div class="host">
+          <img src="assets/images/users/user-default.png" alt="user" />
+          <div class="host-name">{{ invitationDetails?.neighborName }}</div>
+        </div>
+
+        <!-- Info principal -->
+        <div class="info-list">
+
+          <div class="row-item">
+            <div class="icon-pill cyan"><mat-icon>badge</mat-icon></div>
+            <div class="content">
+              <div class="label">Nombre del invitado</div>
+              <div class="value">{{ invitationDetails?.guestName }}</div>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="row-item">
+            <div class="icon-pill green"><mat-icon>call</mat-icon></div>
+            <div class="content">
+              <div class="label">Teléfono</div>
+              <div class="value">{{ invitationDetails?.phoneNumber }}</div>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="row-item">
+            <div class="icon-pill blue"><mat-icon>calendar_month</mat-icon></div>
+            <div class="content">
+              <div class="label">Fecha</div>
+              <div class="value">
+                {{ invitationDetails?.startTime | date:'dd/MM/yyyy' }}
+                    –
+                {{ invitationDetails?.endTime | date:'dd/MM/yyyy' }}
+              </div>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <!-- <div class="row-two">
+            <div class="row-item">
+              <div class="icon-pill soft"><mat-icon>schedule</mat-icon></div>
+              <div class="content">
+                <div class="label">Inicia</div>
+                <div class="value">
+                  {{ invitationDetails?.startTime | date:'hh:mm a' }}
+                </div>
+              </div>
+            </div>
+
+            <div class="row-item">
+              <div class="icon-pill soft"><mat-icon>alarm_on</mat-icon></div>
+              <div class="content">
+                <div class="label">Termina</div>
+                <div class="value">
+                  {{ invitationDetails?.endTime | date:'hh:mm a' }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider> -->
+
+          <div class="row-item">
+            <div class="icon-pill purple"><span class="material-symbols-outlined">home_pin</span></div>
+            <div class="content">
+              <div class="label">Dirección</div>
+              <div class="value">{{ invitationDetails?.location }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tipo de Acceso -->
+        <!-- <div class="access-type">
+          <div class="title">Tipo de Acceso</div>
+          <div class="access-box">
+            <div class="option"
+                 [ngClass]="{'active': (invitationDetails?.accessType || '').toLowerCase() === 'vehicular'}">
+              <mat-icon>directions_car</mat-icon>
+              Vehicular
+            </div>
+            <div class="option"
+                 [ngClass]="{'active': (invitationDetails?.accessType || '').toLowerCase() === 'peatonal'}">
+              <mat-icon>directions_walk</mat-icon>
+              Peatonal
+            </div>
+          </div>
+        </div> -->
+
+        <!-- Botón -->
+        <button class="cta" mat-button (click)="onSubmit()">
+          Entrar
+        </button>
+
+      </div>
+    </div>
+  </div>
+</div>

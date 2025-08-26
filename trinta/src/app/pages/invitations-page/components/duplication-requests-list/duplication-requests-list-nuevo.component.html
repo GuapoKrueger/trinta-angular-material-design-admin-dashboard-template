@@ -1,0 +1,152 @@
+<!-- Título -->
+<div *ngIf="!loading && !errorMsg" class="title-section">
+  <h3 class="passo-title">
+    <span class="passo-text">
+      <span class="letter-p">p</span>
+      <span class="letter-a">a</span>
+      <span class="letter-s1">s</span>
+      <span class="letter-s2">s</span>
+      <span class="letter-o">o</span>
+    </span>
+    pendiente
+  </h3>
+</div>
+
+<!-- Loading -->
+<div *ngIf="loading" class="spinner-container">
+  <mat-spinner></mat-spinner>
+</div>
+
+<!-- Error -->
+<div *ngIf="errorMsg && !loading" class="error-message">
+  {{ errorMsg }}
+</div>
+
+<!-- Cards -->
+<div *ngIf="!loading && filteredRequests.length > 0" class="list-wrap">
+  <div
+    class="visit-card"
+    *ngFor="let request of filteredRequests; trackBy: trackByRequestId"
+  >
+
+      <!-- Nota de advertencia (motivo) -->
+    <div class="note-row warning-note">
+      <span class="material-symbols-outlined">warning</span>
+      <div>
+        Solicitan <strong>duplicar</strong> tu acceso de <strong>{{ request.accessServiceTypeName }}</strong>.<br>
+        Motivo: “<strong>{{ request.requestReason }}</strong>”
+      </div>
+    </div>
+    
+
+
+    <!-- Head -->
+<!-- Versión simple (siempre muestra Pendiente) -->
+<div class="head">
+  <span class="material-symbols-outlined avatar-ico" [ngSwitch]="request.accessServiceTypeName">
+    <ng-container *ngSwitchCase="'Paqueteria'">local_shipping</ng-container>
+    <ng-container *ngSwitchCase="'Proveedor'">store</ng-container>
+    <ng-container *ngSwitchCase="'Comida'">restaurant</ng-container>
+    <ng-container *ngSwitchCase="'Repartidor'">delivery_dining</ng-container>
+    <ng-container *ngSwitchCase="'Servicio de limpieza'">cleaning_services</ng-container>
+    <ng-container *ngSwitchCase="'Servicio generales'">build</ng-container>
+    <ng-container *ngSwitchCase="'Otros'">dashboard_customize</ng-container>
+    <ng-container *ngSwitchDefault>help_outline</ng-container>
+  </span>
+
+  <div class="who">
+    <div class="row-head">
+      <div class="name">{{ request.accessServiceTypeName }}</div>
+
+      <div class="status-pill pending" aria-label="Solicitud pendiente">
+        <span class="material-symbols-outlined">hourglass_empty</span>
+        <span class="txt">Pendiente</span>
+      </div>
+    </div>
+
+    <div class="type">Solicitud de duplicación</div>
+  </div>
+</div>
+
+
+
+
+    <!-- Info -->
+    <div class="info">
+      <!-- Invitado / proveedor -->
+      <div class="row">
+        <span class="material-symbols-outlined ico tel">article_person</span>
+        <div class="col">
+          <div class="label">Invitado / Proveedor</div>
+          <div class="value">{{ request.guestName }}</div>
+        </div>
+      </div>
+
+      <!-- Rango de fechas -->
+      <div class="row">
+        <span class="material-symbols-outlined ico date">calendar_month</span>
+        <div class="col">
+          <div class="label">Fecha</div>
+          <div class="value">
+            {{ request.startTime | date:"d 'de' MMMM" : undefined : 'es' }}
+            –
+            {{ request.endTime   | date:"d 'de' MMMM" : undefined : 'es' }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Dirección -->
+      <div class="row">
+        <span class="material-symbols-outlined ico addr">home_pin</span>
+        <div class="col">
+          <div class="label">Dirección</div>
+          <div class="value">{{ request.fullAddress }}</div>
+        </div>
+      </div>
+
+      <!-- Notas (si hay) -->
+      <div class="row" *ngIf="request.notes">
+        <span class="material-symbols-outlined ico note">sticky_note_2</span>
+        <div class="col">
+          <div class="label">Notas</div>
+          <div class="value">{{ request.notes }}</div>
+        </div>
+      </div>
+
+      <!-- Nueva invitación (si el backend la generó ya) -->
+      <div class="row success-row" *ngIf="request.newInvitationId">
+        <span class="material-symbols-outlined ico ok">check_circle</span>
+        <div class="col">
+          <div class="label">Nueva invitación</div>
+          <div class="value">ID {{ request.newInvitationId }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Acciones (dos columnas al 50%) -->
+    <div class="actions two-cols">
+    <button type="button" class="half-btn danger-outline" (click)="cancelRequest(request)">
+        <span class="material-symbols-outlined">cancel</span>
+        Cancelar
+    </button>
+
+    <button type="button" class="half-btn neutral-outline" (click)="duplicateRequest(request)">
+        <span class="material-symbols-outlined">content_copy</span>
+        Duplicar
+    </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Vacío -->
+<!-- <div *ngIf="!loading && filteredRequests.length === 0 && !errorMsg" class="no-results">
+  <p>No se encontraron solicitudes de duplicación.</p>
+</div> -->
+
+<!-- Vacío -->
+<div *ngIf="!loading && filteredRequests.length === 0 && !errorMsg" class="no-results empty-state">
+  <img src="assets/images/SinPassoPendiente.png" alt="Sin solicitudes" class="empty-img" />
+  <p>No se encontraron solicitudes de duplicación.</p>
+</div>
+

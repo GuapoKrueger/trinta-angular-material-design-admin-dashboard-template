@@ -37,7 +37,7 @@
             <ng-container *ngSwitchCase="'Repartidor'">delivery_dining</ng-container>
             <ng-container *ngSwitchCase="'Servicio de limpieza'">cleaning_services</ng-container>
             <ng-container *ngSwitchCase="'Servicio generales'">build</ng-container>
-            <ng-container *ngSwitchCase="'Otros'">miscellaneous_services</ng-container>
+            <ng-container *ngSwitchCase="'Otros'">dashboard_customize</ng-container>
             <ng-container *ngSwitchDefault>help_outline</ng-container>
         </span>
       <div class="who">
@@ -119,7 +119,7 @@
   class="fab"
   type="button"
   aria-label="Crear acceso de servicio"
-
+  (click)="onCreateServiceAccess()"
 >
   <span class="material-symbols-outlined">add</span>
 </button>

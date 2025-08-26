@@ -44,7 +44,7 @@
 
 // }
 
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { Subject, Observable } from 'rxjs';
 import { environment as env } from '../../../../environments/environment.development';
@@ -56,6 +56,8 @@ export class InvitationSocketService {
   // Eventos
   private newInvitationSubject = new Subject<any>();
   private duplicationRequestedSubject = new Subject<any>();
+  // cancelación de duplicación (para guardia)
+  private duplicationCancelledSubject = new Subject<any>();
 
   /** Invitación nueva para el guardia */
   readonly newInvitation$: Observable<any> = this.newInvitationSubject.asObservable();
@@ -63,11 +65,15 @@ export class InvitationSocketService {
   readonly duplicationRequested$: Observable<any> =
     this.duplicationRequestedSubject.asObservable();
 
+    /** ⬅cancelación de duplicación (para guardia) */
+  readonly duplicationCancelled$: Observable<any> =
+    this.duplicationCancelledSubject.asObservable();
+
   // Grupos unidos (para re-unirse en reconexión)
   private joinedGroups = new Set<string>();
   private isStarting = false;
 
-  constructor() {}
+  constructor(private ngZone: NgZone) {}
 
   /** Inicializa la conexión si no existe */
   private ensureConnection(): void {
@@ -75,18 +81,31 @@ export class InvitationSocketService {
 
     this.isStarting = true;
 
-    this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(`${env.api.replace('/api', '')}hubs/invitations`, { withCredentials: true })
+this.hubConnection = new signalR.HubConnectionBuilder()
+      .withUrl(
+        `${env.api.replace('/api', '')}hubs/invitations`,
+        {
+          withCredentials: true,
+          // transport: signalR.HttpTransportType.WebSockets // 🔒 evita caer en SSE/LongPolling
+          // skipNegotiation: true, // opcional: solo si **seguro** hay WebSockets en hosting
+        }
+      )
       .withAutomaticReconnect()
       .build();
 
-    // Handlers de eventos del servidor
+
+
+
     this.hubConnection.on('NewInvitation', (invitation: any) => {
-      this.newInvitationSubject.next(invitation);
+      this.ngZone.run(() => this.newInvitationSubject.next(invitation));
     });
 
     this.hubConnection.on('DuplicationRequestCreated', (payload: any) => {
-      this.duplicationRequestedSubject.next(payload);
+      this.ngZone.run(() => this.duplicationRequestedSubject.next(payload));
+    });
+
+    this.hubConnection.on('DuplicationCancelled', (payload: any) => {
+      this.ngZone.run(() => this.duplicationCancelledSubject.next(payload));
     });
 
     // Rejoin tras reconectar

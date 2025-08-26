@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import { ServiceInvitationService } from '../../services/service-invitation/service-invitation.service';
 import { ServiceInvitationResponse } from '../../models/service-invitation-response.interface';
 import { ServiceInvitationRequest } from '../../models/service-invitation-request.interface';
@@ -12,13 +12,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import Swal from 'sweetalert2';
+import Swal, { SweetAlertIcon } from 'sweetalert2';
 import { InvitationSocketService } from '../../services/invitation-socket.service';
 import { MatTabsModule } from '@angular/material/tabs';
 import { TgwAsynchronouslyLoadingTcComponent } from '../../../../ui-elements/tabs/tgw-asynchronously-loading-tc/tgw-asynchronously-loading-tc.component';
 import { UtwaCustomLabelTemplateComponent } from '../../../../ui-elements/tabs/utwa-custom-label-template/utwa-custom-label-template.component';
 import { MatCardModule } from '@angular/material/card';
 import { FeathericonsModule } from '../../../../icons/feathericons/feathericons.module';
+import { Subject, Subscription, takeUntil } from 'rxjs';
+import { er } from '@fullcalendar/core/internal-common';
 
 /**
  * Componente exclusivo para el rol de vigilante (gatekeeper).
@@ -26,9 +28,10 @@ import { FeathericonsModule } from '../../../../icons/feathericons/feathericons.
  */
 @Component({
   selector: 'app-gatekeeper-service-invitations-list',
-  templateUrl: './gatekeeper-service-invitations-list.component.html',
-  styleUrls: ['./gatekeeper-service-invitations-list.component.scss'],
+  templateUrl: './gatekeeper-service-invitations-list-nuevo.component.html',
+  styleUrls: ['./gatekeeper-service-invitations-list-nuevo.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule, 
     MatTableModule, 
@@ -43,7 +46,7 @@ import { FeathericonsModule } from '../../../../icons/feathericons/feathericons.
     UtwaCustomLabelTemplateComponent, 
     DatePipe,
     MatCardModule,
-      FeathericonsModule
+    FeathericonsModule
   ]
 })
 export class GatekeeperServiceInvitationsListComponent implements OnInit {
@@ -72,6 +75,10 @@ export class GatekeeperServiceInvitationsListComponent implements OnInit {
   
   gatekeeperId: number | null = null;
 
+  private socketSubscription = new Subscription();
+
+   private destroy$ = new Subject<void>();
+
   // Tab group where the tab content is loaded lazily (when activated)
     tabLoadTimes: Date[] = [];
     getTimeLoaded(index: number) {
@@ -88,7 +95,9 @@ export class GatekeeperServiceInvitationsListComponent implements OnInit {
     private invitationService: ServiceInvitationService,
     private authService: AuthService,
     private dialog: MatDialog,
-    private invitationSocket: InvitationSocketService 
+    private invitationSocket: InvitationSocketService,
+    private ngZone: NgZone,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -99,9 +108,12 @@ export class GatekeeperServiceInvitationsListComponent implements OnInit {
     if (this.gatekeeperId) {
       this.invitationSocket.joinGatekeeper(this.gatekeeperId);
 
-      this.invitationSocket.newInvitation$.subscribe((newInvitation) => {
-        if (this.activeTab === 'active') {
-          this.activeInvitations.unshift(newInvitation);
+      this.invitationSocket.newInvitation$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((newInvitation) => {
+        this.ngZone.run(() => {
+          this.activeInvitations = [newInvitation, ...this.activeInvitations];
+          this.cdr.markForCheck();
 
           Swal.fire({
             toast: true,
@@ -111,11 +123,40 @@ export class GatekeeperServiceInvitationsListComponent implements OnInit {
             showConfirmButton: false,
             timer: 5000
           });
-        }
+        });
       });
+
+      // Cancelación de duplicación
+      this.invitationSocket.duplicationCancelled$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(({ originalInvitationId }) => {
+          this.ngZone.run(() => {
+            this.resetPagination();
+            this.loadInitialInvitations();
+            this.cdr.markForCheck();
+
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              icon: 'info',
+              title: 'Se canceló una duplicación. Lista actualizada.',
+              showConfirmButton: false,
+              timer: 3500
+            });
+          });
+      });
+
     }
 
   }
+
+   // AÑADIR EL MÉTODO ngOnDestroy para limpiar la suscripción
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  trackByInvitationId = (_: number, inv: ServiceInvitationResponse) => inv.id;
 
   /**
    * Cambia el tab activo
@@ -234,22 +275,25 @@ export class GatekeeperServiceInvitationsListComponent implements OnInit {
             timerProgressBar: true
           });
         } else {
-          this.errorMsg = response.message || 'Error al abrir el acceso.';
+
+          this.showMessage('error', 'Alerta', response.message );
         }
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         console.error('Error al abrir acceso:', error);
         
         if (error.errors && error.errors.length > 0) {
-          this.errorMsg = error.errors.join('. ');
+          this.showMessage('error', 'Alerta', error.errors.join('. '));
         } else if (error.title) {
-          this.errorMsg = error.title;
+          this.showMessage('error', 'Alerta', error.title);
         } else {
-          this.errorMsg = error?.message || 'Error al abrir el acceso. Intente nuevamente.';
+          this.showMessage('error', 'Alerta', error?.message || 'Error al abrir el acceso. Intente nuevamente.');
         }
         
         this.loading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -303,33 +347,58 @@ export class GatekeeperServiceInvitationsListComponent implements OnInit {
     ).subscribe({
       next: (response) => {
         if (response.isSuccess) {
-          Swal.fire({
-            title: '¡Solicitud enviada!',
-            text: `Se ha enviado la solicitud de duplicación para ${invitation.guestName}. El administrador la revisará próximamente.`,
-            icon: 'success',
-            timer: 4000,
-            timerProgressBar: true
-          });
+          // Swal.fire({
+          //   title: '¡Solicitud enviada!',
+          //   text: `Se ha enviado la solicitud de duplicación para ${invitation.guestName}. El administrador la revisará próximamente.`,
+          //   icon: 'success',
+          //   timer: 5000,
+          //   timerProgressBar: true
+          // });
+          this.showMessage('success', '¡Solicitud enviada!', 
+            `Se ha enviado la solicitud de duplicación para ${invitation.guestName}. El administrador la revisará próximamente.`);
         } else {
-          this.errorMsg = response.message || 'Error al enviar la solicitud de duplicación.';
+          // this.errorMsg = response.message || 'Error al enviar la solicitud de duplicación.';
+          this.showMessage('error', 'Alerta', response.message || 'Error al enviar la solicitud de duplicación.');
+
         }
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         console.error('Error al solicitar duplicación:', error);
         
         if (error.errors && error.errors.length > 0) {
-          this.errorMsg = error.errors.join('. ');
+          // this.errorMsg = error.errors.join('. ');
+
+          this.showMessage('error', 'Alerta', error.errors.join('. '));
+
         } else if (error.title) {
-          this.errorMsg = error.title;
+          // this.errorMsg = error.title;
+          this.showMessage('error', 'Alerta', error.title);
+
         } else {
-          this.errorMsg = error?.message || 'Error al solicitar la duplicación. Intente nuevamente.';
+          // this.errorMsg = error?.message || 'Error al solicitar la duplicación. Intente nuevamente.';
+          this.showMessage('error','Alerta' ,error?.message || 'Error al solicitar la duplicación. Intente nuevamente.');
         }
         
         this.loading = false;
+        this.cdr.markForCheck();
       }
     });
   }
+
+private showMessage(icon: SweetAlertIcon, title: string, text: string): void {
+  Swal.fire({
+    toast: true,
+    position: 'top-end',
+    icon,
+    text,
+    title,
+    showConfirmButton: false,
+    timer: 5000,
+    timerProgressBar: true
+  });
+}
 
   /**
    * Obtiene el día formateado para mostrar en la fecha
@@ -411,6 +480,7 @@ export class GatekeeperServiceInvitationsListComponent implements OnInit {
         this.updateHasMorePages(data.length, isActive);
         
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.errorMsg = err?.message || 'Error al cargar invitaciones.';
@@ -420,6 +490,7 @@ export class GatekeeperServiceInvitationsListComponent implements OnInit {
         } else {
           this.inactiveInvitations = [];
         }
+        this.cdr.markForCheck();
       }
     });
   }
@@ -459,6 +530,7 @@ export class GatekeeperServiceInvitationsListComponent implements OnInit {
         this.updateHasMorePages(data.length, isActive);
         
         this.loadingMore = false;
+        this.cdr.markForCheck();
       },
       error: (err) => {
         console.error('Error al cargar más invitaciones:', err);
@@ -470,6 +542,7 @@ export class GatekeeperServiceInvitationsListComponent implements OnInit {
         } else {
           this.inactiveCurrentPage--;
         }
+        this.cdr.markForCheck();
       }
     });
   }

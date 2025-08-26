@@ -27,6 +27,7 @@ import { InvitationByIdNeighborResponse } from '../models/invitation-response.in
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { FeathericonsModule } from '../../../icons/feathericons/feathericons.module';
+import { MatDividerModule } from '@angular/material/divider';
 
 export const dateRangeValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const startTime = control.get('startTime')?.value;
@@ -67,13 +68,14 @@ export const dateRangeValidator: ValidatorFn = (control: AbstractControl): Valid
     NgxMaskPipe,
     MatRadioModule,
     MatButtonToggleModule,
-    MatIconModule
+    MatIconModule,
+    MatDividerModule
   ],
   providers: [
     provideNgxMask() 
   ],
-  templateUrl: './share-invitation.component.html',
-  styleUrl: './share-invitation.component.scss'
+  templateUrl: './share-invitation-nuevo.component.html',
+  styleUrl: './share-invitation-nuevo.component.scss' 
 })
 export class ShareInvitationComponent implements OnInit{
 
@@ -192,6 +194,20 @@ export class ShareInvitationComponent implements OnInit{
       });
     }
   }
+
+  formatTimeRange(start: string | null | undefined, end: string | null | undefined): string {
+  if (!start || !end) return '';
+  // Normaliza "HH:mm" o "HH:mm:ss" a hora local con am/pm usando Intl
+  const [sh, sm] = start.split(':').map(Number);
+  const [eh, em] = end.split(':').map(Number);
+
+  const d = new Date();
+  const s = new Date(d.getFullYear(), d.getMonth(), d.getDate(), sh || 0, sm || 0);
+  const e = new Date(d.getFullYear(), d.getMonth(), d.getDate(), eh || 0, em || 0);
+
+  const fmt = new Intl.DateTimeFormat('es-MX', { hour: 'numeric', minute: '2-digit' });
+  return `${fmt.format(s)} – ${fmt.format(e)}`;
+}
 
   private validateDateRange(): boolean {
     const startTime = this.form.get('startTime')?.value;

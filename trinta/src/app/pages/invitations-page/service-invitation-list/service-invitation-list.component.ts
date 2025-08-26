@@ -199,4 +199,8 @@ export class ServiceInvitationListComponent implements OnInit {
         });
     }
   }
+
+    onCreateServiceAccess() : void {
+    this.router.navigate(['/invitations/service-visit']);
+  }
 }
