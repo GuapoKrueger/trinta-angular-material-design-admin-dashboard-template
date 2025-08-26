@@ -48,9 +48,15 @@
   padding: 20px 24px 8px;
   text-align: center;
 
-  .event-img {
-    width: 220px; height: 150px; object-fit: cover;
-    border-radius: 12px; box-shadow: 0 14px 28px rgba(2,132,199,.18);
+.event-img {
+    max-width: 100%;         /* que no exceda el ancho del contenedor */
+    max-height: 250px;       /* ajusta según el diseño */
+    height: auto;            /* mantiene la proporción */
+    object-fit: contain;     /* ⚡ muestra toda la imagen sin recortar */
+    display: block;
+    margin: 0 auto;          /* centra horizontalmente */
+    border-radius: 12px;
+    box-shadow: 0 14px 28px rgba(2,132,199,.18);
   }
   .event-img.placeholder {
     display: inline-grid; place-items: center;
